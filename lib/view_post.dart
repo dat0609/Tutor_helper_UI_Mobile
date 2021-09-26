@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tutor_helper/proflie.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class ViewPost extends StatefulWidget {
+  const ViewPost({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _ViewPostState createState() => _ViewPostState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ViewPostState extends State<ViewPost> {
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -105,18 +105,11 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        "Here is a list of schedule",
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.blueGrey,
-                        ),
-                      ),
                       SizedBox(
                         height: 8,
                       ),
                       Text(
-                        "You need to check...",
+                        "Check out some post of students",
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.blueGrey,
@@ -141,92 +134,25 @@ class _HomePageState extends State<HomePage> {
             ),
             child: ListView(
               children: [
-                buildTitleRow("Today classes", 3),
+                buildTitleRow("Student posts", 10),
                 const SizedBox(
                   height: 20,
                 ),
-                buildClassItem(),
-                buildClassItem(),
+                buildClassItem("Philosophy of marxism and Leninism",
+                    "123 Ho Thi Dau", "1"),
+                buildClassItem(
+                    "The Basic of Typography II", "53 Le Van Tam", "1"),
+                buildClassItem("Design Psychology: Principle Design",
+                    "13/2 Truong Dinh", "1"),
+                buildClassItem("The Basic of Math II", "53 Le Van Ky", "1"),
                 const SizedBox(
                   height: 25,
                 ),
-                buildTitleRow("Your task", 4),
-                const SizedBox(
-                  height: 20,
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      buildTaskItem(
-                          3, "The Basic of Typography II", Colors.red),
-                      buildTaskItem(3, "Design Psychology: Principle of...",
-                          Colors.green),
-                      buildTaskItem(3, "Design Psychology: Principle of...",
-                          Colors.green),
-                    ],
-                  ),
-                )
               ],
             ),
           ),
         )
       ],
-    );
-  }
-
-  Container buildTaskItem(int numDays, String courseTitle, Color color) {
-    return Container(
-      margin: const EdgeInsets.only(right: 15),
-      padding: const EdgeInsets.all(12),
-      height: 140,
-      width: 140,
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Deadline",
-            style: TextStyle(fontSize: 10, color: Colors.grey),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Row(
-            children: [
-              Container(
-                height: 6,
-                width: 6,
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(3),
-                ),
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              Text(
-                "$numDays days left",
-                style:
-                    const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Container(
-            width: 100,
-            child: Text(
-              courseTitle,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -262,7 +188,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Container buildClassItem() {
+  Container buildClassItem(String courseTitle, String address, String date) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(10),
@@ -278,11 +204,11 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
               Text(
-                "07:00",
+                "Start",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
-                "AM",
+                "1/10/2021",
                 style:
                     TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
               ),
@@ -299,9 +225,10 @@ class _HomePageState extends State<HomePage> {
             children: [
               Container(
                 width: MediaQuery.of(context).size.width - 160,
-                child: const Text(
-                  "The Basic of Math II",
-                  overflow: TextOverflow.ellipsis,
+                child: Text(
+                  courseTitle,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.green),
                 ),
               ),
               Row(
@@ -314,13 +241,18 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(
                     width: 5,
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width - 160,
-                    child: const Text(
-                      "Room C1, Faculty of Art & Design Building",
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: Colors.grey, fontSize: 13),
-                    ),
+                  Row(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width - 160,
+                        child: Text(
+                          address,
+                          overflow: TextOverflow.ellipsis,
+                          style:
+                              const TextStyle(color: Colors.grey, fontSize: 13),
+                        ),
+                      ),
+                    ],
                   )
                 ],
               ),
@@ -337,9 +269,20 @@ class _HomePageState extends State<HomePage> {
                   Text(
                     "Gabriel Sutton",
                     style: TextStyle(color: Colors.grey, fontSize: 13),
-                  )
+                  ),
                 ],
               ),
+              // Row(
+              //   children: [
+              //     IconButton(
+              //       // ignore: avoid_print
+              //       onPressed: () {
+              //         print("123");
+              //       },
+              //       icon: const Icon(Icons.volume_up),
+              //     ),
+              //   ],
+              // )
             ],
           )
         ],

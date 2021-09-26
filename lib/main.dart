@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tutor_helper/calendar.dart';
+import 'package:tutor_helper/document.dart';
 import 'package:tutor_helper/home.dart';
+import 'package:tutor_helper/login_screen.dart';
+import 'package:tutor_helper/sign_up.dart';
+import 'package:tutor_helper/view_post.dart';
 
 void main() {
   runApp(SchoolManagement());
@@ -17,10 +21,10 @@ class _SchoolManagementState extends State<SchoolManagement> {
   int _selectedItemIndex = 0;
   final List pages = [
     const HomePage(),
-    null,
-    null,
+    const DocumentPage(),
     const CalendarPage(),
-    null,
+    const ViewPost(),
+    //DocumentPage(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -47,20 +51,16 @@ class _SchoolManagementState extends State<SchoolManagement> {
               ),
               BottomNavigationBarItem(
                 title: Text(""),
-                icon: Icon(Icons.insert_chart),
-              ),
-              BottomNavigationBarItem(
-                // ignore: deprecated_member_use
-                title: Text(""),
-                icon: Icon(Icons.done),
+                icon: Icon(Icons.dashboard_customize_rounded),
               ),
               BottomNavigationBarItem(
                 title: Text(""),
                 icon: Icon(Icons.calendar_today),
               ),
               BottomNavigationBarItem(
+                // ignore: deprecated_member_use
                 title: Text(""),
-                icon: Icon(Icons.chat_bubble),
+                icon: Icon(Icons.table_view_rounded),
               ),
             ],
           ),
