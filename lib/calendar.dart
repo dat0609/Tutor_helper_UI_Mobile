@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:timeago/timeago.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({Key? key}) : super(key: key);
@@ -10,6 +13,13 @@ class CalendarPage extends StatefulWidget {
 class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
+    initializeDateFormatting('vi', null);
+    final DateTime now = DateTime.now();
+    final String month = DateFormat('MMM').format(now);
+    final String year = DateFormat('y').format(now);
+    DateFormat dateOfWeekForCalendarFormat = new DateFormat('E');
+    DateFormat dayForCalendarFormat = DateFormat('d');
+
     return Stack(
       children: [
         Container(
@@ -27,8 +37,8 @@ class _CalendarPageState extends State<CalendarPage> {
                     width: 15,
                   ),
                   RichText(
-                    text: const TextSpan(
-                        text: "Oct",
+                    text: TextSpan(
+                        text: month,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Color(0XFF263064),
@@ -36,7 +46,7 @@ class _CalendarPageState extends State<CalendarPage> {
                         ),
                         children: [
                           TextSpan(
-                            text: " 2021",
+                            text: " $year",
                             style: TextStyle(
                               fontWeight: FontWeight.normal,
                               fontSize: 16,
@@ -73,13 +83,44 @@ class _CalendarPageState extends State<CalendarPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      buildDateColumn("S", 7, false),
-                      buildDateColumn("M", 8, false),
-                      buildDateColumn("T", 9, false),
-                      buildDateColumn("W", 10, true),
-                      buildDateColumn("T", 11, false),
-                      buildDateColumn("F", 12, false),
-                      buildDateColumn("S", 13, false),
+                      buildDateColumn(
+                          dateOfWeekForCalendarFormat
+                              .format(now.subtract(new Duration(days: 3))),
+                          int.parse(dayForCalendarFormat
+                              .format(now.subtract(new Duration(days: 3)))),
+                          false),
+                      buildDateColumn(
+                          dateOfWeekForCalendarFormat
+                              .format(now.subtract(new Duration(days: 2))),
+                          int.parse(dayForCalendarFormat
+                              .format(now.subtract(new Duration(days: 2)))),
+                          false),
+                      buildDateColumn(
+                          dateOfWeekForCalendarFormat
+                              .format(now.subtract(new Duration(days: 1))),
+                          int.parse(dayForCalendarFormat
+                              .format(now.subtract(new Duration(days: 1)))),
+                          false),
+                      buildDateColumn(dateOfWeekForCalendarFormat.format(now),
+                          int.parse(dayForCalendarFormat.format(now)), true),
+                      buildDateColumn(
+                          dateOfWeekForCalendarFormat
+                              .format(now.add(new Duration(days: 1))),
+                          int.parse(dayForCalendarFormat
+                              .format(now.add(new Duration(days: 1)))),
+                          false),
+                      buildDateColumn(
+                          dateOfWeekForCalendarFormat
+                              .format(now.add(new Duration(days: 2))),
+                          int.parse(dayForCalendarFormat
+                              .format(now.add(new Duration(days: 2)))),
+                          false),
+                      buildDateColumn(
+                          dateOfWeekForCalendarFormat
+                              .format(now.add(new Duration(days: 3))),
+                          int.parse(dayForCalendarFormat
+                              .format(now.add(new Duration(days: 3)))),
+                          false),
                     ],
                   ),
                 ),
