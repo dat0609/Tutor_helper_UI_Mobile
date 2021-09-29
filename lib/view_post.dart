@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tutor_helper/proflie.dart';
+import 'package:tutor_helper/profile.dart';
+import 'package:tutor_helper/date_time_format.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class ViewPost extends StatefulWidget {
   const ViewPost({Key? key}) : super(key: key);
@@ -11,6 +13,10 @@ class ViewPost extends StatefulWidget {
 class _ViewPostState extends State<ViewPost> {
   @override
   Widget build(BuildContext context) {
+    initializeDateFormatting('vi', null);
+    final DateTime now = DateTime.now();
+    DateTimeTutor dt = DateTimeTutor();
+
     return Stack(
       children: [
         Container(
@@ -30,15 +36,15 @@ class _ViewPostState extends State<ViewPost> {
               Container(
                 alignment: Alignment.centerRight,
                 child: RichText(
-                  text: const TextSpan(
-                      text: "Wed",
+                  text: TextSpan(
+                      text: dt.dateOfWeekFormat.format(now),
                       style: TextStyle(
                           color: Color(0XFF263064),
                           fontSize: 12,
                           fontWeight: FontWeight.w900),
                       children: [
                         TextSpan(
-                          text: " 10 Oct",
+                          text: " " + dt.dateFormat.format(now),
                           style: TextStyle(
                               color: Color(0XFF263064),
                               fontSize: 12,

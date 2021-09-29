@@ -5,6 +5,7 @@ import 'package:tutor_helper/home.dart';
 import 'package:tutor_helper/login_screen.dart';
 import 'package:tutor_helper/sign_up.dart';
 import 'package:tutor_helper/view_post.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(SchoolManagement());

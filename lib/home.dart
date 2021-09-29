@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tutor_helper/proflie.dart';
-import 'package:intl/intl.dart';
+import 'package:tutor_helper/profile.dart';
+import 'package:tutor_helper/date_time_format.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,11 +15,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     initializeDateFormatting('vi', null);
     final DateTime now = DateTime.now();
-    final String dateOfWeek = DateFormat('EEE').format(now);
-    final String date = DateFormat('d MMM').format(now);
-    final String userFullName = "Mingple";
-    final int numOfTodayClass = 3;
-    final int numOfTask = 6;
+    DateTimeTutor dt = DateTimeTutor();
+    // final String userFullName = "Mingple";
+    // final int numOfTodayClass = 3;
+    // final int numOfTask = 6;
 
     return Stack(
       children: [
@@ -41,14 +40,14 @@ class _HomePageState extends State<HomePage> {
                 alignment: Alignment.centerRight,
                 child: RichText(
                   text: TextSpan(
-                      text: dateOfWeek,
+                      text: dt.dateOfWeekFormat.format(now),
                       style: TextStyle(
                           color: Color(0XFF263064),
                           fontSize: 12,
                           fontWeight: FontWeight.w900),
                       children: [
                         TextSpan(
-                          text: " $date",
+                          text: " " + dt.dateFormat.format(now),
                           style: TextStyle(
                               color: Color(0XFF263064),
                               fontSize: 12,
@@ -288,11 +287,11 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
               Text(
-                "07:00",
+                ,//Time
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
-                "AM",
+                ,//Midday
                 style:
                     TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
               ),
@@ -310,7 +309,7 @@ class _HomePageState extends State<HomePage> {
               Container(
                 width: MediaQuery.of(context).size.width - 160,
                 child: const Text(
-                  "The Basic of Math II",
+                  ,//Subject Name
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -327,7 +326,7 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     width: MediaQuery.of(context).size.width - 160,
                     child: const Text(
-                      "Room C1, Faculty of Art & Design Building",
+                      ,//Address
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(color: Colors.grey, fontSize: 13),
                     ),
@@ -338,14 +337,14 @@ class _HomePageState extends State<HomePage> {
                 children: const [
                   CircleAvatar(
                     backgroundImage: NetworkImage(
-                        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=200&q=80"),
+                        //Tutor Image),
                     radius: 10,
                   ),
                   SizedBox(
                     width: 5,
                   ),
                   Text(
-                    "Gabriel Sutton",
+                    ,//TutorName
                     style: TextStyle(color: Colors.grey, fontSize: 13),
                   )
                 ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:timeago/timeago.dart';
+import 'package:tutor_helper/date_time_format.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({Key? key}) : super(key: key);
@@ -15,10 +16,7 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget build(BuildContext context) {
     initializeDateFormatting('vi', null);
     final DateTime now = DateTime.now();
-    final String month = DateFormat('MMM').format(now);
-    final String year = DateFormat('y').format(now);
-    DateFormat dateOfWeekForCalendarFormat = new DateFormat('E');
-    DateFormat dayForCalendarFormat = DateFormat('d');
+    DateTimeTutor dt = DateTimeTutor();
 
     return Stack(
       children: [
@@ -38,7 +36,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   ),
                   RichText(
                     text: TextSpan(
-                        text: month,
+                        text: dt.monthFormat.format(now),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Color(0XFF263064),
@@ -46,7 +44,7 @@ class _CalendarPageState extends State<CalendarPage> {
                         ),
                         children: [
                           TextSpan(
-                            text: " $year",
+                            text: " " + dt.yearFormat.format(now),
                             style: TextStyle(
                               fontWeight: FontWeight.normal,
                               fontSize: 16,
@@ -84,41 +82,43 @@ class _CalendarPageState extends State<CalendarPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       buildDateColumn(
-                          dateOfWeekForCalendarFormat
+                          dt.dateOfWeekForCalendarFormat
                               .format(now.subtract(new Duration(days: 3))),
-                          int.parse(dayForCalendarFormat
+                          int.parse(dt.dayForCalendarFormat
                               .format(now.subtract(new Duration(days: 3)))),
                           false),
                       buildDateColumn(
-                          dateOfWeekForCalendarFormat
+                          dt.dateOfWeekForCalendarFormat
                               .format(now.subtract(new Duration(days: 2))),
-                          int.parse(dayForCalendarFormat
+                          int.parse(dt.dayForCalendarFormat
                               .format(now.subtract(new Duration(days: 2)))),
                           false),
                       buildDateColumn(
-                          dateOfWeekForCalendarFormat
+                          dt.dateOfWeekForCalendarFormat
                               .format(now.subtract(new Duration(days: 1))),
-                          int.parse(dayForCalendarFormat
+                          int.parse(dt.dayForCalendarFormat
                               .format(now.subtract(new Duration(days: 1)))),
                           false),
-                      buildDateColumn(dateOfWeekForCalendarFormat.format(now),
-                          int.parse(dayForCalendarFormat.format(now)), true),
                       buildDateColumn(
-                          dateOfWeekForCalendarFormat
+                          dt.dateOfWeekForCalendarFormat.format(now),
+                          int.parse(dt.dayForCalendarFormat.format(now)),
+                          true),
+                      buildDateColumn(
+                          dt.dateOfWeekForCalendarFormat
                               .format(now.add(new Duration(days: 1))),
-                          int.parse(dayForCalendarFormat
+                          int.parse(dt.dayForCalendarFormat
                               .format(now.add(new Duration(days: 1)))),
                           false),
                       buildDateColumn(
-                          dateOfWeekForCalendarFormat
+                          dt.dateOfWeekForCalendarFormat
                               .format(now.add(new Duration(days: 2))),
-                          int.parse(dayForCalendarFormat
+                          int.parse(dt.dayForCalendarFormat
                               .format(now.add(new Duration(days: 2)))),
                           false),
                       buildDateColumn(
-                          dateOfWeekForCalendarFormat
+                          dt.dateOfWeekForCalendarFormat
                               .format(now.add(new Duration(days: 3))),
-                          int.parse(dayForCalendarFormat
+                          int.parse(dt.dayForCalendarFormat
                               .format(now.add(new Duration(days: 3)))),
                           false),
                     ],
@@ -169,14 +169,14 @@ class _CalendarPageState extends State<CalendarPage> {
                   children: [
                     RichText(
                       text: const TextSpan(
-                          text: "07:00",
+                          text: ,//time
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
                           children: [
                             TextSpan(
-                              text: " AM",
+                              text: ,//midday
                               style: TextStyle(
                                 fontWeight: FontWeight.normal,
                                 color: Colors.grey,
@@ -185,7 +185,7 @@ class _CalendarPageState extends State<CalendarPage> {
                           ]),
                     ),
                     const Text(
-                      "1 h 45 min",
+                      ,//time duration
                       style: TextStyle(
                         color: Colors.grey,
                       ),
@@ -210,7 +210,7 @@ class _CalendarPageState extends State<CalendarPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "Typography",
+                  ,//Subject
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
@@ -220,7 +220,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   height: 5,
                 ),
                 const Text(
-                  "The Basic of Typography I",
+                  ,//Subject Detail
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 12,
@@ -235,7 +235,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     const CircleAvatar(
                       radius: 9,
                       backgroundImage: NetworkImage(
-                          "https://images.unsplash.com/photo-1541647376583-8934aaf3448a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=200&q=80"),
+                          //TutorImage),
                     ),
                     const SizedBox(
                       width: 5,
@@ -244,7 +244,7 @@ class _CalendarPageState extends State<CalendarPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
                         Text(
-                          "Gabriel Sutton",
+                          ,//TutorName
                           style: TextStyle(
                             fontSize: 15,
                           ),
@@ -253,7 +253,7 @@ class _CalendarPageState extends State<CalendarPage> {
                           height: 5,
                         ),
                         Text(
-                          "722-085-9210",
+                          ,//TutorNumber
                           style: TextStyle(
                             color: Colors.grey,
                             fontSize: 12,
@@ -280,7 +280,7 @@ class _CalendarPageState extends State<CalendarPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
                         Text(
-                          "Faculty of Art & Design Building",
+                          ,//Address
                           style: TextStyle(
                             fontSize: 15,
                           ),
@@ -289,7 +289,7 @@ class _CalendarPageState extends State<CalendarPage> {
                           height: 5,
                         ),
                         Text(
-                          "Room C1, 1st floor",
+                          ,//Address Detail
                           style: TextStyle(
                             color: Colors.grey,
                             fontSize: 12,
