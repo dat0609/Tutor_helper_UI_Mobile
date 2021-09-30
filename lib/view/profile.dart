@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tutor_helper/login_screen.dart';
+import 'package:tutor_helper/view/login_screen.dart';
 
 class EditProfilePage extends StatefulWidget {
   @override
@@ -8,6 +8,11 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   bool showPassword = false;
+  String fullName = "";
+  String email = "";
+  String phone = "";
+  String description = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,15 +104,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(
                 height: 35,
               ),
-              buildTextField("Full Name", , false),
-              buildTextField("E-mail", , false),
-              buildTextField("Password", , true),
-              buildTextField("Phone", , false),
-              buildTextField(
-                  "Description",
-                  ,
-                  false),
-              buildTextField("Location", , false),
+              buildTextField("Full Name", fullName, false),
+              buildTextField("E-mail", email, false),
+              buildTextField("Password", "", true),
+              buildTextField("Phone", phone, false),
+              buildTextField("Description", description, false),
               const SizedBox(
                 height: 35,
               ),

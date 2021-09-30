@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tutor_helper/view/calendar.dart';
 import 'package:tutor_helper/view/document.dart';
 import 'package:tutor_helper/view/home.dart';
-import 'package:tutor_helper/view/login_screen.dart';
-import 'package:tutor_helper/view/sign_up.dart';
 import 'package:tutor_helper/view/view_post.dart';
 import 'package:get/get.dart';
 

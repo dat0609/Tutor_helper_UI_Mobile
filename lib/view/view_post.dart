@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tutor_helper/profile.dart';
-import 'package:tutor_helper/date_time_format.dart';
+import 'package:tutor_helper/view/profile.dart';
+import 'package:tutor_helper/presenter/date_time_format.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 class ViewPost extends StatefulWidget {
@@ -101,7 +101,7 @@ class _ViewPostState extends State<ViewPost> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
                       Text(
-                        "Hi Jackie",
+                        "Hi Nhat Minh",
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.w900,

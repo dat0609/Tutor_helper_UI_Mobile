@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tutor_helper/model/student.dart';
-import 'package:tutor_helper/model/tutor.dart';
+// import 'package:tutor_helper/model/student.dart';
+// import 'package:tutor_helper/model/tutor.dart';
 import 'package:tutor_helper/presenter/date_time_format.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:tutor_helper/view/profile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,9 +18,9 @@ class _HomePageState extends State<HomePage> {
     initializeDateFormatting('vi', null);
     final DateTime now = DateTime.now();
     DateTimeTutor dt = DateTimeTutor();
-    // final String userFullName = "Mingple";
-    // final int numOfTodayClass = 3;
-    // final int numOfTask = 6;
+    final String userFullName = "Nhat Minh";
+    final int numOfTodayClass = 3;
+    final int numOfTask = 3;
 
     return Stack(
       children: [
@@ -155,8 +156,14 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(
                   height: 20,
                 ),
-                buildClassItem(),
-                buildClassItem(),
+                buildClassItem(DateTime.parse("2021-10-01T07:00:00Z"), "SWD",
+                    "Google Meet", "NONE", "PhuongLHK"),
+                buildClassItem(DateTime.parse("2021-10-01T08:45:00Z"), "ISC",
+                    "Google Meet", "NONE", "HungLD"),
+                buildClassItem(DateTime.parse("2021-10-01T10:30:00Z"), "PRM",
+                    "Google Meet", "NONE", "ThanhPC"),
+
+                ///Class item
                 const SizedBox(
                   height: 25,
                 ),
@@ -168,12 +175,9 @@ class _HomePageState extends State<HomePage> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      buildTaskItem(
-                          3, "The Basic of Typography II", Colors.red),
-                      buildTaskItem(3, "Design Psychology: Principle of...",
-                          Colors.green),
-                      buildTaskItem(3, "Design Psychology: Principle of...",
-                          Colors.green),
+                      buildTaskItem(1, "Deadline", Colors.red),
+                      buildTaskItem(3, "Assignment", Colors.yellow),
+                      buildTaskItem(6, "Quiz", Colors.green),
                     ],
                   ),
                 )
@@ -272,7 +276,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Container buildClassItem() {
+  Container buildClassItem(DateTime time, String subjectName, String address,
+      String tutorImage, String tutorName) {
+    DateTimeTutor dtt = DateTimeTutor();
+    String timeString = dtt.timeFormat.format(time).split(" ")[0];
+    String midday = dtt.timeFormat.format(time).split(" ")[1];
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(10),
@@ -286,13 +294,13 @@ class _HomePageState extends State<HomePage> {
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Text(
-                ,//Time
+                timeString, //Time
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
-                ,//Midday
+                midday, //Midday
                 style:
                     TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
               ),
@@ -309,8 +317,8 @@ class _HomePageState extends State<HomePage> {
             children: [
               Container(
                 width: MediaQuery.of(context).size.width - 160,
-                child: const Text(
-                  ,//Subject Name
+                child: Text(
+                  subjectName, //Subject Name
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -326,8 +334,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width - 160,
-                    child: const Text(
-                      ,//Address
+                    child: Text(
+                      address, //Address
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(color: Colors.grey, fontSize: 13),
                     ),
@@ -335,17 +343,17 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               Row(
-                children: const [
+                children: [
                   CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        //Tutor Image),
+                    backgroundImage: NetworkImage(tutorImage //Tutor Image
+                        ),
                     radius: 10,
                   ),
                   SizedBox(
                     width: 5,
                   ),
                   Text(
-                    ,//TutorName
+                    tutorName, //TutorName
                     style: TextStyle(color: Colors.grey, fontSize: 13),
                   )
                 ],
