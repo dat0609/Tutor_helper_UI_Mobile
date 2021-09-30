@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:tutor_helper/calendar.dart';
-import 'package:tutor_helper/document.dart';
-import 'package:tutor_helper/home.dart';
-import 'package:tutor_helper/login_screen.dart';
-import 'package:tutor_helper/sign_up.dart';
-import 'package:tutor_helper/view_post.dart';
+import 'package:tutor_helper/view/calendar.dart';
+import 'package:tutor_helper/view/document.dart';
+import 'package:tutor_helper/view/home.dart';
+import 'package:tutor_helper/view/login_screen.dart';
+import 'package:tutor_helper/view/sign_up.dart';
+import 'package:tutor_helper/view/view_post.dart';
 import 'package:get/get.dart';
 
 void main() {
