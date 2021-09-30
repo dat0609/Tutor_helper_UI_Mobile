@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tutor_helper/profile.dart';
-import 'package:tutor_helper/date_time_format.dart';
+import 'package:tutor_helper/model/student.dart';
+import 'package:tutor_helper/model/tutor.dart';
+import 'package:tutor_helper/presenter/date_time_format.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 class HomePage extends StatefulWidget {

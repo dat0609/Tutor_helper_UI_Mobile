@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:timeago/timeago.dart';
-import 'package:tutor_helper/date_time_format.dart';
+import 'package:tutor_helper/presenter/date_time_format.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({Key? key}) : super(key: key);
@@ -128,9 +128,17 @@ class _CalendarPageState extends State<CalendarPage> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        buildTaskListItem(),
-                        buildTaskListItem(),
-                        buildTaskListItem(),
+                        //Task list
+                        buildClassDetail(
+                            DateTime.now(),
+                            DateTime.now().add(Duration(hours: 1, minutes: 40)),
+                            "subjectName",
+                            "subjectDetail",
+                            "tutorImage",
+                            "tutorName",
+                            "tutorNumber",
+                            "address",
+                            "addressDetail")
                       ],
                     ),
                   ),
@@ -143,7 +151,20 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 
-  Container buildTaskListItem() {
+  Container buildClassDetail(
+      DateTime startTime,
+      DateTime endTime,
+      String subjectName,
+      String subjectDetail,
+      String tutorImage,
+      String tutorName,
+      String tutorNumber,
+      String address,
+      String addressDetail) {
+    DateTimeTutor dtt = DateTimeTutor();
+    String startTimeString = dtt.timeFormat.format(startTime).split(" ")[0];
+    String timeDuration = dtt.getDurationTime(startTime, endTime);
+    String midday = dtt.timeFormat.format(startTime).split(" ")[1];
     return Container(
       margin: const EdgeInsets.only(bottom: 25),
       child: Column(
@@ -168,15 +189,15 @@ class _CalendarPageState extends State<CalendarPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     RichText(
-                      text: const TextSpan(
-                          text: ,//time
+                      text: TextSpan(
+                          text: startTimeString, //StartTime
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
                           children: [
                             TextSpan(
-                              text: ,//midday
+                              text: midday, //midday
                               style: TextStyle(
                                 fontWeight: FontWeight.normal,
                                 color: Colors.grey,
@@ -184,8 +205,8 @@ class _CalendarPageState extends State<CalendarPage> {
                             )
                           ]),
                     ),
-                    const Text(
-                      ,//time duration
+                    Text(
+                      timeDuration, //time duration
                       style: TextStyle(
                         color: Colors.grey,
                       ),
@@ -209,8 +230,8 @@ class _CalendarPageState extends State<CalendarPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  ,//Subject
+                Text(
+                  subjectName, //Subject
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
@@ -219,8 +240,8 @@ class _CalendarPageState extends State<CalendarPage> {
                 const SizedBox(
                   height: 5,
                 ),
-                const Text(
-                  ,//Subject Detail
+                Text(
+                  subjectDetail, //Subject Detail
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 12,
@@ -232,19 +253,19 @@ class _CalendarPageState extends State<CalendarPage> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 9,
-                      backgroundImage: NetworkImage(
-                          //TutorImage),
+                      backgroundImage: NetworkImage(tutorImage //TutorImage
+                          ),
                     ),
                     const SizedBox(
                       width: 5,
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
-                          ,//TutorName
+                          tutorName, //TutorName
                           style: TextStyle(
                             fontSize: 15,
                           ),
@@ -253,7 +274,7 @@ class _CalendarPageState extends State<CalendarPage> {
                           height: 5,
                         ),
                         Text(
-                          ,//TutorNumber
+                          tutorNumber, //TutorNumber
                           style: TextStyle(
                             color: Colors.grey,
                             fontSize: 12,
@@ -278,9 +299,9 @@ class _CalendarPageState extends State<CalendarPage> {
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
-                          ,//Address
+                          address, //Address
                           style: TextStyle(
                             fontSize: 15,
                           ),
@@ -289,7 +310,7 @@ class _CalendarPageState extends State<CalendarPage> {
                           height: 5,
                         ),
                         Text(
-                          ,//Address Detail
+                          addressDetail, //Address Detail
                           style: TextStyle(
                             color: Colors.grey,
                             fontSize: 12,

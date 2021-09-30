@@ -1,81 +1,31 @@
 class User {
-  String userID;
-  String fullName;
-  String phoneNumber;
-  late DateTime createAt;
-  late DateTime updateAt;
+  int userID;
+  String email;
+  int roleID;
 
-  User(this.userID, this.fullName, this.phoneNumber, this.createAt,
-      this.updateAt);
+  User(this.userID, this.email, this.roleID);
 
-  String get getUserID {
+  int get getUserID {
     return userID;
   }
 
-  set setUserID(String userID) {
+  set setUserID(int userID) {
     this.userID = userID;
   }
 
-  String get getFullName {
-    return fullName;
+  String get getEmail {
+    return email;
   }
 
-  set getFullName(String fullName) {
-    this.fullName = fullName;
+  set getEmail(String email) {
+    this.email = email;
   }
 
-  String get getPhoneNumber {
-    return phoneNumber;
+  int get getRoleID {
+    return roleID;
   }
 
-  set setPhoneNumber(String phoneNumber) {
-    this.phoneNumber = phoneNumber;
-  }
-
-  DateTime get getCreateAt {
-    return createAt;
-  }
-
-  set setCreateAt(DateTime createAt) {
-    this.createAt = createAt;
-  }
-
-  DateTime get getUpdateAtt {
-    return createAt;
-  }
-
-  set setUpdateAt(DateTime updateAt) {
-    this.updateAt = updateAt;
-  }
-}
-
-class Student extends User {
-  String schoolID = '';
-  String gradeID = '';
-
-  Student(this.schoolID, this.gradeID, String userID, String fullName,
-      String phoneNumber, DateTime createAt, DateTime updateAt)
-      : super(userID, fullName, phoneNumber, createAt, updateAt) {
-    super.userID = userID;
-    super.fullName = fullName;
-    super.phoneNumber = phoneNumber;
-    super.createAt = createAt;
-    super.updateAt = updateAt;
-  }
-
-  String get getSchoolID {
-    return schoolID;
-  }
-
-  set setSchoolID(String schoolID) {
-    this.schoolID = schoolID;
-  }
-
-  String get getGradeID {
-    return gradeID;
-  }
-
-  set setGradeID(String gradeID) {
-    this.gradeID = gradeID;
+  set setRoleID(int roleID) {
+    this.roleID = roleID;
   }
 }
