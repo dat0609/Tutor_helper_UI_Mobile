@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
-// import 'package:tutor_helper/model/student.dart';
-// import 'package:tutor_helper/model/tutor.dart';
+import 'package:tutor_helper/api/api_manage.dart';
+import 'package:tutor_helper/model/tutors.dart';
+import 'package:tutor_helper/view/student_page/profile.dart';
 import 'package:tutor_helper/presenter/date_time_format.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:tutor_helper/view/profile.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class StudentViewPost extends StatefulWidget {
+  const StudentViewPost({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _StudentViewPostState createState() => _StudentViewPostState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _StudentViewPostState extends State<StudentViewPost> {
+  late Future<Tutors> _tutors;
+
+  @override
+  void initState() {
+    _tutors = API_Manager().getTutors();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    String imageLink = "assets/images/default_avatar.png";
     initializeDateFormatting('vi', null);
     final DateTime now = DateTime.now();
     DateTimeTutor dt = DateTimeTutor();
-    final String userFullName = "Nhat Minh";
-    final int numOfTodayClass = 3;
-    final int numOfTask = 3;
 
     return Stack(
       children: [
@@ -85,8 +91,8 @@ class _HomePageState extends State<HomePage> {
                         // ),
                       ),
                       child: GestureDetector(
-                        child: Image.network(
-                          "https://images.unsplash.com/photo-1541647376583-8934aaf3448a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1234&q=80",
+                        child: Image.asset(
+                          imageLink,
                           fit: BoxFit.cover,
                           width: 50,
                           height: 50,
@@ -95,7 +101,7 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => EditProfilePage()),
+                                builder: (context) => StudentEditProfilePage()),
                           );
                         },
                       )),
@@ -105,29 +111,34 @@ class _HomePageState extends State<HomePage> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Hi $userFullName",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0XFF343E87),
-                        ),
+                      FutureBuilder<Tutors>(
+                        future: _tutors,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            String fullName = snapshot.data!.data.fullName;
+                            return Text(
+                              "Hi $fullName",
+                              style: const TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w900,
+                                color: Color(0XFF343E87),
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text('${snapshot.error}');
+                          } else {
+                            return const CircularProgressIndicator();
+                          }
+                        },
                       ),
                       SizedBox(
                         height: 10,
-                      ),
-                      Text(
-                        "Here is a list of schedule",
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.blueGrey,
-                        ),
                       ),
                       SizedBox(
                         height: 8,
                       ),
                       Text(
-                        "You need to check...",
+                        "Check out some post of students",
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.blueGrey,
@@ -152,95 +163,22 @@ class _HomePageState extends State<HomePage> {
             ),
             child: ListView(
               children: [
-                buildTitleRow("Today classes", numOfTodayClass),
+                buildTitleRow("Student posts", 2),
                 const SizedBox(
                   height: 20,
                 ),
-                buildClassItem(DateTime.parse("2021-10-01T07:00:00Z"), "SWD",
-                    "Google Meet", "NONE", "PhuongLHK"),
-                buildClassItem(DateTime.parse("2021-10-01T08:45:00Z"), "ISC",
-                    "Google Meet", "NONE", "HungLD"),
-                buildClassItem(DateTime.parse("2021-10-01T10:30:00Z"), "PRM",
-                    "Google Meet", "NONE", "ThanhPC"),
-
-                ///Class item
+                buildClassItem(
+                    "Math 2", "1050 CMT8", "3/10/2021", "Loc", "Picture"),
+                buildClassItem("English 4", "391 Cộng Hòa", "9/11/2021", "Anh",
+                    "Picture 2"),
                 const SizedBox(
                   height: 25,
                 ),
-                buildTitleRow("Your task", numOfTask),
-                const SizedBox(
-                  height: 20,
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      buildTaskItem(1, "Deadline", Colors.red),
-                      buildTaskItem(3, "Assignment", Colors.yellow),
-                      buildTaskItem(6, "Quiz", Colors.green),
-                    ],
-                  ),
-                )
               ],
             ),
           ),
         )
       ],
-    );
-  }
-
-  Container buildTaskItem(int numDays, String courseTitle, Color color) {
-    return Container(
-      margin: const EdgeInsets.only(right: 15),
-      padding: const EdgeInsets.all(12),
-      height: 140,
-      width: 140,
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Deadline",
-            style: TextStyle(fontSize: 10, color: Colors.grey),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Row(
-            children: [
-              Container(
-                height: 6,
-                width: 6,
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(3),
-                ),
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              Text(
-                "$numDays days left",
-                style:
-                    const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Container(
-            width: 100,
-            child: Text(
-              courseTitle,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -276,11 +214,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Container buildClassItem(DateTime time, String subjectName, String address,
-      String tutorImage, String tutorName) {
-    DateTimeTutor dtt = DateTimeTutor();
-    String timeString = dtt.timeFormat.format(time).split(" ")[0];
-    String midday = dtt.timeFormat.format(time).split(" ")[1];
+  Container buildClassItem(String courseTitle, String address, String date,
+      String fullName, String imageLink) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(10),
@@ -296,11 +231,11 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                timeString, //Time
+                "Start",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
-                midday, //Midday
+                date,
                 style:
                     TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
               ),
@@ -318,8 +253,9 @@ class _HomePageState extends State<HomePage> {
               Container(
                 width: MediaQuery.of(context).size.width - 160,
                 child: Text(
-                  subjectName, //Subject Name
-                  overflow: TextOverflow.ellipsis,
+                  courseTitle,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.green),
                 ),
               ),
               Row(
@@ -332,32 +268,47 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(
                     width: 5,
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width - 160,
-                    child: Text(
-                      address, //Address
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(color: Colors.grey, fontSize: 13),
-                    ),
+                  Row(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width - 160,
+                        child: Text(
+                          address,
+                          overflow: TextOverflow.ellipsis,
+                          style:
+                              const TextStyle(color: Colors.grey, fontSize: 13),
+                        ),
+                      ),
+                    ],
                   )
                 ],
               ),
               Row(
                 children: [
                   CircleAvatar(
-                    backgroundImage: NetworkImage(tutorImage //Tutor Image
-                        ),
+                    backgroundImage: NetworkImage(imageLink),
                     radius: 10,
                   ),
                   SizedBox(
                     width: 5,
                   ),
                   Text(
-                    tutorName, //TutorName
+                    fullName,
                     style: TextStyle(color: Colors.grey, fontSize: 13),
-                  )
+                  ),
                 ],
               ),
+              // Row(
+              //   children: [
+              //     IconButton(
+              //       // ignore: avoid_print
+              //       onPressed: () {
+              //         print("123");
+              //       },
+              //       icon: const Icon(Icons.volume_up),
+              //     ),
+              //   ],
+              // )
             ],
           )
         ],

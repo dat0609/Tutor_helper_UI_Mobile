@@ -1,18 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:tutor_helper/view/profile.dart';
+import 'package:tutor_helper/api/api_manage.dart';
+import 'package:tutor_helper/model/tutors.dart';
+import 'package:tutor_helper/view/tutor_page/profile.dart';
 import 'package:tutor_helper/presenter/date_time_format.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-class ViewPost extends StatefulWidget {
-  const ViewPost({Key? key}) : super(key: key);
+class TutorViewPost extends StatefulWidget {
+  const TutorViewPost({Key? key}) : super(key: key);
 
   @override
-  _ViewPostState createState() => _ViewPostState();
+  _TutorViewPostState createState() => _TutorViewPostState();
 }
 
-class _ViewPostState extends State<ViewPost> {
+class _TutorViewPostState extends State<TutorViewPost> {
+  late Future<Tutors> _tutors;
+
+  @override
+  void initState() {
+    _tutors = API_Manager().getTutors();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    String imageLink = "assets/images/default_avatar.png";
     initializeDateFormatting('vi', null);
     final DateTime now = DateTime.now();
     DateTimeTutor dt = DateTimeTutor();
@@ -80,8 +91,8 @@ class _ViewPostState extends State<ViewPost> {
                         // ),
                       ),
                       child: GestureDetector(
-                        child: Image.network(
-                          "https://images.unsplash.com/photo-1541647376583-8934aaf3448a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1234&q=80",
+                        child: Image.asset(
+                          imageLink,
                           fit: BoxFit.cover,
                           width: 50,
                           height: 50,
@@ -90,7 +101,7 @@ class _ViewPostState extends State<ViewPost> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => EditProfilePage()),
+                                builder: (context) => TutorEditProfilePage()),
                           );
                         },
                       )),
@@ -99,14 +110,26 @@ class _ViewPostState extends State<ViewPost> {
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        "Hi Nhat Minh",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w900,
-                          color: Color(0XFF343E87),
-                        ),
+                    children: [
+                      FutureBuilder<Tutors>(
+                        future: _tutors,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            String fullName = snapshot.data!.data.fullName;
+                            return Text(
+                              "Hi $fullName",
+                              style: const TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w900,
+                                color: Color(0XFF343E87),
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text('${snapshot.error}');
+                          } else {
+                            return const CircularProgressIndicator();
+                          }
+                        },
                       ),
                       SizedBox(
                         height: 10,
@@ -140,17 +163,14 @@ class _ViewPostState extends State<ViewPost> {
             ),
             child: ListView(
               children: [
-                buildTitleRow("Student posts", 10),
+                buildTitleRow("Student posts", 2),
                 const SizedBox(
                   height: 20,
                 ),
-                buildClassItem("Philosophy of marxism and Leninism",
-                    "123 Ho Thi Dau", "1"),
                 buildClassItem(
-                    "The Basic of Typography II", "53 Le Van Tam", "1"),
-                buildClassItem("Design Psychology: Principle Design",
-                    "13/2 Truong Dinh", "1"),
-                buildClassItem("The Basic of Math II", "53 Le Van Ky", "1"),
+                    "Math 2", "1050 CMT8", "3/10/2021", "Loc", "Picture"),
+                buildClassItem("English 4", "391 Cộng Hòa", "9/11/2021", "Anh",
+                    "Picture 2"),
                 const SizedBox(
                   height: 25,
                 ),
@@ -194,7 +214,8 @@ class _ViewPostState extends State<ViewPost> {
     );
   }
 
-  Container buildClassItem(String courseTitle, String address, String date) {
+  Container buildClassItem(String courseTitle, String address, String date,
+      String fullName, String imageLink) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(10),
@@ -208,13 +229,13 @@ class _ViewPostState extends State<ViewPost> {
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Text(
                 "Start",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
-                "1/10/2021",
+                date,
                 style:
                     TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
               ),
@@ -263,17 +284,16 @@ class _ViewPostState extends State<ViewPost> {
                 ],
               ),
               Row(
-                children: const [
+                children: [
                   CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=200&q=80"),
+                    backgroundImage: NetworkImage(imageLink),
                     radius: 10,
                   ),
                   SizedBox(
                     width: 5,
                   ),
                   Text(
-                    "Gabriel Sutton",
+                    fullName,
                     style: TextStyle(color: Colors.grey, fontSize: 13),
                   ),
                 ],

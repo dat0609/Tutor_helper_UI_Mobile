@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:tutor_helper/api/api_manage.dart';
+import 'package:tutor_helper/model/tutors.dart';
 import 'package:tutor_helper/view/login_screen.dart';
 
-class EditProfilePage extends StatefulWidget {
+class StudentEditProfilePage extends StatefulWidget {
   @override
-  _EditProfilePageState createState() => _EditProfilePageState();
+  _StudentEditProfilePageState createState() => _StudentEditProfilePageState();
 }
 
-class _EditProfilePageState extends State<EditProfilePage> {
+class _StudentEditProfilePageState extends State<StudentEditProfilePage> {
+  late Future<Tutors> _tutors;
+
+  @override
+  void initState() {
+    _tutors = API_Manager().getTutors();
+    super.initState();
+  }
+
   bool showPassword = false;
   String fullName = "";
   String email = "";
-  String phone = "";
-  String description = "";
+  String phoneNumber = "";
+  String imageLink = "assets/images/default_avatar.png";
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +44,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
+                MaterialPageRoute(builder: (context) => const LoginPage()),
               );
             },
           ),
@@ -73,10 +83,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 offset: const Offset(0, 10))
                           ],
                           shape: BoxShape.circle,
-                          image: const DecorationImage(
+                          image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: NetworkImage(
-                                "https://images.unsplash.com/photo-1541647376583-8934aaf3448a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1234&q=80",
+                              image: AssetImage(
+                                imageLink,
                               ))),
                     ),
                     Positioned(
@@ -104,11 +114,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(
                 height: 35,
               ),
-              buildTextField("Full Name", fullName, false),
-              buildTextField("E-mail", email, false),
-              buildTextField("Password", "", true),
-              buildTextField("Phone", phone, false),
-              buildTextField("Description", description, false),
+              FutureBuilder<Tutors>(
+                future: _tutors,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    var data = snapshot.data!.data;
+                    fullName = data.fullName;
+                    email = data.email;
+                    phoneNumber = data.phoneNumber;
+                    return const Text("");
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  } else {
+                    return const Text("");
+                  }
+                },
+              ),
+              buildTextField("Full Name", fullName),
+              buildTextField("E-mail", email),
+              buildTextField("Phone", phoneNumber),
               const SizedBox(
                 height: 35,
               ),
@@ -129,7 +153,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             color: Colors.black)),
                   ),
                   RaisedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      //Save xuống database
+                    },
                     color: Colors.blue[500],
                     padding: const EdgeInsets.symmetric(horizontal: 50),
                     elevation: 2,
@@ -152,26 +178,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  Widget buildTextField(
-      String labelText, String placeholder, bool isPasswordTextField) {
+  Widget buildTextField(String labelText, String placeholder) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0),
       child: TextField(
-        obscureText: isPasswordTextField ? showPassword : false,
         decoration: InputDecoration(
-            suffixIcon: isPasswordTextField
-                ? IconButton(
-                    onPressed: () {
-                      setState(() {
-                        showPassword = !showPassword;
-                      });
-                    },
-                    icon: const Icon(
-                      Icons.remove_red_eye,
-                      color: Colors.grey,
-                    ),
-                  )
-                : null,
             contentPadding: const EdgeInsets.only(bottom: 3),
             labelText: labelText,
             floatingLabelBehavior: FloatingLabelBehavior.always,

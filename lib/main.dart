@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:tutor_helper/view/calendar.dart';
-import 'package:tutor_helper/view/document.dart';
-import 'package:tutor_helper/view/home.dart';
-import 'package:tutor_helper/view/view_post.dart';
-import 'package:get/get.dart';
+import 'package:tutor_helper/view/tutor_page/calendar.dart';
+import 'package:tutor_helper/view/tutor_page/document.dart';
+import 'package:tutor_helper/view/tutor_page/home.dart';
+import 'package:tutor_helper/view/login_screen.dart';
+import 'package:tutor_helper/view/tutor_page/view_post.dart';
+import 'package:tutor_helper/view/student_page/calendar.dart';
+import 'package:tutor_helper/view/student_page/document.dart';
+import 'package:tutor_helper/view/student_page/home.dart';
+import 'package:tutor_helper/view/login_screen.dart';
+import 'package:tutor_helper/view/student_page/view_post.dart';
 
 void main() {
-  runApp(SchoolManagement());
+  runApp(const SchoolManagement());
 }
 
 class SchoolManagement extends StatefulWidget {
@@ -17,16 +22,32 @@ class SchoolManagement extends StatefulWidget {
 }
 
 class _SchoolManagementState extends State<SchoolManagement> {
-  int _selectedItemIndex = 0;
-  final List pages = [
-    const HomePage(),
-    const DocumentPage(),
-    const CalendarPage(),
-    const ViewPost(),
-    //DocumentPage(),
-  ];
+  int _selectedItemIndex = 0; //TODO:RoleID = 1 thì là Tutor,=2 thì là Student
+
   @override
   Widget build(BuildContext context) {
+    bool loggedin = true;
+    int roleID = 1;
+    List pages = [
+      const TutorHomePage(),
+      TutorDocumentPage(),
+      const TutorCalendarPage(),
+      const TutorViewPost(),
+    ];
+    if (roleID == 2) {
+      pages = [
+        const StudentHomePage(),
+        StudentDocumentPage(),
+        const StudentCalendarPage(),
+        const StudentViewPost(), //Upload Post
+      ];
+    }
+    if (loggedin == false) {
+      return const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: LoginPage(),
+      );
+    }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -45,20 +66,20 @@ class _SchoolManagementState extends State<SchoolManagement> {
             },
             items: const [
               BottomNavigationBarItem(
-                title: Text(""),
+                title: Text("Home"),
                 icon: Icon(Icons.home),
               ),
               BottomNavigationBarItem(
-                title: Text(""),
+                title: Text("Document"),
                 icon: Icon(Icons.dashboard_customize_rounded),
               ),
               BottomNavigationBarItem(
-                title: Text(""),
+                title: Text("Calendar"),
                 icon: Icon(Icons.calendar_today),
               ),
               BottomNavigationBarItem(
                 // ignore: deprecated_member_use
-                title: Text(""),
+                title: Text("Post"),
                 icon: Icon(Icons.table_view_rounded),
               ),
             ],

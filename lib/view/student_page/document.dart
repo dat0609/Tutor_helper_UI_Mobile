@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-class DocumentPage extends StatelessWidget {
-  const DocumentPage({Key? key}) : super(key: key);
+class StudentDocumentPage extends StatelessWidget {
+  StudentDocumentPage({Key? key}) : super(key: key);
+  String fullName = "Nhat Minh";
+  String imageLink = "assets/images/default_avatar.png";
 
   @override
   Widget build(BuildContext context) {
@@ -49,15 +51,18 @@ class DocumentPage extends StatelessWidget {
               ],
             ),
           ),
-          _cardItem("https://www.computerhope.com/jargon/t/task.png"),
           _cardItem(
-              "https://images.unsplash.com/photo-1541647376583-8934aaf3448a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1234&q=80"),
+            "https://www.computerhope.com/jargon/t/task.png",
+            "English 1",
+            3,
+            "Learn to say hello in japanese :\">",
+          ),
         ],
       ),
     );
   }
 
-  _cardItem(String image) {
+  _cardItem(String image, String title, int numOfTask, String description) {
     return Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(children: <Widget>[
@@ -73,14 +78,14 @@ class DocumentPage extends StatelessWidget {
           const SizedBox(width: 20.0),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const <Widget>[
-              Text("Hahaaaaaaaaaaaaaaaaaa",
+            children: <Widget>[
+              Text(title,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
               SizedBox(width: 10),
-              Text("2 items",
+              Text("$numOfTask items",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
               SizedBox(height: 10.0),
-              Text("haha",
+              Text(description,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))
             ],
           )
@@ -95,7 +100,7 @@ class DocumentPage extends StatelessWidget {
           size: 16.0,
           color: Colors.white,
         ),
-        backgroundColor: Colors.deepOrange.withOpacity(0.9),
+        backgroundColor: Colors.cyan[700],
       ),
       const SizedBox(
         height: 10.0,
@@ -123,14 +128,13 @@ class DocumentPage extends StatelessWidget {
           Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Row(children: const <Widget>[
+                Row(children: <Widget>[
                   CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        "https://images.unsplash.com/photo-1541647376583-8934aaf3448a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1234&q=80"),
+                    backgroundImage: AssetImage("$imageLink"),
                   ),
                   SizedBox(width: 10.0),
                   Text(
-                    "Hi Jackie",
+                    "Hi $fullName",
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w900,

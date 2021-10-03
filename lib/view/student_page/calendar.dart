@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:timeago/timeago.dart';
 import 'package:tutor_helper/presenter/date_time_format.dart';
 
-class CalendarPage extends StatefulWidget {
-  const CalendarPage({Key? key}) : super(key: key);
+class StudentCalendarPage extends StatefulWidget {
+  const StudentCalendarPage({Key? key}) : super(key: key);
 
   @override
-  _CalendarPageState createState() => _CalendarPageState();
+  _StudentCalendarPageState createState() => _StudentCalendarPageState();
 }
 
-class _CalendarPageState extends State<CalendarPage> {
+class _StudentCalendarPageState extends State<StudentCalendarPage> {
   @override
   Widget build(BuildContext context) {
     initializeDateFormatting('vi', null);
     final DateTime now = DateTime.now();
-    DateTimeTutor dt = DateTimeTutor();
+    DateTimeTutor dtt = DateTimeTutor();
 
     return Stack(
       children: [
@@ -36,7 +34,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   ),
                   RichText(
                     text: TextSpan(
-                        text: dt.monthFormat.format(now),
+                        text: dtt.monthFormat.format(now),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Color(0XFF263064),
@@ -44,7 +42,7 @@ class _CalendarPageState extends State<CalendarPage> {
                         ),
                         children: [
                           TextSpan(
-                            text: " " + dt.yearFormat.format(now),
+                            text: " " + dtt.yearFormat.format(now),
                             style: TextStyle(
                               fontWeight: FontWeight.normal,
                               fontSize: 16,
@@ -82,43 +80,43 @@ class _CalendarPageState extends State<CalendarPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       buildDateColumn(
-                          dt.dateOfWeekForCalendarFormat
+                          dtt.dateOfWeekForCalendarFormat
                               .format(now.subtract(new Duration(days: 3))),
-                          int.parse(dt.dayForCalendarFormat
+                          int.parse(dtt.dayForCalendarFormat
                               .format(now.subtract(new Duration(days: 3)))),
                           false),
                       buildDateColumn(
-                          dt.dateOfWeekForCalendarFormat
+                          dtt.dateOfWeekForCalendarFormat
                               .format(now.subtract(new Duration(days: 2))),
-                          int.parse(dt.dayForCalendarFormat
+                          int.parse(dtt.dayForCalendarFormat
                               .format(now.subtract(new Duration(days: 2)))),
                           false),
                       buildDateColumn(
-                          dt.dateOfWeekForCalendarFormat
+                          dtt.dateOfWeekForCalendarFormat
                               .format(now.subtract(new Duration(days: 1))),
-                          int.parse(dt.dayForCalendarFormat
+                          int.parse(dtt.dayForCalendarFormat
                               .format(now.subtract(new Duration(days: 1)))),
                           false),
                       buildDateColumn(
-                          dt.dateOfWeekForCalendarFormat.format(now),
-                          int.parse(dt.dayForCalendarFormat.format(now)),
+                          dtt.dateOfWeekForCalendarFormat.format(now),
+                          int.parse(dtt.dayForCalendarFormat.format(now)),
                           true),
                       buildDateColumn(
-                          dt.dateOfWeekForCalendarFormat
+                          dtt.dateOfWeekForCalendarFormat
                               .format(now.add(new Duration(days: 1))),
-                          int.parse(dt.dayForCalendarFormat
+                          int.parse(dtt.dayForCalendarFormat
                               .format(now.add(new Duration(days: 1)))),
                           false),
                       buildDateColumn(
-                          dt.dateOfWeekForCalendarFormat
+                          dtt.dateOfWeekForCalendarFormat
                               .format(now.add(new Duration(days: 2))),
-                          int.parse(dt.dayForCalendarFormat
+                          int.parse(dtt.dayForCalendarFormat
                               .format(now.add(new Duration(days: 2)))),
                           false),
                       buildDateColumn(
-                          dt.dateOfWeekForCalendarFormat
+                          dtt.dateOfWeekForCalendarFormat
                               .format(now.add(new Duration(days: 3))),
-                          int.parse(dt.dayForCalendarFormat
+                          int.parse(dtt.dayForCalendarFormat
                               .format(now.add(new Duration(days: 3)))),
                           false),
                     ],
@@ -130,8 +128,8 @@ class _CalendarPageState extends State<CalendarPage> {
                       children: [
                         //Task list
                         buildClassDetail(
-                            DateTime.now(),
-                            DateTime.now().add(Duration(hours: 1, minutes: 40)),
+                            DateTime.parse("2021-10-01T08:45:00Z"),
+                            DateTime.parse("2021-10-01T09:45:00Z"),
                             "subjectName",
                             "subjectDetail",
                             "tutorImage",
