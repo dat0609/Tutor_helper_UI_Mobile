@@ -31,28 +31,23 @@ class _TutorLoginPageState extends State<TutorLoginPage> {
         setState(() {});
         return;
       }
-
       final _googleSigninAuthentication =
           await _googleSignInAccount.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: _googleSigninAuthentication.accessToken,
         idToken: _googleSigninAuthentication.idToken,
       );
+      String accessToken = _googleSigninAuthentication.accessToken.toString();
+      String idToken = _googleSigninAuthentication.idToken.toString();
       await FirebaseAuth.instance.signInWithCredential(credential);
-      await storage.write(
-          key: "accessToken",
-          value: _googleSigninAuthentication.accessToken.toString());
-      await storage.write(
-          key: "idToken",
-          value: _googleSigninAuthentication.idToken.toString());
-      await storage.write(key: "loginStatus", value: "logined");
-      var sign_in_url = Uri.parse(Strings.signin_url);
-      await https.post(sign_in_url, headers: {
+      await storage.write(key: "accessToken", value: accessToken);
+      await storage.write(key: "idToken", value: idToken);
+      await https.post(Uri.parse(Strings.signin_url), headers: {
         "Content-type": "application/json",
         "Accept": "application/json",
-        "idToken": _googleSigninAuthentication.idToken.toString(),
+        "idToken": idToken,
         "role": "tutor",
-        "accessToken": _googleSigninAuthentication.accessToken.toString(),
+        "accessToken": accessToken,
       });
 
       Get.to(() => const TutorManagement());
