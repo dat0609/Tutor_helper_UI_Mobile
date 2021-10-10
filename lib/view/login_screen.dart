@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:get/get.dart';
+import 'package:tutor_helper/view/student_page/login_screen.dart';
+import 'package:tutor_helper/view/tutor_page/tutor_login_screen.dart';
 
-class LoginPage extends StatelessWidget {
+import '../main.dart';
+
+class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,21 +36,40 @@ class LoginPage extends StatelessWidget {
                 Column(
                   children: <Widget>[
                     const Text(
-                      "Login",
+                      "Please login...",
                       style:
                           TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
                       height: 20,
                     ),
-                    Text(
-                      "Login to your account",
-                      style: TextStyle(fontSize: 15, color: Colors.black),
+                    const Text(
+                      "What role are you?",
+                      style: TextStyle(fontSize: 18, color: Colors.black),
                     ),
-                    SignInButton(
-                      Buttons.Google,
-                      onPressed: () {},
-                    )
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        RaisedButton.icon(
+                          onPressed: () {
+                            const MaterialApp(
+                              debugShowCheckedModeBanner: false,
+                              home: StudentLoginPage(),
+                            );
+                          },
+                          icon: const Icon(Icons.book_online_outlined),
+                          label: const Text("Student"),
+                          color: Colors.amberAccent,
+                        ),
+                        RaisedButton.icon(
+                            onPressed: () {
+                              Get.to(() => const TutorLoginPage());
+                            },
+                            icon: const Icon(Icons.class__outlined),
+                            label: const Text("Tutor"),
+                            color: Colors.cyan),
+                      ],
+                    ),
                   ],
                 ),
               ],

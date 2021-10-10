@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_manage.dart';
 import 'package:tutor_helper/model/tutors.dart';
 import 'package:tutor_helper/view/tutor_page/profile.dart';
@@ -23,6 +24,8 @@ class _TutorViewPostState extends State<TutorViewPost> {
 
   @override
   Widget build(BuildContext context) {
+    var data = Get.arguments;
+    print(data);
     String imageLink = "assets/images/default_avatar.png";
     initializeDateFormatting('vi', null);
     final DateTime now = DateTime.now();
@@ -115,7 +118,7 @@ class _TutorViewPostState extends State<TutorViewPost> {
                         future: _tutors,
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            String fullName = snapshot.data!.data.fullName;
+                            String fullName = snapshot.data!.data[0].fullName;
                             return Text(
                               "Hi $fullName",
                               style: const TextStyle(

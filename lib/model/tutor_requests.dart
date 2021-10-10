@@ -37,7 +37,6 @@ class Data {
     this.grade,
     this.student,
     this.subject,
-    required this.classes,
     required this.courses,
   });
   late final int tutorRequestId;
@@ -52,7 +51,6 @@ class Data {
   late final Null grade;
   late final Null student;
   late final Null subject;
-  late final List<dynamic> classes;
   late final List<dynamic> courses;
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -68,7 +66,6 @@ class Data {
     grade = json['grade'];
     student = json['student'];
     subject = json['subject'];
-    classes = List.castFrom<dynamic, dynamic>(json['classes']);
     courses = List.castFrom<dynamic, dynamic>(json['courses']);
   }
 
@@ -86,7 +83,6 @@ class Data {
     _data['grade'] = grade;
     _data['student'] = student;
     _data['subject'] = subject;
-    _data['classes'] = classes;
     _data['courses'] = courses;
     return _data;
   }

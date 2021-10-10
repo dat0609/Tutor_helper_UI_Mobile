@@ -119,9 +119,9 @@ class _StudentEditProfilePageState extends State<StudentEditProfilePage> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     var data = snapshot.data!.data;
-                    fullName = data.fullName;
-                    email = data.email;
-                    phoneNumber = data.phoneNumber;
+                    // fullName = data.fullName;
+                    // email = data.email;
+                    // phoneNumber = data.phoneNumber;
                     return const Text("");
                   } else if (snapshot.hasError) {
                     return Text('${snapshot.error}');

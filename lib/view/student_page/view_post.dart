@@ -111,26 +111,26 @@ class _StudentViewPostState extends State<StudentViewPost> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      FutureBuilder<Tutors>(
-                        future: _tutors,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            String fullName = snapshot.data!.data.fullName;
-                            return Text(
-                              "Hi $fullName",
-                              style: const TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w900,
-                                color: Color(0XFF343E87),
-                              ),
-                            );
-                          } else if (snapshot.hasError) {
-                            return Text('${snapshot.error}');
-                          } else {
-                            return const CircularProgressIndicator();
-                          }
-                        },
-                      ),
+                      // FutureBuilder<Tutors>(
+                      //   future: _tutors,
+                      //   builder: (context, snapshot) {
+                      //     if (snapshot.hasData) {
+                      //       // String fullName = snapshot.data!.data.fullName;
+                      //       return Text(
+                      //         "Hi $fullName",
+                      //         style: const TextStyle(
+                      //           fontSize: 25,
+                      //           fontWeight: FontWeight.w900,
+                      //           color: Color(0XFF343E87),
+                      //         ),
+                      //       );
+                      //     } else if (snapshot.hasError) {
+                      //       return Text('${snapshot.error}');
+                      //     } else {
+                      //       return const CircularProgressIndicator();
+                      //     }
+                      //   },
+                      // ),
                       SizedBox(
                         height: 10,
                       ),

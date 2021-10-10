@@ -1,5 +1,4 @@
-import 'package:tutor_helper/model/tutors.dart';
-import 'package:tutor_helper/model/tutor_requests.dart';
+import 'package:tutor_helper/model/courses.dart';
 
 class Classes {
   Classes({
@@ -32,35 +31,29 @@ class Data {
     required this.title,
     required this.description,
     required this.status,
-    required this.tutorId,
-    required this.tutorRequestId,
     required this.createAt,
     this.updateAt,
-    this.tutor,
-    this.tutorRequest,
+    required this.courseId,
+    this.course,
   });
   late final int id;
   late final String title;
   late final String description;
   late final bool status;
-  late final int tutorId;
-  late final int tutorRequestId;
   late final String createAt;
   late final String? updateAt;
-  late final Tutors? tutor;
-  late final TutorRequests? tutorRequest;
+  late final int courseId;
+  late final Courses? course;
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     description = json['description'];
     status = json['status'];
-    tutorId = json['tutorId'];
-    tutorRequestId = json['tutorRequestId'];
     createAt = json['createAt'];
     updateAt = json['updateAt'];
-    tutor = json['tutor'];
-    tutorRequest = json['tutorRequest'];
+    courseId = json['courseId'];
+    course = json['course'];
   }
 
   Map<String, dynamic> toJson() {
@@ -69,12 +62,10 @@ class Data {
     _data['title'] = title;
     _data['description'] = description;
     _data['status'] = status;
-    _data['tutorId'] = tutorId;
-    _data['tutorRequestId'] = tutorRequestId;
     _data['createAt'] = createAt;
     _data['updateAt'] = updateAt;
-    _data['tutor'] = tutor;
-    _data['tutorRequest'] = tutorRequest;
+    _data['courseId'] = courseId;
+    _data['course'] = course;
     return _data;
   }
 }

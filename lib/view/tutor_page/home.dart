@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tutor_helper/model/tutors.dart';
 import 'package:tutor_helper/presenter/date_time_format.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -13,13 +14,13 @@ class TutorHomePage extends StatefulWidget {
 }
 
 class _TutorHomePageState extends State<TutorHomePage> {
-  late Future<Tutors> _tutors;
+  // late Future<Tutors> _tutors;
 
-  @override
-  void initState() {
-    _tutors = API_Manager().getTutors();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   _tutors = API_Manager().getTutors();
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -107,26 +108,33 @@ class _TutorHomePageState extends State<TutorHomePage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FutureBuilder<Tutors>(
-                    future: _tutors,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        String fullName = snapshot.data!.data.fullName;
-                        return Text(
-                          "Hi $fullName",
-                          style: const TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.w900,
-                            color: Color(0XFF343E87),
-                          ),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text('${snapshot.error}');
-                      } else {
-                        return const Text("");
-                      }
-                    },
-                  ),
+                  // FutureBuilder<Tutors>(
+                  //   future: _tutors,
+                  //   builder: (context, snapshot) {
+                  //     if (snapshot.hasData) {
+                  //       String fullName = snapshot.data!.data[0].fullName;
+                  //       return Text(
+                  //         "Hi dddfdfd $fullName",
+                  //         style: const TextStyle(
+                  //           fontSize: 25,
+                  //           fontWeight: FontWeight.w900,
+                  //           color: Color(0XFF343E87),
+                  //         ),
+                  //       );
+                  //     } else if (snapshot.hasError) {
+                  //       return Text('${snapshot.error}');
+                  //     } else {
+                  //       return const Text("");
+                  //     }
+                  //   },
+                  // ),
+                  // Text(
+                  //         "Hi dddfdfd $fullName",
+                  //         style: const TextStyle(
+                  //           fontSize: 25,
+                  //           fontWeight: FontWeight.w900,
+                  //           color: Color(0XFF343E87),
+                  //         ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -167,36 +175,7 @@ class _TutorHomePageState extends State<TutorHomePage> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(30),
         ),
-        child: FutureBuilder<Tutors>(
-            future: _tutors,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                  itemCount: snapshot.data!.data.classes.length,
-                  itemBuilder: (context, index) {
-                    var data = snapshot.data!.data.classes;
-                    return SizedBox(
-                      height: 100,
-                      child: ListTile(
-                          title: Text(data[index].title,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
-                          subtitle: Text(data[index].description,
-                              maxLines: 2, overflow: TextOverflow.ellipsis),
-                          focusColor: Colors.amber,
-                          trailing: Text(
-                              data[index].status == true ? "Ok" : "Failed"),
-                          onTap: () {
-                            // ignore: avoid_print
-                            print(data[index].id);
-                          }),
-                    );
-                  },
-                );
-              } else {
-                return const Text("");
-              }
-            }),
+        child: const Text("under"),
       ),
     );
   }

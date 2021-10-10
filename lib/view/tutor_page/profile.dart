@@ -119,9 +119,9 @@ class _TutorEditProfilePageState extends State<TutorEditProfilePage> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     var data = snapshot.data!.data;
-                    fullName = data.fullName;
-                    email = data.email;
-                    phoneNumber = data.phoneNumber;
+                    fullName = data[0].fullName;
+                    email = data[0].email;
+                    phoneNumber = data[0].phoneNumber;
                     return const Text("");
                   } else if (snapshot.hasError) {
                     return Text('${snapshot.error}');

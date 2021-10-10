@@ -107,26 +107,26 @@ class _StudentHomePageState extends State<StudentHomePage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FutureBuilder<Tutors>(
-                    future: _tutors,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        String fullName = snapshot.data!.data.fullName;
-                        return Text(
-                          "Hi $fullName",
-                          style: const TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.w900,
-                            color: Color(0XFF343E87),
-                          ),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text('${snapshot.error}');
-                      } else {
-                        return const Text("");
-                      }
-                    },
-                  ),
+                  // FutureBuilder<Tutors>(
+                  //   future: _tutors,
+                  //   builder: (context, snapshot) {
+                  //     if (snapshot.hasData) {
+                  //       // String fullName = snapshot.data!.data.fullName;
+                  //       return Text(
+                  //         "Hi $fullName",
+                  //         style: const TextStyle(
+                  //           fontSize: 25,
+                  //           fontWeight: FontWeight.w900,
+                  //           color: Color(0XFF343E87),
+                  //         ),
+                  //       );
+                  //     } else if (snapshot.hasError) {
+                  //       return Text('${snapshot.error}');
+                  //     } else {
+                  //       return const Text("");
+                  //     }
+                  //   },
+                  // ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -167,36 +167,36 @@ class _StudentHomePageState extends State<StudentHomePage> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(30),
         ),
-        child: FutureBuilder<Tutors>(
-            future: _tutors,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                  itemCount: snapshot.data!.data.classes.length,
-                  itemBuilder: (context, index) {
-                    var data = snapshot.data!.data.classes;
-                    return SizedBox(
-                      height: 100,
-                      child: ListTile(
-                          title: Text(data[index].title,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
-                          subtitle: Text(data[index].description,
-                              maxLines: 2, overflow: TextOverflow.ellipsis),
-                          focusColor: Colors.amber,
-                          trailing: Text(
-                              data[index].status == true ? "Ok" : "Failed"),
-                          onTap: () {
-                            // ignore: avoid_print
-                            print(data[index].id);
-                          }),
-                    );
-                  },
-                );
-              } else {
-                return const Text("");
-              }
-            }),
+        // child: FutureBuilder<Tutors>(
+        // future: _tutors,
+        // builder: (context, snapshot) {
+        // if (snapshot.hasData) {
+        //   return ListView.builder(
+        //     itemCount: snapshot.data!.data.classes.length,
+        //     itemBuilder: (context, index) {
+        //       var data = snapshot.data!.data.classes;
+        //       return SizedBox(
+        //         height: 100,
+        //         child: ListTile(
+        //             title: Text(data[index].title,
+        //                 style:
+        //                     const TextStyle(fontWeight: FontWeight.bold)),
+        //             subtitle: Text(data[index].description,
+        //                 maxLines: 2, overflow: TextOverflow.ellipsis),
+        //             focusColor: Colors.amber,
+        //             trailing: Text(
+        //                 data[index].status == true ? "Ok" : "Failed"),
+        //             onTap: () {
+        //               // ignore: avoid_print
+        //               print(data[index].id);
+        //             }),
+        //       );
+        //     },
+        //   );
+        // } else {
+        //   return const Text("");
+        // }
+        // }),
       ),
     );
   }
