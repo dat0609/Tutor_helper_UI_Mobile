@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:tutor_helper/view/tutor_page/calendar.dart';
 import 'package:tutor_helper/view/tutor_page/document.dart';
 import 'package:tutor_helper/view/tutor_page/home.dart';
@@ -16,8 +15,6 @@ class _TutorManagementState extends State<TutorManagement> {
   int _selectedItemIndex = 0;
   @override
   Widget build(BuildContext context) {
-    var data = Get.arguments;
-    print(data);
     List pages = [
       const TutorHomePage(),
       TutorDocumentPage(),

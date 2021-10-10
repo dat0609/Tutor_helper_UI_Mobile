@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:tutor_helper/controller/user_controller.dart';
+import 'package:tutor_helper/constants/strings.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as https;
 
 class TutorLoginPage extends StatefulWidget {
   const TutorLoginPage({Key? key}) : super(key: key);
@@ -14,6 +16,7 @@ class TutorLoginPage extends StatefulWidget {
 }
 
 class _TutorLoginPageState extends State<TutorLoginPage> {
+  final storage = const FlutterSecureStorage();
   void _loginWithGoogle() async {
     setState(() {});
     final GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -36,10 +39,23 @@ class _TutorLoginPageState extends State<TutorLoginPage> {
         idToken: _googleSigninAuthentication.idToken,
       );
       await FirebaseAuth.instance.signInWithCredential(credential);
-      Get.to(() => const TutorManagement(),
-          arguments: UserArguments(
-              accessToken: _googleSigninAuthentication.accessToken.toString(),
-              idToken: _googleSigninAuthentication.idToken.toString()));
+      await storage.write(
+          key: "accessToken",
+          value: _googleSigninAuthentication.accessToken.toString());
+      await storage.write(
+          key: "idToken",
+          value: _googleSigninAuthentication.idToken.toString());
+      await storage.write(key: "loginStatus", value: "logined");
+      var sign_in_url = Uri.parse(Strings.signin_url);
+      await https.post(sign_in_url, headers: {
+        "Content-type": "application/json",
+        "Accept": "application/json",
+        "idToken": _googleSigninAuthentication.idToken.toString(),
+        "role": "tutor",
+        "accessToken": _googleSigninAuthentication.accessToken.toString(),
+      });
+
+      Get.to(() => const TutorManagement());
     } on FirebaseAuthException catch (e) {
       var content = '';
       switch (e.code) {
