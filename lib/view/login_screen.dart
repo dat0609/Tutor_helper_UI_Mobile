@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tutor_helper/view/student_page/login_screen.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_login_screen.dart';
-
-import '../main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -54,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () {
                             const MaterialApp(
                               debugShowCheckedModeBanner: false,
-                              home: StudentLoginPage(),
+                              // home: StudentLoginPage(),
                             );
                           },
                           icon: const Icon(Icons.book_online_outlined),

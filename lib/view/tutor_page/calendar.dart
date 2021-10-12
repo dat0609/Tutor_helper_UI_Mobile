@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:tutor_helper/presenter/date_time_format.dart';
 
@@ -35,7 +36,7 @@ class _TutorCalendarPageState extends State<TutorCalendarPage> {
                   RichText(
                     text: TextSpan(
                         text: dtt.monthFormat.format(now),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Color(0XFF263064),
                           fontSize: 22,
@@ -43,7 +44,7 @@ class _TutorCalendarPageState extends State<TutorCalendarPage> {
                         children: [
                           TextSpan(
                             text: " " + dtt.yearFormat.format(now),
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.normal,
                               fontSize: 16,
                             ),

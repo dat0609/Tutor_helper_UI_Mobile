@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:tutor_helper/model/tutors.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:tutor_helper/model/courses.dart';
 import 'package:tutor_helper/presenter/date_time_format.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:tutor_helper/view/tutor_page/profile.dart';
 import 'package:tutor_helper/api/api_manage.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 
 class TutorHomePage extends StatefulWidget {
   const TutorHomePage({Key? key}) : super(key: key);
@@ -14,13 +15,11 @@ class TutorHomePage extends StatefulWidget {
 }
 
 class _TutorHomePageState extends State<TutorHomePage> {
-  // late Future<Tutors> _tutors;
+  final storage = const FlutterSecureStorage();
 
-  // @override
-  // void initState() {
-  //   _tutors = API_Manager().getTutors();
-  //   super.initState();
-  // }
+  Future<String?> _getToken() async {
+    return await storage.read(key: "jwtToken");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,33 +107,29 @@ class _TutorHomePageState extends State<TutorHomePage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // FutureBuilder<Tutors>(
-                  //   future: _tutors,
-                  //   builder: (context, snapshot) {
-                  //     if (snapshot.hasData) {
-                  //       String fullName = snapshot.data!.data[0].fullName;
-                  //       return Text(
-                  //         "Hi dddfdfd $fullName",
-                  //         style: const TextStyle(
-                  //           fontSize: 25,
-                  //           fontWeight: FontWeight.w900,
-                  //           color: Color(0XFF343E87),
-                  //         ),
-                  //       );
-                  //     } else if (snapshot.hasError) {
-                  //       return Text('${snapshot.error}');
-                  //     } else {
-                  //       return const Text("");
-                  //     }
-                  //   },
-                  // ),
-                  // Text(
-                  //         "Hi dddfdfd $fullName",
-                  //         style: const TextStyle(
-                  //           fontSize: 25,
-                  //           fontWeight: FontWeight.w900,
-                  //           color: Color(0XFF343E87),
-                  //         ),
+                  FutureBuilder<String?>(
+                    future: _getToken(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        var token = snapshot.data;
+                        Map<String, dynamic> tokenData = Jwt.parseJwt(token!);
+                        var emailString =
+                            tokenData['email'].toString().split("@");
+                        return Text(
+                          "Hi  " + emailString[0],
+                          style: const TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w900,
+                            color: Color(0XFF343E87),
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('${snapshot.error}');
+                      } else {
+                        return const Text("");
+                      }
+                    },
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -175,103 +170,40 @@ class _TutorHomePageState extends State<TutorHomePage> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(30),
         ),
-        child: const Text("under"),
-      ),
-    );
-  }
-
-  Container buildTaskItem(int numDays, String courseTitle, Color color) {
-    return Container(
-      margin: const EdgeInsets.only(right: 15),
-      padding: const EdgeInsets.all(12),
-      height: 140,
-      width: 140,
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Deadline",
-            style: TextStyle(fontSize: 10, color: Colors.grey),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Row(
-            children: [
-              Container(
-                height: 6,
-                width: 6,
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(3),
-                ),
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              Text(
-                "$numDays days left",
-                style:
-                    const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Container(
-            width: 100,
-            child: Text(
-              courseTitle,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Row buildTitleRow(String title, int number) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        RichText(
-          text: TextSpan(
-              text: title,
-              style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold),
-              children: [
-                TextSpan(
-                  text: "($number)",
-                  style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.normal),
-                ),
-              ]),
+        child: FutureBuilder<String?>(
+          future: _getToken(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              var token = snapshot.data;
+              return FutureBuilder<Courses>(
+                future: API_Manager().getCourses(token),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                        itemCount: snapshot.data!.data.length,
+                        itemBuilder: (context, index) {
+                          var data = snapshot.data!.data[index];
+                          return buildClassItem(data.title, data.description);
+                        });
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  } else {
+                    return const Text("");
+                  }
+                },
+              );
+            } else if (snapshot.hasError) {
+              return Text('${snapshot.error}');
+            } else {
+              return const Text("");
+            }
+          },
         ),
-        const Text(
-          "See all",
-          style: TextStyle(
-              fontSize: 12,
-              color: Color(0XFF3E3993),
-              fontWeight: FontWeight.bold),
-        )
-      ],
+      ),
     );
   }
 
-  Container buildClassItem(DateTime time, String subjectName, String address,
-      String tutorImage, String tutorName) {
-    DateTimeTutor dtt = DateTimeTutor();
-    String timeString = dtt.timeFormat.format(time).split(" ")[0];
-    String midday = dtt.timeFormat.format(time).split(" ")[1];
+  Container buildClassItem(String subjectName, String description) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(10),
@@ -281,71 +213,31 @@ class _TutorHomePageState extends State<TutorHomePage> {
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                timeString, //Time
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text(
-                midday, //Midday
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.grey),
-              ),
-            ],
-          ),
-          Container(
-            height: 100,
-            width: 1,
-            color: Colors.grey.withOpacity(0.5),
-          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width - 160,
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 60,
                 child: Text(
-                  subjectName, //Subject Name
-                  overflow: TextOverflow.ellipsis,
+                  subjectName.trim(), //Subject Name
+                  overflow: TextOverflow.clip,
                 ),
               ),
               Row(
                 children: [
-                  const Icon(
-                    Icons.location_on,
-                    color: Colors.grey,
-                    size: 20,
-                  ),
                   const SizedBox(
                     width: 5,
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width - 160,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 60,
                     child: Text(
-                      address, //Address
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.grey, fontSize: 13),
+                      description.trim(), //Address
+                      overflow: TextOverflow.clip,
+                      style: const TextStyle(color: Colors.black, fontSize: 13),
                     ),
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(tutorImage //Tutor Image
-                        ),
-                    radius: 10,
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    tutorName, //TutorName
-                    style: const TextStyle(color: Colors.grey, fontSize: 13),
                   )
                 ],
               ),

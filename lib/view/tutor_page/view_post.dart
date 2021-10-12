@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 import 'package:tutor_helper/api/api_manage.dart';
-import 'package:tutor_helper/model/tutors.dart';
+import 'package:tutor_helper/model/tutor_requests.dart';
 import 'package:tutor_helper/view/tutor_page/profile.dart';
 import 'package:tutor_helper/presenter/date_time_format.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:tutor_helper/view/tutor_page/view_post_detail.dart';
 
 class TutorViewPost extends StatefulWidget {
   const TutorViewPost({Key? key}) : super(key: key);
@@ -14,18 +17,19 @@ class TutorViewPost extends StatefulWidget {
 }
 
 class _TutorViewPostState extends State<TutorViewPost> {
-  late Future<Tutors> _tutors;
+  final storage = const FlutterSecureStorage();
+
+  Future<String?> _getToken() async {
+    return await storage.read(key: "jwtToken");
+  }
 
   @override
   void initState() {
-    _tutors = API_Manager().getTutors();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    var data = Get.arguments;
-    print(data);
     String imageLink = "assets/images/default_avatar.png";
     initializeDateFormatting('vi', null);
     final DateTime now = DateTime.now();
@@ -52,14 +56,14 @@ class _TutorViewPostState extends State<TutorViewPost> {
                 child: RichText(
                   text: TextSpan(
                       text: dt.dateOfWeekFormat.format(now),
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Color(0XFF263064),
                           fontSize: 12,
                           fontWeight: FontWeight.w900),
                       children: [
                         TextSpan(
                           text: " " + dt.dateFormat.format(now),
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Color(0XFF263064),
                               fontSize: 12,
                               fontWeight: FontWeight.normal),
@@ -114,13 +118,17 @@ class _TutorViewPostState extends State<TutorViewPost> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      FutureBuilder<Tutors>(
-                        future: _tutors,
+                      FutureBuilder<String?>(
+                        future: _getToken(),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            String fullName = snapshot.data!.data[0].fullName;
+                            var token = snapshot.data;
+                            Map<String, dynamic> tokenData =
+                                Jwt.parseJwt(token!);
+                            var emailString =
+                                tokenData['email'].toString().split("@");
                             return Text(
-                              "Hi $fullName",
+                              "Hi  " + emailString[0],
                               style: const TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.w900,
@@ -130,17 +138,14 @@ class _TutorViewPostState extends State<TutorViewPost> {
                           } else if (snapshot.hasError) {
                             return Text('${snapshot.error}');
                           } else {
-                            return const CircularProgressIndicator();
+                            return const Text("");
                           }
                         },
                       ),
-                      SizedBox(
-                        height: 10,
+                      const SizedBox(
+                        height: 18,
                       ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Text(
+                      const Text(
                         "Check out some post of students",
                         style: TextStyle(
                           fontSize: 13,
@@ -164,23 +169,41 @@ class _TutorViewPostState extends State<TutorViewPost> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(30),
             ),
-            child: ListView(
-              children: [
-                buildTitleRow("Student posts", 2),
-                const SizedBox(
-                  height: 20,
-                ),
-                buildClassItem(
-                    "Math 2", "1050 CMT8", "3/10/2021", "Loc", "Picture"),
-                buildClassItem("English 4", "391 Cộng Hòa", "9/11/2021", "Anh",
-                    "Picture 2"),
-                const SizedBox(
-                  height: 25,
-                ),
-              ],
+            child: FutureBuilder<String?>(
+              future: _getToken(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  var token = snapshot.data;
+                  return FutureBuilder<TutorRequests>(
+                    future: API_Manager().getTutorRequests(token),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                            itemCount: snapshot.data!.data.length,
+                            itemBuilder: (context, index) {
+                              var data = snapshot.data!.data[index];
+                              return buildClassItem(
+                                  data.title,
+                                  data.description,
+                                  "Name",
+                                  data.tutorRequestId);
+                            });
+                      } else if (snapshot.hasError) {
+                        return Text('${snapshot.error}');
+                      } else {
+                        return const Text("");
+                      }
+                    },
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                } else {
+                  return const Text("");
+                }
+              },
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -217,8 +240,8 @@ class _TutorViewPostState extends State<TutorViewPost> {
     );
   }
 
-  Container buildClassItem(String courseTitle, String address, String date,
-      String fullName, String imageLink) {
+  Container buildClassItem(String courseTitle, String description,
+      String fullName, int tutorRequestID) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(10),
@@ -231,87 +254,49 @@ class _TutorViewPostState extends State<TutorViewPost> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Start",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text(
-                date,
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
-              ),
-            ],
-          ),
-          Container(
-            height: 100,
-            width: 1,
-            color: Colors.grey.withOpacity(0.5),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width - 160,
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 100,
                 child: Text(
                   courseTitle,
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.green),
+                      overflow: TextOverflow.clip,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green),
                 ),
               ),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.location_on,
-                    color: Colors.grey,
-                    size: 20,
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width - 160,
-                        child: Text(
-                          address,
-                          overflow: TextOverflow.ellipsis,
-                          style:
-                              const TextStyle(color: Colors.grey, fontSize: 13),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 100,
+                child: Text(
+                  description,
+                  style: const TextStyle(
+                      overflow: TextOverflow.clip,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 12),
+                ),
               ),
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(imageLink),
-                    radius: 10,
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    fullName,
-                    style: TextStyle(color: Colors.grey, fontSize: 13),
-                  ),
-                ],
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 100,
+                child: Text(
+                  fullName,
+                  style: const TextStyle(color: Colors.grey, fontSize: 13),
+                ),
               ),
-              // Row(
-              //   children: [
-              //     IconButton(
-              //       // ignore: avoid_print
-              //       onPressed: () {
-              //         print("123");
-              //       },
-              //       icon: const Icon(Icons.volume_up),
-              //     ),
-              //   ],
-              // )
+            ],
+          ),
+          Row(
+            children: [
+              IconButton(
+                // ignore: avoid_print
+                onPressed: () {
+                  Get.to(() => const TutorViewPostDetail(),
+                      arguments: tutorRequestID);
+                },
+                icon: const Icon(Icons.arrow_right),
+              ),
             ],
           )
         ],

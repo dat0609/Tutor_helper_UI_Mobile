@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 
 class TutorDocumentPage extends StatelessWidget {
   TutorDocumentPage({Key? key}) : super(key: key);
-  String fullName = "Nhat Minh";
   String imageLink = "assets/images/default_avatar.png";
+  final storage = const FlutterSecureStorage();
+  Future<String?> _getToken() async {
+    return await storage.read(key: "jwtToken");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,12 +138,28 @@ class TutorDocumentPage extends StatelessWidget {
                     backgroundImage: AssetImage("$imageLink"),
                   ),
                   SizedBox(width: 10.0),
-                  Text(
-                    "Hi $fullName",
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0XFF343E87)),
+                  FutureBuilder<String?>(
+                    future: _getToken(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        var token = snapshot.data;
+                        Map<String, dynamic> tokenData = Jwt.parseJwt(token!);
+                        var emailString =
+                            tokenData['email'].toString().split("@");
+                        return Text(
+                          "Hi  " + emailString[0],
+                          style: const TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w900,
+                            color: Color(0XFF343E87),
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('${snapshot.error}');
+                      } else {
+                        return const Text("");
+                      }
+                    },
                   ),
                   SizedBox(
                     height: 10,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tutor_helper/api/api_manage.dart';
-import 'package:tutor_helper/model/tutors.dart';
 import 'package:tutor_helper/view/login_screen.dart';
 
 class TutorEditProfilePage extends StatefulWidget {
@@ -9,11 +8,9 @@ class TutorEditProfilePage extends StatefulWidget {
 }
 
 class _TutorEditProfilePageState extends State<TutorEditProfilePage> {
-  late Future<Tutors> _tutors;
-
   @override
   void initState() {
-    _tutors = API_Manager().getTutors();
+    // _tutors = API_Manager().getTutors();
     super.initState();
   }
 
@@ -114,22 +111,22 @@ class _TutorEditProfilePageState extends State<TutorEditProfilePage> {
               const SizedBox(
                 height: 35,
               ),
-              FutureBuilder<Tutors>(
-                future: _tutors,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    var data = snapshot.data!.data;
-                    fullName = data[0].fullName;
-                    email = data[0].email;
-                    phoneNumber = data[0].phoneNumber;
-                    return const Text("");
-                  } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
-                  } else {
-                    return const Text("");
-                  }
-                },
-              ),
+              // FutureBuilder<Tutors>(
+              //   future: _tutors,
+              //   builder: (context, snapshot) {
+              //     if (snapshot.hasData) {
+              //       var data = snapshot.data!.data;
+              //       fullName = data[0].fullName;
+              //       email = data[0].email;
+              //       phoneNumber = data[0].phoneNumber;
+              //       return const Text("");
+              //     } else if (snapshot.hasError) {
+              //       return Text('${snapshot.error}');
+              //     } else {
+              //       return const Text("");
+              //     }
+              //   },
+              // ),
               buildTextField("Full Name", fullName),
               buildTextField("E-mail", email),
               buildTextField("Phone", phoneNumber),
