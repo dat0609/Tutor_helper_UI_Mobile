@@ -1,13 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
-
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:tutor_helper/constants/strings.dart';
 import 'package:tutor_helper/model/classes.dart';
 import 'package:tutor_helper/model/courses.dart';
-import 'package:tutor_helper/model/getcourses.dart';
 import 'package:tutor_helper/model/grades.dart';
 import 'package:tutor_helper/model/tutor_requests.dart';
 import 'package:tutor_helper/model/tutors.dart';
@@ -70,6 +66,7 @@ class API_Manager {
       if (response.statusCode == 200) {
         var jsonString = response.body;
         var jsonMap = json.decode(jsonString);
+        log(jsonString);
         tutorrequestInfo = TutorRequests.fromJson(jsonMap);
       }
     } catch (Exception) {
@@ -102,9 +99,8 @@ class API_Manager {
     return tutorrequestInfo;
   }
 
-  Future<GetCourses> createCourseByRequest(var token, String title,
-      String description, int tutorId, int tutorrequestId) async {
-    // var courseInfo;
+  void createCourseByRequest(var token, String title, String description,
+      int tutorId, int tutorrequestId) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       "Authorization": "Bearer " + token.toString()
@@ -116,31 +112,35 @@ class API_Manager {
       "tutorId": tutorId,
       "tutorRequestId": tutorrequestId
     });
-    var response = await http.post(
+    await http.post(
       Uri.parse(Strings.createCourses),
       headers: headers,
       body: body,
     );
-    log(response.statusCode.toString());
-    return GetCourses.fromJson(jsonDecode(response.body));
   }
 
-  Future<TutorRequests> acceptTutorRequest(var token, int id) async {
+  void acceptTutorRequest(var token, int tutorid, int tutorrequestid,
+      int studentid, int gradeid, String title, String description) async {
     Map<String, String> headers = {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Charset': 'utf-8',
       "Authorization": "Bearer " + token.toString()
     };
     final body = jsonEncode({
-      "tutorRequestId": id,
-      "title": "string",
-      "description": "string",
+      "tutorRequestId": tutorrequestid,
+      "title": title,
+      "description": description,
       "status": false,
-      "studentId": 0,
-      "gradeId": 0
+      "studentId": studentid,
+      "gradeId": gradeid
     });
     var response = await http.put(Uri.parse(Strings.tutorrequests_url),
         headers: headers, body: body);
-
-    return TutorRequests.fromJson(jsonDecode(response.body));
+    if (response.statusCode == 200) {
+      API_Manager().createCourseByRequest(
+          token, title, description, tutorid, tutorrequestid);
+    } else {
+      log("Error while accept TutorRequest");
+    }
   }
 }

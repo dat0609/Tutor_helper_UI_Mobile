@@ -1,3 +1,7 @@
+import 'package:tutor_helper/model/grades.dart';
+import 'package:tutor_helper/model/students.dart';
+import 'package:tutor_helper/model/subjects.dart';
+
 class TutorRequests {
   TutorRequests({
     required this.message,
@@ -32,7 +36,7 @@ class Data {
     required this.studentId,
     required this.subjectId,
     required this.gradeId,
-    required this.createAt,
+    this.createAt,
     this.updateAt,
     this.grade,
     this.student,
@@ -46,11 +50,11 @@ class Data {
   late final int studentId;
   late final int subjectId;
   late final int gradeId;
-  late final String createAt;
+  late final String? createAt;
   late final String? updateAt;
-  late final Null grade;
-  late final Null student;
-  late final Null subject;
+  late final Grades? grade;
+  late final Students? student;
+  late final Subjects? subject;
   late final List<dynamic> courses;
 
   Data.fromJson(Map<String, dynamic> json) {

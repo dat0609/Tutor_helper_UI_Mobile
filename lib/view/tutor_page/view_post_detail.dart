@@ -21,6 +21,7 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
   String description = "";
   int tutorId = 0;
   int tutorrequestId = 0;
+  int studentId = 0;
 
   Future<String?> _getToken() async {
     return await storage.read(key: "jwtToken");
@@ -64,6 +65,7 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
                           description = data.description.toString();
                           tutorId = 31;
                           tutorrequestId = data.tutorRequestId;
+                          studentId = data.studentId;
                           return Column(
                             children: [
                               listItem("Student:", data.studentId.toString()),
@@ -127,9 +129,6 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
               )),
           TextButton(
               onPressed: () {
-                // API_Manager().createCourseByRequest(
-                //     token, title, description, tutorId, tutorrequestId);
-                // API_Manager().acceptTutorRequest(token, tutorrequestId);
                 showAlertDialog(context);
               },
               child: const Text(
@@ -174,21 +173,46 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
   }
 
   showAlertDialog(BuildContext context) {
-    // set up the button
     Widget okButton = TextButton(
       child: const Text("OK"),
       onPressed: () {
         Get.back();
         Get.back();
+        Get.back();
       },
     );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
+    Widget cancelButton = TextButton(
+      child: const Text("Cancel"),
+      onPressed: () {
+        Get.back();
+      },
+    );
+    AlertDialog secondAlert = AlertDialog(
       title: const Text("Thank you!"),
-      content: const Text("You has been accepted the request!!!"),
+      content: const Text("The request has been accepted!!!"),
       actions: [
         okButton,
+      ],
+    );
+    Widget acceptButton = TextButton(
+      child: const Text("Accept"),
+      onPressed: () {
+        API_Manager().acceptTutorRequest(
+            token, tutorId, tutorrequestId, studentId, 1, title, description);
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return secondAlert;
+          },
+        );
+      },
+    );
+    AlertDialog firstAlert = AlertDialog(
+      title: const Text("Attention!"),
+      content: const Text("Are you sure you want to accept the request?"),
+      actions: [
+        cancelButton,
+        acceptButton,
       ],
     );
 
@@ -196,7 +220,7 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return alert;
+        return firstAlert;
       },
     );
   }

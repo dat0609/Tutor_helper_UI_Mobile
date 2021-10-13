@@ -1,6 +1,3 @@
-import 'package:tutor_helper/model/tutor_requests.dart';
-import 'package:tutor_helper/model/tutors.dart';
-
 class Courses {
   Courses({
     required this.message,
@@ -34,10 +31,7 @@ class Data {
     required this.status,
     required this.tutorId,
     required this.tutorRequestId,
-    required this.createAt,
-    this.updateAt,
-    this.tutor,
-    this.tutorRequest,
+    // this.createAt,
     required this.classes,
     required this.feedbacks,
   });
@@ -47,10 +41,7 @@ class Data {
   late final bool status;
   late final int tutorId;
   late final int tutorRequestId;
-  late final String createAt;
-  late final String? updateAt;
-  late final Tutors? tutor;
-  late final TutorRequests? tutorRequest;
+  // late final String? createAt;
   late final List<dynamic> classes;
   late final List<dynamic> feedbacks;
 
@@ -61,10 +52,7 @@ class Data {
     status = json['status'];
     tutorId = json['tutorId'];
     tutorRequestId = json['tutorRequestId'];
-    createAt = json['createAt'];
-    updateAt = json['updateAt'];
-    tutor = json['tutor'];
-    tutorRequest = json['tutorRequest'];
+    // createAt = json['createAt'];
     classes = List.castFrom<dynamic, dynamic>(json['classes']);
     feedbacks = List.castFrom<dynamic, dynamic>(json['feedbacks']);
   }
@@ -77,10 +65,7 @@ class Data {
     _data['status'] = status;
     _data['tutorId'] = tutorId;
     _data['tutorRequestId'] = tutorRequestId;
-    _data['createAt'] = createAt;
-    _data['updateAt'] = updateAt;
-    _data['tutor'] = tutor;
-    _data['tutorRequest'] = tutorRequest;
+    // _data['createAt'] = createAt;
     _data['classes'] = classes;
     _data['feedbacks'] = feedbacks;
     return _data;
