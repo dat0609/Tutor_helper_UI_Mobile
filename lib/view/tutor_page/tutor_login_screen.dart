@@ -32,7 +32,7 @@ class _TutorLoginPageState extends State<TutorLoginPage> {
     final tokenResult =
         await FirebaseAuth.instance.currentUser!.getIdToken(true);
     Map<String, String> headers = {'Content-Type': 'application/json'};
-    final bodies = jsonEncode({
+    final body = jsonEncode({
       "idToken": tokenResult,
       "role": "Tutor",
       "accessToken": "string",
@@ -40,12 +40,9 @@ class _TutorLoginPageState extends State<TutorLoginPage> {
       "signInMethod": "Google"
     });
     final response = await https.post(Uri.parse(Strings.signin_url),
-        headers: headers, body: bodies);
+        headers: headers, body: body);
     if (response.statusCode == 200) {
-      storage.write(
-          key: "jwtToken",
-          value: jsonDecode(response.body)['data']['jwtToken']);
-      // log(jsonDecode(response.body)['data'].toString());
+      storage.write(key: "database", value: response.body);
       Get.offAll(() => const TutorManagement());
     }
   }

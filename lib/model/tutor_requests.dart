@@ -36,11 +36,11 @@ class Data {
     required this.studentId,
     required this.subjectId,
     required this.gradeId,
-    this.createAt,
-    this.updateAt,
-    this.grade,
-    this.student,
-    this.subject,
+    // this.createAt,
+    // this.updateAt,
+    // this.grade,
+    // this.student,
+    // this.subject,
     required this.courses,
   });
   late final int tutorRequestId;
@@ -50,11 +50,11 @@ class Data {
   late final int studentId;
   late final int subjectId;
   late final int gradeId;
-  late final String? createAt;
-  late final String? updateAt;
-  late final Grades? grade;
-  late final Students? student;
-  late final Subjects? subject;
+  // late final String? createAt;
+  // late final String? updateAt;
+  // late final Grades? grade;
+  // late final Students? student;
+  // late final Subjects? subject;
   late final List<dynamic> courses;
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -65,11 +65,11 @@ class Data {
     studentId = json['studentId'];
     subjectId = json['subjectId'];
     gradeId = json['gradeId'];
-    createAt = json['createAt'];
-    updateAt = json['updateAt'];
-    grade = json['grade'];
-    student = json['student'];
-    subject = json['subject'];
+    // createAt = json['createAt'];
+    // updateAt = json['updateAt'];
+    // grade = json['grade'];
+    // student = json['student'];
+    // subject = json['subject'];
     courses = List.castFrom<dynamic, dynamic>(json['courses']);
   }
 
@@ -82,11 +82,11 @@ class Data {
     _data['studentId'] = studentId;
     _data['subjectId'] = subjectId;
     _data['gradeId'] = gradeId;
-    _data['createAt'] = createAt;
-    _data['updateAt'] = updateAt;
-    _data['grade'] = grade;
-    _data['student'] = student;
-    _data['subject'] = subject;
+    // _data['createAt'] = createAt;
+    // _data['updateAt'] = updateAt;
+    // _data['grade'] = grade;
+    // _data['student'] = student;
+    // _data['subject'] = subject;
     _data['courses'] = courses;
     return _data;
   }

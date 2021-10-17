@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:tutor_helper/api/api_manage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
+import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/view/login_screen.dart';
 
 class TutorEditProfilePage extends StatefulWidget {
@@ -8,16 +12,15 @@ class TutorEditProfilePage extends StatefulWidget {
 }
 
 class _TutorEditProfilePageState extends State<TutorEditProfilePage> {
-  @override
-  void initState() {
-    // _tutors = API_Manager().getTutors();
-    super.initState();
+  final storage = const FlutterSecureStorage();
+  void _logOut() async {
+    return await storage.deleteAll();
   }
 
-  bool showPassword = false;
-  String fullName = "";
-  String email = "";
-  String phoneNumber = "";
+  Future<String?> _getData() async {
+    return await storage.read(key: "database");
+  }
+
   String imageLink = "assets/images/default_avatar.png";
 
   @override
@@ -39,10 +42,8 @@ class _TutorEditProfilePageState extends State<TutorEditProfilePage> {
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.black),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-              );
+              _logOut();
+              Get.offAll(() => const LoginPage());
             },
           ),
         ],
@@ -111,25 +112,27 @@ class _TutorEditProfilePageState extends State<TutorEditProfilePage> {
               const SizedBox(
                 height: 35,
               ),
-              // FutureBuilder<Tutors>(
-              //   future: _tutors,
-              //   builder: (context, snapshot) {
-              //     if (snapshot.hasData) {
-              //       var data = snapshot.data!.data;
-              //       fullName = data[0].fullName;
-              //       email = data[0].email;
-              //       phoneNumber = data[0].phoneNumber;
-              //       return const Text("");
-              //     } else if (snapshot.hasError) {
-              //       return Text('${snapshot.error}');
-              //     } else {
-              //       return const Text("");
-              //     }
-              //   },
-              // ),
-              buildTextField("Full Name", fullName),
-              buildTextField("E-mail", email),
-              buildTextField("Phone", phoneNumber),
+              FutureBuilder<String?>(
+                future: _getData(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    var data = jsonDecode(snapshot.data.toString());
+                    var fullName = data["data"]['fullName'].toString();
+                    var email = data["data"]['email'].toString();
+                    return ListView(
+                      children: [
+                        buildTextField("Full Name", fullName),
+                        buildTextField("E-mail", email),
+                      ],
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  } else {
+                    return const Text("");
+                  }
+                },
+              ),
+              // buildTextField("Phone", phoneNumber),
               const SizedBox(
                 height: 35,
               ),

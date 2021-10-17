@@ -1,11 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:tutor_helper/model/courses.dart';
+import 'package:get/get.dart';
+import 'package:tutor_helper/model/tutorcourses.dart';
 import 'package:tutor_helper/presenter/date_time_format.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:tutor_helper/view/tutor_page/profile.dart';
-import 'package:tutor_helper/api/api_manage.dart';
-import 'package:jwt_decode/jwt_decode.dart';
+import 'package:tutor_helper/api/api_management.dart';
+import 'package:tutor_helper/view/tutor_page/view_course_detail.dart';
 
 class TutorHomePage extends StatefulWidget {
   const TutorHomePage({Key? key}) : super(key: key);
@@ -17,8 +20,8 @@ class TutorHomePage extends StatefulWidget {
 class _TutorHomePageState extends State<TutorHomePage> {
   final storage = const FlutterSecureStorage();
 
-  Future<String?> _getToken() async {
-    return await storage.read(key: "jwtToken");
+  Future<String?> _getData() async {
+    return await storage.read(key: "database");
   }
 
   @override
@@ -108,15 +111,14 @@ class _TutorHomePageState extends State<TutorHomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   FutureBuilder<String?>(
-                    future: _getToken(),
+                    future: _getData(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        var token = snapshot.data;
-                        Map<String, dynamic> tokenData = Jwt.parseJwt(token!);
-                        var emailString =
-                            tokenData['email'].toString().split("@");
+                        var data = jsonDecode(snapshot.data.toString());
+                        var email = data["data"]['email'].toString().split("@");
+                        String username = email[0];
                         return Text(
-                          "Hi  " + emailString[0],
+                          "Hi  $username",
                           style: const TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.w900,
@@ -171,22 +173,39 @@ class _TutorHomePageState extends State<TutorHomePage> {
           borderRadius: BorderRadius.circular(30),
         ),
         child: FutureBuilder<String?>(
-          future: _getToken(),
+          future: _getData(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              var token = snapshot.data;
-              return FutureBuilder<Courses>(
-                future: API_Manager().getCourses(token),
+              var data = jsonDecode(snapshot.data.toString());
+              int tutorID = data["data"]["tutorId"];
+              return FutureBuilder<TutorCourses>(
+                future: API_Management()
+                    .getCoursesByTutorID(data["data"]['jwtToken'], tutorID),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
+                    var tutorCourse = snapshot.data!.data.courses;
                     return ListView.builder(
-                        itemCount: snapshot.data!.data.length,
+                        itemCount: tutorCourse.length,
                         itemBuilder: (context, index) {
-                          var data = snapshot.data!.data[index];
-                          return buildClassItem(data.title, data.description);
+                          var courseData = snapshot.data!.data.courses[index];
+                          if (courseData.status == true) {
+                            return buildClassItem(
+                                courseData.title,
+                                courseData.description,
+                                courseData.courseId,
+                                courseData.tutorId,
+                                courseData.tutorRequestId,
+                                courseData.tutorId,
+                                data["data"]['jwtToken']);
+                          } else {
+                            return const Visibility(
+                              child: Text("data"),
+                              visible: false,
+                            );
+                          }
                         });
                   } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
+                    return const Text("");
                   } else {
                     return const Text("");
                   }
@@ -203,7 +222,8 @@ class _TutorHomePageState extends State<TutorHomePage> {
     );
   }
 
-  Container buildClassItem(String subjectName, String description) {
+  Container buildClassItem(String title, String description, int courseid,
+      int tutorid, int tutorrequestid, int studentid, String token) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(10),
@@ -220,29 +240,40 @@ class _TutorHomePageState extends State<TutorHomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SizedBox(
-                width: MediaQuery.of(context).size.width - 60,
+                width: MediaQuery.of(context).size.width - 100,
                 child: Text(
-                  subjectName.trim(), //Subject Name
+                  title.trim(), //Subject Name
                   overflow: TextOverflow.clip,
                 ),
               ),
-              Row(
-                children: [
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width - 60,
-                    child: Text(
-                      description.trim(), //Address
-                      overflow: TextOverflow.clip,
-                      style: const TextStyle(color: Colors.black, fontSize: 13),
-                    ),
-                  )
-                ],
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 100,
+                child: Text(
+                  description.trim(), //Address
+                  overflow: TextOverflow.clip,
+                  style: const TextStyle(color: Colors.black, fontSize: 13),
+                ),
+              )
+            ],
+          ),
+          Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  Get.to(() => const TutorViewCourseDetail(), arguments: [
+                    title,
+                    description,
+                    courseid,
+                    tutorid,
+                    tutorrequestid,
+                    studentid,
+                    token,
+                  ]);
+                },
+                icon: const Icon(Icons.arrow_right_alt_rounded),
               ),
             ],
-          )
+          ),
         ],
       ),
     );

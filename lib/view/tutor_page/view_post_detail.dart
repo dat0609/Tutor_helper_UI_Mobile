@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:tutor_helper/api/api_manage.dart';
+import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/tutor_requests.dart';
-import 'package:tutor_helper/view/tutor_page/view_post.dart';
+import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
 
 class TutorViewPostDetail extends StatefulWidget {
   const TutorViewPostDetail({Key? key}) : super(key: key);
@@ -22,6 +22,7 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
   int tutorId = 0;
   int tutorrequestId = 0;
   int studentId = 0;
+  int subjectId = 0;
 
   Future<String?> _getToken() async {
     return await storage.read(key: "jwtToken");
@@ -34,13 +35,13 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [_upper(), _under()]);
+    return Stack(children: [_navigator(), _upper(), _under()]);
   }
 
   Container _upper() {
     tutorRequestIDGotten = data;
     return Container(
-      margin: const EdgeInsets.only(top: 15),
+      margin: const EdgeInsets.only(top: 75),
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
       height: 800,
       width: 400,
@@ -53,7 +54,7 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
           if (snapshot.hasData) {
             token = snapshot.data;
             return FutureBuilder<TutorRequests>(
-              future: API_Manager().getTutorRequests(token),
+              future: API_Management().getAllTutorRequests(token),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return ListView.builder(
@@ -66,6 +67,7 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
                           tutorId = 31;
                           tutorrequestId = data.tutorRequestId;
                           studentId = data.studentId;
+                          subjectId = data.subjectId;
                           return Column(
                             children: [
                               listItem("Student:", data.studentId.toString()),
@@ -80,11 +82,11 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              listItem("Grade:", data.grade.toString()),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              listItem("Subject:", data.subject.toString()),
+                              // listItem("Grade:", data.grade.toString()),
+                              // const SizedBox(
+                              //   height: 10,
+                              // ),
+                              // listItem("Subject:", data.subject.toString()),
                             ],
                           );
                         }
@@ -116,19 +118,6 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
         children: [
           TextButton(
               onPressed: () {
-                Get.back();
-              },
-              child: const Text(
-                "Cancel",
-                style: TextStyle(color: Colors.white),
-              ),
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
-                backgroundColor: Colors.red[900],
-                textStyle: const TextStyle(fontSize: 20),
-              )),
-          TextButton(
-              onPressed: () {
                 showAlertDialog(context);
               },
               child: const Text(
@@ -142,6 +131,12 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
               )),
         ],
       ),
+    );
+  }
+
+  AppBar _navigator() {
+    return AppBar(
+      actions: <Widget>[],
     );
   }
 
@@ -176,9 +171,7 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
     Widget okButton = TextButton(
       child: const Text("OK"),
       onPressed: () {
-        Get.back();
-        Get.back();
-        Get.back();
+        Get.offAll(() => const TutorManagement());
       },
     );
     Widget cancelButton = TextButton(
@@ -197,8 +190,8 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
     Widget acceptButton = TextButton(
       child: const Text("Accept"),
       onPressed: () {
-        API_Manager().acceptTutorRequest(
-            token, tutorId, tutorrequestId, studentId, 1, title, description);
+        API_Management().acceptTutorRequest(token, tutorId, tutorrequestId,
+            studentId, 1, title, description, subjectId);
         showDialog(
           context: context,
           builder: (BuildContext context) {

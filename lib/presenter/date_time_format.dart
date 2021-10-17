@@ -1,5 +1,4 @@
 import 'package:intl/intl.dart';
-import 'package:timeago/timeago.dart';
 
 class DateTimeTutor {
   DateFormat dateOfWeekFormat = DateFormat('EEE');
