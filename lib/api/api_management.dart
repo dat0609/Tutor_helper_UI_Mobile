@@ -31,47 +31,15 @@ class API_Management {
   }
 
   Future<TutorRequests> getAllTutorRequests(String token) async {
-    var tutorrequestInfo;
-    try {
-      Map<String, String> headers = {
-        'Content-Type': 'application/json',
-        "Authorization": "Bearer " + token.toString()
-      };
-      var response = await http.get(Uri.parse(Strings.tutorrequests_url),
-          headers: headers);
-      if (response.statusCode == 200) {
-        var jsonString = response.body;
-        var jsonMap = json.decode(jsonString);
-        tutorrequestInfo = TutorRequests.fromJson(jsonMap);
-      }
-    } catch (Exception) {
-      (Exception.toString());
-    }
-
-    return tutorrequestInfo;
-  }
-
-  Future<TutorRequests> getTutorRequestByID(var token, int id) async {
-    var tutorrequestInfo;
-    try {
-      var response = await http.get(
-        Uri.parse(Strings.tutorrequests_get_url(id)),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + token.toString()
-        },
-      );
-      if (response.statusCode == 200) {
-        var jsonString = response.body;
-        var jsonMap = json.decode(jsonString);
-        log(jsonMap.toString());
-        tutorrequestInfo = TutorRequests.fromJson(jsonMap);
-      }
-    } catch (Exception) {
-      (Exception.toString());
-    }
-
-    return tutorrequestInfo;
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      "Authorization": "Bearer " + token.toString()
+    };
+    var response =
+        await http.get(Uri.parse(Strings.tutorrequests_url), headers: headers);
+    var jsonString = response.body;
+    var jsonMap = json.decode(jsonString);
+    return TutorRequests.fromJson(jsonMap);
   }
 
   void createCourseByRequest(var token, String title, String description,

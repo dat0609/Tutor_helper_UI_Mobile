@@ -281,7 +281,9 @@ class _TutorViewPostState extends State<TutorViewPost> {
                     arguments: {
                       "tutorRequestID": tutorRequestID,
                       "tutorId": tutorId,
-                      "token": token
+                      "token": token,
+                      "title": courseTitle,
+                      "description": description,
                     },
                   );
                 },

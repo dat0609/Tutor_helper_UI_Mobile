@@ -48,51 +48,26 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
       decoration: const BoxDecoration(
         color: Color(0xFFF9F9FB),
       ),
-      child: FutureBuilder<TutorRequests>(
-        future: API_Management().getAllTutorRequests(datafromPost["token"]),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-                itemCount: snapshot.data!.data.length,
-                itemBuilder: (context, index) {
-                  var data = snapshot.data!.data[index];
-                  if (data.tutorRequestId == tutorRequestIDGotten) {
-                    title = data.title.toString();
-                    description = data.description.toString();
-                    tutorId = datafromPost["tutorId"];
-                    tutorrequestId = data.tutorRequestId;
-                    studentId = data.studentId;
-                    subjectId = data.subjectId;
-                    return Column(
-                      children: [
-                        listItem("Student:", data.studentId.toString()),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        listItem("Title:", data.title.toString()),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        listItem("Desc:", data.description.toString()),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        // listItem("Grade:", data.grade.toString()),
-                        // const SizedBox(
-                        //   height: 10,
-                        // ),
-                        // listItem("Subject:", data.subject.toString()),
-                      ],
-                    );
-                  }
-                  return const Visibility(child: Text(""), visible: false);
-                });
-          } else if (snapshot.hasError) {
-            return Text('${snapshot.error}');
-          } else {
-            return const Text("");
-          }
-        },
+      child: Column(
+        children: [
+          // listItem("Student:", datafromPost),
+          const SizedBox(
+            height: 10,
+          ),
+          listItem("Title:", datafromPost["title"]),
+          const SizedBox(
+            height: 10,
+          ),
+          listItem("Desc:", datafromPost["description"]),
+          const SizedBox(
+            height: 10,
+          ),
+          // listItem("Grade:", data.grade.toString()),
+          // const SizedBox(
+          //   height: 10,
+          // ),
+          // listItem("Subject:", data.subject.toString()),
+        ],
       ),
     );
   }
