@@ -1,24 +1,21 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:tutor_helper/api/api_management.dart';
-import 'package:tutor_helper/view/tutor_page/create_class.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
+import 'package:date_time_picker/date_time_picker.dart';
 
-class TutorViewCourseDetail extends StatefulWidget {
-  const TutorViewCourseDetail({Key? key}) : super(key: key);
+class CreateClass extends StatefulWidget {
+  const CreateClass({Key? key}) : super(key: key);
 
   @override
-  _TutorViewCourseDetailState createState() => _TutorViewCourseDetailState();
+  _CreateClassState createState() => _CreateClassState();
 }
 
-class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
-  var data_from_home_page = Get.arguments;
+class _CreateClassState extends State<CreateClass> {
+  var data_from_course_detail = Get.arguments;
   final storage = const FlutterSecureStorage();
-
-  Future<String?> _getData() async {
-    return await storage.read(key: "database");
-  }
 
   @override
   void initState() {
@@ -31,16 +28,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
   }
 
   AppBar _navigator() {
-    return AppBar(
-      actions: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.delete_forever),
-          onPressed: () {
-            showAlertDialog(context);
-          },
-        )
-      ],
-    );
+    return AppBar();
   }
 
   Container _upper() {
@@ -54,8 +42,21 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
       ),
       child: Column(
         children: [
-          listItem("Title", data_from_home_page["title"]),
-          listItem("Desc", data_from_home_page["description"]),
+          // Row(children: [
+          //   TextButton(
+          //     onPressed: () {
+          //       testText = "sssss";
+          //     },
+          //     child: Text("Date:$testText"),
+          //   ),
+          // ]),
+          Row(children: const [
+            Text(
+              "In developing!",
+              style: TextStyle(fontSize: 30),
+            )
+          ]),
+          // Row(children: const [Text("datetime")]),
         ],
       ),
     );
@@ -70,15 +71,6 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
           TextButton(
               onPressed: () {
                 print("Create Class");
-                Get.to(() => const CreateClass(), arguments: {
-                  "title": data_from_home_page["title"],
-                  "description": data_from_home_page["description"],
-                  "courseid": data_from_home_page["courseid"],
-                  "tutorid": data_from_home_page["tutorid"],
-                  "tutorrequestid": data_from_home_page["tutorrequestid"],
-                  "studentid": data_from_home_page["tutorid"],
-                  "token": data_from_home_page["token"],
-                });
               },
               child: const Text(
                 "Create Class",
@@ -87,19 +79,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
               style: TextButton.styleFrom(
                 backgroundColor: Colors.cyan,
                 textStyle: const TextStyle(fontSize: 20),
-              )),
-          TextButton(
-              onPressed: () {
-                print("Student Info");
-              },
-              child: const Text(
-                "Student Info",
-                style: TextStyle(color: Colors.white),
-              ),
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.green,
-                textStyle: const TextStyle(fontSize: 20),
-              )),
+              ))
         ],
       ),
     );
@@ -155,13 +135,6 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
     Widget deleteButton = TextButton(
       child: const Text("Delete"),
       onPressed: () {
-        API_Management().deleteCourse(
-            data_from_home_page["token"],
-            data_from_home_page["courseid"],
-            data_from_home_page["title"],
-            data_from_home_page["description"],
-            data_from_home_page["tutorid"],
-            data_from_home_page["tutorrequestid"]);
         showDialog(
           context: context,
           builder: (BuildContext context) {

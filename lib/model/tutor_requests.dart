@@ -1,7 +1,3 @@
-import 'package:tutor_helper/model/grades.dart';
-import 'package:tutor_helper/model/students.dart';
-import 'package:tutor_helper/model/subjects.dart';
-
 class TutorRequests {
   TutorRequests({
     required this.message,
@@ -36,12 +32,7 @@ class Data {
     required this.studentId,
     required this.subjectId,
     required this.gradeId,
-    // this.createAt,
-    // this.updateAt,
-    // this.grade,
-    // this.student,
-    // this.subject,
-    required this.courses,
+    this.createAt,
   });
   late final int tutorRequestId;
   late final String title;
@@ -50,12 +41,7 @@ class Data {
   late final int studentId;
   late final int subjectId;
   late final int gradeId;
-  // late final String? createAt;
-  // late final String? updateAt;
-  // late final Grades? grade;
-  // late final Students? student;
-  // late final Subjects? subject;
-  late final List<dynamic> courses;
+  late final String? createAt;
 
   Data.fromJson(Map<String, dynamic> json) {
     tutorRequestId = json['tutorRequestId'];
@@ -65,12 +51,7 @@ class Data {
     studentId = json['studentId'];
     subjectId = json['subjectId'];
     gradeId = json['gradeId'];
-    // createAt = json['createAt'];
-    // updateAt = json['updateAt'];
-    // grade = json['grade'];
-    // student = json['student'];
-    // subject = json['subject'];
-    courses = List.castFrom<dynamic, dynamic>(json['courses']);
+    createAt = json['createAt'];
   }
 
   Map<String, dynamic> toJson() {
@@ -82,12 +63,7 @@ class Data {
     _data['studentId'] = studentId;
     _data['subjectId'] = subjectId;
     _data['gradeId'] = gradeId;
-    // _data['createAt'] = createAt;
-    // _data['updateAt'] = updateAt;
-    // _data['grade'] = grade;
-    // _data['student'] = student;
-    // _data['subject'] = subject;
-    _data['courses'] = courses;
+    _data['createAt'] = createAt;
     return _data;
   }
 }

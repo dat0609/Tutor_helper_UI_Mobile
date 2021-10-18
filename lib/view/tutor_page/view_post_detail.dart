@@ -13,7 +13,7 @@ class TutorViewPostDetail extends StatefulWidget {
 }
 
 class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
-  var data = Get.arguments;
+  var datafromPost = Get.arguments;
   final storage = const FlutterSecureStorage();
   int tutorRequestIDGotten = 0;
   var token;
@@ -39,7 +39,7 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
   }
 
   Container _upper() {
-    tutorRequestIDGotten = data;
+    tutorRequestIDGotten = datafromPost["tutorRequestID"];
     return Container(
       margin: const EdgeInsets.only(top: 75),
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
@@ -48,58 +48,45 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
       decoration: const BoxDecoration(
         color: Color(0xFFF9F9FB),
       ),
-      child: FutureBuilder<String?>(
-        future: _getToken(),
+      child: FutureBuilder<TutorRequests>(
+        future: API_Management().getAllTutorRequests(datafromPost["token"]),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            token = snapshot.data;
-            return FutureBuilder<TutorRequests>(
-              future: API_Management().getAllTutorRequests(token),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                      itemCount: snapshot.data!.data.length,
-                      itemBuilder: (context, index) {
-                        var data = snapshot.data!.data[index];
-                        if (data.tutorRequestId == tutorRequestIDGotten) {
-                          title = data.title.toString();
-                          description = data.description.toString();
-                          tutorId = 31;
-                          tutorrequestId = data.tutorRequestId;
-                          studentId = data.studentId;
-                          subjectId = data.subjectId;
-                          return Column(
-                            children: [
-                              listItem("Student:", data.studentId.toString()),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              listItem("Title:", data.title.toString()),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              listItem("Desc:", data.description.toString()),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              // listItem("Grade:", data.grade.toString()),
-                              // const SizedBox(
-                              //   height: 10,
-                              // ),
-                              // listItem("Subject:", data.subject.toString()),
-                            ],
-                          );
-                        }
-                        return const Visibility(
-                            child: Text(""), visible: false);
-                      });
-                } else if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                } else {
-                  return const Text("");
-                }
-              },
-            );
+            return ListView.builder(
+                itemCount: snapshot.data!.data.length,
+                itemBuilder: (context, index) {
+                  var data = snapshot.data!.data[index];
+                  if (data.tutorRequestId == tutorRequestIDGotten) {
+                    title = data.title.toString();
+                    description = data.description.toString();
+                    tutorId = datafromPost["tutorId"];
+                    tutorrequestId = data.tutorRequestId;
+                    studentId = data.studentId;
+                    subjectId = data.subjectId;
+                    return Column(
+                      children: [
+                        listItem("Student:", data.studentId.toString()),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        listItem("Title:", data.title.toString()),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        listItem("Desc:", data.description.toString()),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        // listItem("Grade:", data.grade.toString()),
+                        // const SizedBox(
+                        //   height: 10,
+                        // ),
+                        // listItem("Subject:", data.subject.toString()),
+                      ],
+                    );
+                  }
+                  return const Visibility(child: Text(""), visible: false);
+                });
           } else if (snapshot.hasError) {
             return Text('${snapshot.error}');
           } else {
@@ -190,8 +177,8 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
     Widget acceptButton = TextButton(
       child: const Text("Accept"),
       onPressed: () {
-        API_Management().acceptTutorRequest(token, tutorId, tutorrequestId,
-            studentId, 1, title, description, subjectId);
+        API_Management().acceptTutorRequest(datafromPost["token"], tutorId,
+            tutorrequestId, studentId, 1, title, description, subjectId);
         showDialog(
           context: context,
           builder: (BuildContext context) {

@@ -123,7 +123,8 @@ class API_Management {
       API_Management().createCourseByRequest(
           token, title, description, tutorid, tutorrequestid);
     } else {
-      log("Error while accept TutorRequest");
+      log(response.headers.toString());
+      log(token);
     }
   }
 

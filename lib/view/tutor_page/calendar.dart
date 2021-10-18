@@ -252,11 +252,11 @@ class _TutorCalendarPageState extends State<TutorCalendarPage> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CircleAvatar(
-                      radius: 9,
-                      backgroundImage: NetworkImage(tutorImage //TutorImage
-                          ),
-                    ),
+                    // CircleAvatar(
+                    //   radius: 9,
+                    //   backgroundImage: NetworkImage(tutorImage //TutorImage
+                    //       ),
+                    // ),
                     const SizedBox(
                       width: 5,
                     ),

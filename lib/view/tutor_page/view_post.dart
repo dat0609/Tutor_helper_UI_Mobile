@@ -44,8 +44,6 @@ class _TutorViewPostState extends State<TutorViewPost> {
     initializeDateFormatting('vi', null);
     final DateTime now = DateTime.now();
     DateTimeTutor dtt = DateTimeTutor();
-    String imageLink = "assets/images/default_avatar.png";
-
     return Container(
       decoration: const BoxDecoration(
           //color: Color(0xFFD4E7FE),
@@ -83,90 +81,90 @@ class _TutorViewPostState extends State<TutorViewPost> {
           const SizedBox(
             height: 15,
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(width: 1, color: Colors.white),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.blueGrey.withOpacity(0.2),
-                        blurRadius: 12,
-                        spreadRadius: 8,
-                      )
-                    ],
-                  ),
-                  child: GestureDetector(
-                    child: Image.asset(
-                      imageLink,
-                      fit: BoxFit.cover,
-                      width: 50,
-                      height: 50,
+          FutureBuilder<String?>(
+            future: _getData(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var data = jsonDecode(snapshot.data.toString());
+                var email = data["data"]["email"].toString().split("@");
+                String username = email[0];
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(width: 1, color: Colors.white),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.blueGrey.withOpacity(0.2),
+                              blurRadius: 12,
+                              spreadRadius: 8,
+                            )
+                          ],
+                        ),
+                        child: GestureDetector(
+                          child: Image.network(
+                            data["data"]["imagePath"],
+                            fit: BoxFit.fill,
+                            width: 50,
+                            height: 50,
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TutorEditProfilePage()),
+                            );
+                          },
+                        )),
+                    const SizedBox(
+                      width: 20,
                     ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => TutorEditProfilePage()),
-                      );
-                    },
-                  )),
-              const SizedBox(
-                width: 20,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  FutureBuilder<String?>(
-                    future: _getData(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        var data = jsonDecode(snapshot.data.toString());
-                        var email = data["data"]['email'].toString().split("@");
-                        String username = email[0];
-                        return Text(
-                          "Hi  $username",
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Hi $username",
                           style: const TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.w900,
                             color: Color(0XFF343E87),
                           ),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text('${snapshot.error}');
-                      } else {
-                        return const Text("");
-                      }
-                    },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Text(
-                    "Here is a list of schedule",
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.blueGrey,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  const Text(
-                    "You need to check...",
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.blueGrey,
-                    ),
-                  ),
-                ],
-              )
-            ],
-          )
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Text(
+                          "Here is a list of request",
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.blueGrey,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        const Text(
+                          "You need to check...",
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.blueGrey,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              } else {
+                return const Text("");
+              }
+            },
+          ),
         ],
       ),
     );
@@ -188,9 +186,10 @@ class _TutorViewPostState extends State<TutorViewPost> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               var data = jsonDecode(snapshot.data.toString());
+              int tutorId = data['data']['tutorId'];
+              String token = data['data']['jwtToken'];
               return FutureBuilder<TutorRequests>(
-                future: API_Management()
-                    .getAllTutorRequests(data['data']['jwtToken']),
+                future: API_Management().getAllTutorRequests(token),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return ListView.builder(
@@ -199,7 +198,7 @@ class _TutorViewPostState extends State<TutorViewPost> {
                           var data = snapshot.data!.data[index];
                           if (data.status == true) {
                             return buildClassItem(data.title, data.description,
-                                "Name", data.tutorRequestId);
+                                "Name", data.tutorRequestId, tutorId, token);
                           } else {
                             return const Visibility(
                               child: Text(""),
@@ -226,7 +225,7 @@ class _TutorViewPostState extends State<TutorViewPost> {
   }
 
   Container buildClassItem(String courseTitle, String description,
-      String fullName, int tutorRequestID) {
+      String fullName, int tutorRequestID, int tutorId, String token) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(10),
@@ -277,8 +276,14 @@ class _TutorViewPostState extends State<TutorViewPost> {
               IconButton(
                 // ignore: avoid_print
                 onPressed: () {
-                  Get.to(() => const TutorViewPostDetail(),
-                      arguments: tutorRequestID);
+                  Get.to(
+                    () => const TutorViewPostDetail(),
+                    arguments: {
+                      "tutorRequestID": tutorRequestID,
+                      "tutorId": tutorId,
+                      "token": token
+                    },
+                  );
                 },
                 icon: const Icon(Icons.arrow_right),
               ),
