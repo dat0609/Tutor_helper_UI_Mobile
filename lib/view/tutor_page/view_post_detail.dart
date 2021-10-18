@@ -24,7 +24,7 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [_navigator(), _upper(), _under()]);
+    return Stack(children: [_navigator(), _upper()]);
   }
 
   Container _upper() {
@@ -49,37 +49,31 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
           ),
           listItem("Desc:", datafromPost["description"]),
           const SizedBox(
-            height: 10,
+            height: 450,
           ),
           // listItem("Grade:", data.grade.toString()),
           // const SizedBox(
           //   height: 10,
           // ),
           // listItem("Subject:", data.subject.toString()),
-        ],
-      ),
-    );
-  }
-
-  Container _under() {
-    return Container(
-      margin: const EdgeInsets.only(top: 700),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          TextButton(
-              onPressed: () {
-                showAlertDialog(context);
-              },
-              child: const Text(
-                "Accept",
-                style: TextStyle(color: Colors.white),
-              ),
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
-                backgroundColor: Colors.green[700],
-                textStyle: const TextStyle(fontSize: 20),
-              )),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextButton(
+                  onPressed: () {
+                    showAlertDialog(context);
+                  },
+                  child: const Text(
+                    "Accept",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
+                    backgroundColor: Colors.green[700],
+                    textStyle: const TextStyle(fontSize: 20),
+                  )),
+            ],
+          ),
         ],
       ),
     );

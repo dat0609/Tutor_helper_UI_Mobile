@@ -37,9 +37,14 @@ class API_Management {
     };
     var response =
         await http.get(Uri.parse(Strings.tutorrequests_url), headers: headers);
-    var jsonString = response.body;
-    var jsonMap = json.decode(jsonString);
-    return TutorRequests.fromJson(jsonMap);
+    if (response.statusCode == 200) {
+      var jsonString = response.body;
+      log(jsonString);
+      var jsonMap = json.decode(jsonString);
+      return TutorRequests.fromJson(jsonMap);
+    } else {
+      throw Exception('Error while get TutorRequests');
+    }
   }
 
   void createCourseByRequest(var token, String title, String description,
@@ -107,6 +112,7 @@ class API_Management {
     log(response.statusCode.toString());
     if (response.statusCode == 200) {
       var jsonString = response.body;
+      log(jsonString);
       var jsonMap = json.decode(jsonString);
       return TutorCourses.fromJson(jsonMap);
     } else {
