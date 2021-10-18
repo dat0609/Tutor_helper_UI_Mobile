@@ -197,8 +197,16 @@ class _TutorViewPostState extends State<TutorViewPost> {
                         itemBuilder: (context, index) {
                           var data = snapshot.data!.data[index];
                           if (data.status == true) {
-                            return buildClassItem(data.title, data.description,
-                                "Name", data.tutorRequestId, tutorId, token);
+                            return buildClassItem(
+                                data.title,
+                                data.description,
+                                "Name",
+                                data.tutorRequestId,
+                                tutorId,
+                                token,
+                                data.gradeId,
+                                data.studentId,
+                                data.subjectId);
                           } else {
                             return const Visibility(
                               child: Text(""),
@@ -224,8 +232,16 @@ class _TutorViewPostState extends State<TutorViewPost> {
     );
   }
 
-  Container buildClassItem(String courseTitle, String description,
-      String fullName, int tutorRequestID, int tutorId, String token) {
+  Container buildClassItem(
+      String courseTitle,
+      String description,
+      String fullName,
+      int tutorRequestID,
+      int tutorId,
+      String token,
+      int gradeId,
+      int studentid,
+      int subjectId) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(10),
@@ -284,6 +300,9 @@ class _TutorViewPostState extends State<TutorViewPost> {
                       "token": token,
                       "title": courseTitle,
                       "description": description,
+                      "gradeId": gradeId,
+                      "studentid": studentid,
+                      "subjectId": subjectId,
                     },
                   );
                 },

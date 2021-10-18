@@ -16,17 +16,6 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
   var datafromPost = Get.arguments;
   final storage = const FlutterSecureStorage();
   int tutorRequestIDGotten = 0;
-  var token;
-  String title = "";
-  String description = "";
-  int tutorId = 0;
-  int tutorrequestId = 0;
-  int studentId = 0;
-  int subjectId = 0;
-
-  Future<String?> _getToken() async {
-    return await storage.read(key: "jwtToken");
-  }
 
   @override
   void initState() {
@@ -152,8 +141,15 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
     Widget acceptButton = TextButton(
       child: const Text("Accept"),
       onPressed: () {
-        API_Management().acceptTutorRequest(datafromPost["token"], tutorId,
-            tutorrequestId, studentId, 1, title, description, subjectId);
+        API_Management().acceptTutorRequest(
+            datafromPost["token"],
+            datafromPost["tutorId"],
+            datafromPost["tutorRequestID"],
+            datafromPost["studentid"],
+            datafromPost["gradeId"],
+            datafromPost["title"],
+            datafromPost["description"],
+            datafromPost["subjectId"]);
         showDialog(
           context: context,
           builder: (BuildContext context) {
