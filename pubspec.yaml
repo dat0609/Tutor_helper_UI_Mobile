@@ -45,6 +45,8 @@ dependencies:
   flutter_secure_storage: ^4.2.1
   jwt_decode: ^0.3.1
   date_time_picker: ^2.1.0
+  day_picker: ^2.0.0
+  syncfusion_flutter_calendar: ^19.3.46
 
 dev_dependencies:
   flutter_test:

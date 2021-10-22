@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
@@ -27,7 +29,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [_navigator(), _upper(), _under()]);
+    return Stack(children: [_navigator(), _upper()]);
   }
 
   AppBar _navigator() {
@@ -56,6 +58,10 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
         children: [
           listItem("Title", data_from_home_page["title"]),
           listItem("Desc", data_from_home_page["description"]),
+          const SizedBox(
+            height: 440,
+          ),
+          _under(),
         ],
       ),
     );
@@ -63,13 +69,11 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
 
   Container _under() {
     return Container(
-      margin: const EdgeInsets.only(top: 700),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           TextButton(
               onPressed: () {
-                print("Create Class");
                 Get.to(() => const CreateClass(), arguments: {
                   "title": data_from_home_page["title"],
                   "description": data_from_home_page["description"],

@@ -39,7 +39,6 @@ class API_Management {
         await http.get(Uri.parse(Strings.tutorrequests_url), headers: headers);
     if (response.statusCode == 200) {
       var jsonString = response.body;
-      log(jsonString);
       var jsonMap = json.decode(jsonString);
       return TutorRequests.fromJson(jsonMap);
     } else {
@@ -95,10 +94,7 @@ class API_Management {
     if (response.statusCode == 200) {
       API_Management().createCourseByRequest(
           token, title, description, tutorid, tutorrequestid);
-    } else {
-      log(response.headers.toString());
-      log(token);
-    }
+    } else {}
   }
 
   Future<TutorCourses> getCoursesByTutorID(var token, int tutorId) async {
@@ -109,10 +105,8 @@ class API_Management {
         "Authorization": "Bearer " + token.toString()
       },
     );
-    log(response.statusCode.toString());
     if (response.statusCode == 200) {
       var jsonString = response.body;
-      log(jsonString);
       var jsonMap = json.decode(jsonString);
       return TutorCourses.fromJson(jsonMap);
     } else {
@@ -128,7 +122,6 @@ class API_Management {
         "Authorization": "Bearer " + token.toString()
       },
     );
-    log(response.statusCode.toString());
     if (response.statusCode == 200) {
       var jsonString = response.body;
       var jsonMap = json.decode(jsonString);
@@ -155,5 +148,27 @@ class API_Management {
     });
     await http.put(Uri.parse(Strings.courses_url),
         headers: headers, body: body);
+  }
+
+  void createClass(var token, int courseid, String title, String description,
+      String startTime, String endTime) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Charset': 'utf-8',
+      "Authorization": "Bearer " + token.toString()
+    };
+    final body = jsonEncode({
+      "title": title,
+      "description": description,
+      "status": true,
+      "courseId": courseid,
+      "startTime": startTime,
+      "endTime": endTime
+    });
+    var res = await http.post(Uri.parse(Strings.class_url),
+        headers: headers, body: body);
+    log(res.statusCode.toString());
+    log(res.headers.toString());
+    log(res.body.toString());
   }
 }

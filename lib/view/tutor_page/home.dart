@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -162,63 +163,74 @@ class _TutorHomePageState extends State<TutorHomePage> {
 
   Positioned _under() {
     return Positioned(
-      top: 185,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        height: MediaQuery.of(context).size.height - 245,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: FutureBuilder<String?>(
-          future: _getData(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              var data = jsonDecode(snapshot.data.toString());
-              int tutorID = data["data"]["tutorId"];
-              return FutureBuilder<TutorCourses>(
-                future: API_Management()
-                    .getCoursesByTutorID(data["data"]['jwtToken'], tutorID),
+        top: 185,
+        child: Column(
+          children: [
+            const Text(
+              "Your Course",
+              style: TextStyle(
+                  fontSize: 25,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w900),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              height: MediaQuery.of(context).size.height - 245,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: FutureBuilder<String?>(
+                future: _getData(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    var tutorCourse = snapshot.data!.data.courses;
-                    return ListView.builder(
-                        itemCount: tutorCourse.length,
-                        itemBuilder: (context, index) {
-                          var courseData = snapshot.data!.data.courses[index];
-                          if (courseData.status == true) {
-                            return buildClassItem(
-                                courseData.title,
-                                courseData.description,
-                                courseData.courseId,
-                                courseData.tutorId,
-                                courseData.tutorRequestId,
-                                courseData.tutorId,
-                                data["data"]['jwtToken']);
-                          } else {
-                            return const Visibility(
-                              child: Text("data"),
-                              visible: false,
-                            );
-                          }
-                        });
+                    var data = jsonDecode(snapshot.data.toString());
+                    int tutorID = data["data"]["tutorId"];
+                    return FutureBuilder<TutorCourses>(
+                      future: API_Management().getCoursesByTutorID(
+                          data["data"]['jwtToken'], tutorID),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          var tutorCourse = snapshot.data!.data.courses;
+                          return ListView.builder(
+                              itemCount: tutorCourse.length,
+                              itemBuilder: (context, index) {
+                                var courseData =
+                                    snapshot.data!.data.courses[index];
+                                if (courseData.status == true) {
+                                  return buildClassItem(
+                                      courseData.title,
+                                      courseData.description,
+                                      courseData.courseId,
+                                      courseData.tutorId,
+                                      courseData.tutorRequestId,
+                                      courseData.tutorId,
+                                      data["data"]['jwtToken']);
+                                } else {
+                                  return const Visibility(
+                                    child: Text("data"),
+                                    visible: false,
+                                  );
+                                }
+                              });
+                        } else if (snapshot.hasError) {
+                          return const Text("");
+                        } else {
+                          return const Text("");
+                        }
+                      },
+                    );
                   } else if (snapshot.hasError) {
-                    return const Text("");
+                    return Text('${snapshot.error}');
                   } else {
                     return const Text("");
                   }
                 },
-              );
-            } else if (snapshot.hasError) {
-              return Text('${snapshot.error}');
-            } else {
-              return const Text("");
-            }
-          },
-        ),
-      ),
-    );
+              ),
+            ),
+          ],
+        ));
   }
 
   Container buildClassItem(String title, String description, int courseid,
