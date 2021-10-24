@@ -1,7 +1,12 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/classes.dart';
+import 'package:tutor_helper/model/tutorcourses.dart';
 import 'package:tutor_helper/presenter/date_time_format.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -13,52 +18,101 @@ class TutorCalendarPage extends StatefulWidget {
 }
 
 class _TutorCalendarPageState extends State<TutorCalendarPage> {
+  List<Appointment> meetings = <Appointment>[];
+  List<int> listCourseId = <int>[];
+  final storage = const FlutterSecureStorage();
+
+  Future<String?> _getData() async {
+    return await storage.read(key: "database");
+  }
+
   @override
   Widget build(BuildContext context) {
     initializeDateFormatting('vi', null);
-    final DateTime now = DateTime.now();
-    DateTimeTutor dtt = DateTimeTutor();
     return Scaffold(
-      body: SfCalendar(
-        view: CalendarView.week,
-        firstDayOfWeek: DateTime.monday,
+      body: FutureBuilder<String?>(
+        future: _getData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var data = jsonDecode(snapshot.data.toString());
+            int tutorID = data["data"]["tutorId"];
+            var token = data["data"]["jwtToken"];
+            return FutureBuilder<TutorCourses>(
+              future: API_Management()
+                  .getCoursesByTutorID(data["data"]['jwtToken'], tutorID),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  var tutorCourse = snapshot.data!.data.courses;
+                  listCourseId.clear();
+                  for (int i = 0; i < tutorCourse.length; i++) {
+                    if (tutorCourse[i].status == true) {
+                      listCourseId.add(tutorCourse[i].courseId);
+                    }
+                  }
+                  return FutureBuilder<Classes>(
+                      future: API_Management().getAllClass(token),
+                      builder: (context, classesData) {
+                        if (classesData.hasData) {
+                          var classData = classesData.data!.data;
+                          meetings.clear();
+                          for (int i = 0; i < classData.length; i++) {
+                            for (int k = 0; k < listCourseId.length; k++) {
+                              if (listCourseId[k] == classData[i].courseId) {
+                                meetings.add(Appointment(
+                                    startTime: DateTime.parse(
+                                        classData[i].startTime.toString()),
+                                    endTime: DateTime.parse(
+                                        classData[i].endTime.toString()),
+                                    subject: classData[i].title,
+                                    color: Colors.blue));
+                              }
+                            }
+                          }
+                          log(listCourseId.length.toString());
+                          log(meetings.length.toString());
+                          return SfCalendar(
+                            view: CalendarView.week,
+                            firstDayOfWeek: DateTime.monday,
+                            dataSource: _MeetingDataSource(meetings),
+                          );
+                        } else if (classesData.hasError) {
+                          return const Visibility(
+                            child: Text(""),
+                            visible: false,
+                          );
+                        } else {
+                          return const Visibility(
+                            child: Text(""),
+                            visible: false,
+                          );
+                        }
+                      });
+                } else if (snapshot.hasError) {
+                  return const Visibility(
+                    child: Text(""),
+                    visible: false,
+                  );
+                } else {
+                  return const Visibility(
+                    child: Text(""),
+                    visible: false,
+                  );
+                }
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          } else {
+            return const Text("");
+          }
+        },
       ),
     );
   }
 }
 
-late Map<DateTime, List<Appointment>> _dataCollection;
-
 class _MeetingDataSource extends CalendarDataSource {
   _MeetingDataSource(List<Appointment> source) {
     appointments = source;
-  }
-
-  @override
-  Future<void> handleLoadMore(DateTime startDate, DateTime endDate) async {
-    await Future.delayed(const Duration(seconds: 1));
-    final List<Appointment> meetings = <Appointment>[];
-    DateTime date = DateTime(startDate.year, startDate.month, startDate.day);
-    final DateTime appEndDate =
-        DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
-    while (date.isBefore(appEndDate)) {
-      final List<Appointment>? data = _dataCollection[date];
-      if (data == null) {
-        date = date.add(const Duration(days: 1));
-        continue;
-      }
-
-      for (final Appointment meeting in data) {
-        if (appointments!.contains(meeting)) {
-          continue;
-        }
-
-        meetings.add(meeting);
-      }
-      date = date.add(const Duration(days: 1));
-    }
-
-    appointments!.addAll(meetings);
-    notifyListeners(CalendarDataSourceAction.add, meetings);
   }
 }

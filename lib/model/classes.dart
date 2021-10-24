@@ -1,5 +1,3 @@
-import 'package:tutor_helper/model/courses.dart';
-
 class Classes {
   Classes({
     required this.message,
@@ -30,30 +28,30 @@ class Data {
     required this.id,
     required this.title,
     required this.description,
+    required this.startTime,
+    required this.endTime,
     required this.status,
     required this.createAt,
-    this.updateAt,
     required this.courseId,
-    this.course,
   });
   late final int id;
   late final String title;
   late final String description;
+  late final String startTime;
+  late final String endTime;
   late final bool status;
   late final String createAt;
-  late final String? updateAt;
   late final int courseId;
-  late final Courses? course;
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     description = json['description'];
+    startTime = json['startTime'];
+    endTime = json['endTime'];
     status = json['status'];
     createAt = json['createAt'];
-    updateAt = json['updateAt'];
     courseId = json['courseId'];
-    course = json['course'];
   }
 
   Map<String, dynamic> toJson() {
@@ -61,11 +59,11 @@ class Data {
     _data['id'] = id;
     _data['title'] = title;
     _data['description'] = description;
+    _data['startTime'] = startTime;
+    _data['endTime'] = endTime;
     _data['status'] = status;
     _data['createAt'] = createAt;
-    _data['updateAt'] = updateAt;
     _data['courseId'] = courseId;
-    _data['course'] = course;
     return _data;
   }
 }

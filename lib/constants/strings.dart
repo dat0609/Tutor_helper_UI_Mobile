@@ -25,4 +25,9 @@ class Strings {
 
   static String class_url =
       "https://tutorhelper20210920193710.azurewebsites.net/api/v1/classes";
+  static String class_for_calendar_url =
+      "https://tutorhelper20210920193710.azurewebsites.net/api/v1/classes?PageSize=1000";
+  static String class_get_url(int id) {
+    return "https://tutorhelper20210920193710.azurewebsites.net/api/v1/classess/$id";
+  }
 }

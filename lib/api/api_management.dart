@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:tutor_helper/constants/strings.dart';
+import 'package:tutor_helper/model/classes.dart';
 import 'package:tutor_helper/model/tutor_requests.dart';
 import 'package:tutor_helper/model/tutorcourses.dart';
 import 'package:tutor_helper/model/tutors.dart';
@@ -165,10 +166,26 @@ class API_Management {
       "startTime": startTime,
       "endTime": endTime
     });
-    var res = await http.post(Uri.parse(Strings.class_url),
-        headers: headers, body: body);
-    log(res.statusCode.toString());
-    log(res.headers.toString());
-    log(res.body.toString());
+    await http.post(Uri.parse(Strings.class_url), headers: headers, body: body);
+  }
+
+  Future<Classes> getAllClass(var token) async {
+    var response = await http.get(
+      Uri.parse(Strings.class_for_calendar_url),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token.toString()
+      },
+    );
+    log(response.request.toString());
+    if (response.statusCode == 200) {
+      var jsonString = response.body;
+      var jsonMap = json.decode(jsonString);
+      return Classes.fromJson(jsonMap);
+    } else {
+      log(response.body.toString());
+      log(response.headers.toString());
+      throw Exception('Error while get Classes');
+    }
   }
 }

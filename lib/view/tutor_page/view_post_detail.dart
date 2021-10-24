@@ -49,7 +49,7 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
           ),
           listItem("Desc:", datafromPost["description"]),
           const SizedBox(
-            height: 450,
+            height: 350,
           ),
           // listItem("Grade:", data.grade.toString()),
           // const SizedBox(

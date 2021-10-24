@@ -70,8 +70,4 @@ class Data {
     _data['feedbacks'] = feedbacks;
     return _data;
   }
-
-  get getTitle {
-    return title;
-  }
 }
