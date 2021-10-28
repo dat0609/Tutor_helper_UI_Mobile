@@ -7,32 +7,22 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/presenter/date_time_format.dart';
+import 'package:tutor_helper/view/tutor_page/calendar.dart';
+import 'package:tutor_helper/view/tutor_page/document.dart';
 import 'package:tutor_helper/view/tutor_page/home.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:day_picker/day_picker.dart';
 import 'package:tutor_helper/view/tutor_page/view_post.dart';
 
-import 'calendar.dart';
-import 'document.dart';
-
-class CreateClass extends StatefulWidget {
-  const CreateClass({Key? key}) : super(key: key);
+class ViewClassDetail extends StatefulWidget {
+  const ViewClassDetail({Key? key}) : super(key: key);
 
   @override
-  _CreateClassState createState() => _CreateClassState();
+  _ViewClassDetailState createState() => _ViewClassDetailState();
 }
 
-class _CreateClassState extends State<CreateClass> {
-  final List<DayInWeek> _days = [
-    DayInWeek("Sun"),
-    DayInWeek("Mon"),
-    DayInWeek("Tue"),
-    DayInWeek("Wed"),
-    DayInWeek("Thu"),
-    DayInWeek("Fri"),
-    DayInWeek("Sat"),
-  ];
+class _ViewClassDetailState extends State<ViewClassDetail> {
   var data_from_course_detail = Get.arguments;
   final storage = const FlutterSecureStorage();
   DateTime selectedStartDate = DateTime.now();
@@ -43,10 +33,9 @@ class _CreateClassState extends State<CreateClass> {
   String endTimeChanged = '';
   String endTimeToValidate = '';
   String endTimeSaved = '';
-  List<int> weekdateData = [];
-  List<List<String>> classDateTimeData = [];
   String title = "";
   String description = "";
+  String date = "";
 
   _startDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -88,11 +77,31 @@ class _CreateClassState extends State<CreateClass> {
 
   AppBar _navigator() {
     return AppBar(
-      title: const Text("Create Class"),
+      title: const Text("Class Infomation"),
+      actions: <Widget>[
+        IconButton(
+          icon: const Icon(Icons.delete_forever),
+          onPressed: () {
+            showAlertDialogForDelete(context);
+          },
+        )
+      ],
     );
   }
 
   Widget _upper() {
+    var startDateTimeStr =
+        data_from_course_detail["startTime"].toString().split("T");
+    date = startDateTimeStr[0];
+    var startTimeStr = startDateTimeStr[1].split(":");
+    String startTime = startTimeStr[0] + ":" + startTimeStr[1];
+    startTimeChanged = startTime;
+    var endDateTimeStr =
+        data_from_course_detail["endTime"].toString().split("T");
+    var endTimeStr = endDateTimeStr[1].split(":");
+    String endTime = endTimeStr[0] + ":" + endTimeStr[1];
+    endTimeChanged = endTime;
+
     return Material(
       type: MaterialType.transparency,
       child: Container(
@@ -117,6 +126,7 @@ class _CreateClassState extends State<CreateClass> {
               ],
             ),
             TextFormField(
+              initialValue: data_from_course_detail["title"],
               keyboardType: TextInputType.text,
               onChanged: (value) {
                 title = value;
@@ -134,6 +144,7 @@ class _CreateClassState extends State<CreateClass> {
               ],
             ),
             TextFormField(
+              initialValue: data_from_course_detail["description"],
               keyboardType: TextInputType.multiline,
               maxLines: 5,
               onChanged: (value) {
@@ -142,100 +153,19 @@ class _CreateClassState extends State<CreateClass> {
             ),
             Wrap(children: const [
               Text(
-                "Choose Time for Class",
+                "Change Time for Class",
                 style: TextStyle(
                     fontSize: 25,
                     color: Colors.black,
                     fontWeight: FontWeight.w900),
               )
             ]),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "Start Date:",
-                  style: TextStyle(fontSize: 20),
-                ),
-                SizedBox(
-                  width: 200,
-                  child: ElevatedButton(
-                    onPressed: () => _startDate(context),
-                    child: Text(
-                      "${selectedStartDate.toLocal()}".split(' ')[0],
-                      style: const TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                    style: ElevatedButton.styleFrom(primary: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "End Date:",
-                  style: TextStyle(fontSize: 20),
-                ),
-                SizedBox(
-                  width: 200,
-                  child: ElevatedButton(
-                    onPressed: () => _endDate(context),
-                    child: Text(
-                      "${selectedEndDate.toLocal()}".split(' ')[0],
-                      style: const TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                    style: ElevatedButton.styleFrom(primary: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-            Wrap(
-              children: [
-                SelectWeekDays(
-                  days: _days,
-                  border: false,
-                  boxDecoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      colors: [Color(0xFF1DACE0), Color(0xFF1DACE0)],
-                      tileMode: TileMode.repeated,
-                    ),
-                  ),
-                  onSelect: (List<String> values) {
-                    weekdateData.clear();
-                    Map<String, int> weekday = {
-                      "Mon": 1,
-                      "Tue": 2,
-                      "Wed": 3,
-                      "Thu": 4,
-                      "Fri": 5,
-                      "Sat": 6,
-                      "Sun": 7,
-                    };
-                    var entryList = weekday.entries.toList();
-                    for (int i = 0; i < values.length; i++) {
-                      for (int k = 0; k < weekday.length; k++) {
-                        if (values[i] == entryList[k].key) {
-                          weekdateData.add(entryList[k].value);
-                          break;
-                        }
-                      }
-                    }
-                  },
-                ),
-              ],
-            ),
             Wrap(
               children: [
                 DateTimePicker(
                   type: DateTimePickerType.time,
                   timePickerEntryModeInput: true,
-                  initialValue: '',
+                  initialValue: startTime,
                   icon: const Icon(Icons.access_time),
                   timeLabelText: "Start Time",
                   use24HourFormat: true,
@@ -254,7 +184,7 @@ class _CreateClassState extends State<CreateClass> {
                 DateTimePicker(
                   type: DateTimePickerType.time,
                   timePickerEntryModeInput: true,
-                  initialValue: '',
+                  initialValue: endTime,
                   icon: const Icon(Icons.access_time),
                   timeLabelText: "End Time",
                   use24HourFormat: true,
@@ -284,23 +214,10 @@ class _CreateClassState extends State<CreateClass> {
       children: [
         TextButton(
             onPressed: () {
-              classDateTimeData.clear();
-              for (int i = 0; i < weekdateData.length; i++) {
-                List<List<String>> dateTimeData =
-                    DateTimeTutor.getDaysInBetween(
-                        "${selectedStartDate.toLocal()}".split(' ')[0],
-                        "${selectedEndDate.toLocal()}".split(' ')[0],
-                        weekdateData[i],
-                        startTimeChanged,
-                        endTimeChanged);
-                for (int k = 0; k < dateTimeData.length; k++) {
-                  classDateTimeData.add(dateTimeData[k]);
-                }
-              }
-              showAlertDialog(context);
+              showAlertDialogForUpdate(context);
             },
             child: const Text(
-              "Create Class",
+              "Update Class",
               style: TextStyle(color: Colors.white),
             ),
             style: TextButton.styleFrom(
@@ -311,16 +228,18 @@ class _CreateClassState extends State<CreateClass> {
     );
   }
 
-  showAlertDialog(BuildContext context) {
+  showAlertDialogForUpdate(BuildContext context) {
     Widget okButton = TextButton(
       child: const Text("OK"),
       onPressed: () {
-        Get.offAll(() => const TutorManagement());
+        Get.back();
+        Get.back();
+        Get.back();
       },
     );
     AlertDialog secondAlert = AlertDialog(
-      title: const Text("Class Created!"),
-      content: const Text("The class has been Created!!!"),
+      title: const Text("Class Updated!"),
+      content: const Text("The class has been Updated!!!"),
       actions: [
         okButton,
       ],
@@ -331,36 +250,91 @@ class _CreateClassState extends State<CreateClass> {
         Get.back();
       },
     );
-    Widget createButton = TextButton(
-      child: const Text("Create"),
+    Widget updatedButton = TextButton(
+      child: const Text("Update"),
       onPressed: () {
-        for (int i = 0; i < classDateTimeData.length; i++) {
-          var date = classDateTimeData[i][0].split("T");
-          String dateStr = date[0];
-          API_Management().createClass(
-              data_from_course_detail["token"],
-              data_from_course_detail["courseid"],
-              "Class of " +
-                  data_from_course_detail["courseid"].toString() +
-                  " at $dateStr",
-              "This is Desc",
-              classDateTimeData[i][0],
-              classDateTimeData[i][1]);
-        }
         showDialog(
           context: context,
           builder: (BuildContext context) {
+            API_Management().updateClass(
+                data_from_course_detail["token"],
+                data_from_course_detail["classid"],
+                data_from_course_detail["courseid"],
+                title,
+                description,
+                date + "T" + startTimeChanged + ":00",
+                date + "T" + endTimeChanged + ":00",
+                true);
             return secondAlert;
           },
         );
       },
     );
     AlertDialog firstAlert = AlertDialog(
-      title: const Text("Create Class!"),
-      content: const Text("Are you sure you want to Create this Class?"),
+      title: const Text("Update Class!"),
+      content: const Text("Are you sure you want to Update this Class?"),
       actions: [
         cancelButton,
-        createButton,
+        updatedButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return firstAlert;
+      },
+    );
+  }
+
+  showAlertDialogForDelete(BuildContext context) {
+    Widget okButton = TextButton(
+      child: const Text("OK"),
+      onPressed: () {
+        Get.back();
+        Get.back();
+        Get.back();
+      },
+    );
+    AlertDialog secondAlert = AlertDialog(
+      title: const Text("Class Deleted!"),
+      content: const Text("The class has been Deleted!!!"),
+      actions: [
+        okButton,
+      ],
+    );
+    Widget cancelButton = TextButton(
+      child: const Text("Cancel"),
+      onPressed: () {
+        Get.back();
+      },
+    );
+    Widget deleteButton = TextButton(
+      child: const Text("Delete"),
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            API_Management().updateClass(
+                data_from_course_detail["token"],
+                data_from_course_detail["classid"],
+                data_from_course_detail["courseid"],
+                title,
+                description,
+                date + "T" + startTimeChanged + ":00",
+                date + "T" + endTimeChanged + ":00",
+                false);
+            return secondAlert;
+          },
+        );
+      },
+    );
+    AlertDialog firstAlert = AlertDialog(
+      title: const Text("Delete Class!"),
+      content: const Text("Are you sure you want to Delete this Class?"),
+      actions: [
+        cancelButton,
+        deleteButton,
       ],
     );
     // show the dialog

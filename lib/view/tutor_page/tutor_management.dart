@@ -17,7 +17,6 @@ class _TutorManagementState extends State<TutorManagement> {
   Widget build(BuildContext context) {
     List pages = [
       const TutorHomePage(),
-      TutorDocumentPage(),
       const TutorCalendarPage(),
       const TutorViewPost(),
     ];
@@ -41,10 +40,6 @@ class _TutorManagementState extends State<TutorManagement> {
               BottomNavigationBarItem(
                 title: Text("Home"),
                 icon: Icon(Icons.home),
-              ),
-              BottomNavigationBarItem(
-                title: Text("Document"),
-                icon: Icon(Icons.dashboard_customize_rounded),
               ),
               BottomNavigationBarItem(
                 title: Text("Calendar"),

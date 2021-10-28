@@ -1,9 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/tutor_requests.dart';
+import 'package:tutor_helper/view/tutor_page/calendar.dart';
+import 'package:tutor_helper/view/tutor_page/document.dart';
+import 'package:tutor_helper/view/tutor_page/home.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
+import 'package:tutor_helper/view/tutor_page/view_post.dart';
 
 class TutorViewPostDetail extends StatefulWidget {
   const TutorViewPostDetail({Key? key}) : super(key: key);
@@ -24,7 +30,10 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [_navigator(), _upper()]);
+    return Stack(children: [
+      _navigator(),
+      _upper(),
+    ]);
   }
 
   Container _upper() {
@@ -33,7 +42,7 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
       margin: const EdgeInsets.only(top: 75),
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
       height: 800,
-      width: 400,
+      width: 500,
       decoration: const BoxDecoration(
         color: Color(0xFFF9F9FB),
       ),
@@ -81,6 +90,7 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
 
   AppBar _navigator() {
     return AppBar(
+      title: const Text("Post Infomation"),
       actions: <Widget>[],
     );
   }

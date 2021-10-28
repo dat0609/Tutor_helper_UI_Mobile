@@ -50,7 +50,7 @@ class Data {
     startTime = json['startTime'];
     endTime = json['endTime'];
     status = json['status'];
-    createAt = json['createAt'];
+    // createAt = json['createAt'];
     courseId = json['courseId'];
   }
 

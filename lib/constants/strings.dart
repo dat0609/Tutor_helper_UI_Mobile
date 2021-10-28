@@ -21,7 +21,7 @@ class Strings {
       "https://tutorhelper20210920193710.azurewebsites.net/api/v1/courses";
 
   static String signin_url =
-      "https://tutorhelper20210920193710.azurewebsites.net/api/v1/auth/sign-in-user";
+      "https://tutorhelper20210920193710.azurewebsites.net/api/v1/auth/sign-in-tutor";
 
   static String class_url =
       "https://tutorhelper20210920193710.azurewebsites.net/api/v1/classes";

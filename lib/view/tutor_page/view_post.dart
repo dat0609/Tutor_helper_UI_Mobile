@@ -5,6 +5,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/tutor_requests.dart';
+import 'package:tutor_helper/view/tutor_page/calendar.dart';
+import 'package:tutor_helper/view/tutor_page/document.dart';
+import 'package:tutor_helper/view/tutor_page/home.dart';
 import 'package:tutor_helper/view/tutor_page/profile.dart';
 import 'package:tutor_helper/presenter/date_time_format.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -22,6 +25,13 @@ class _TutorViewPostState extends State<TutorViewPost> {
   final DateTime now = DateTime.now();
   DateTimeTutor dt = DateTimeTutor();
   final storage = const FlutterSecureStorage();
+  int _selectedItemIndex = 0;
+  List pages = [
+    const TutorHomePage(),
+    TutorDocumentPage(),
+    const TutorCalendarPage(),
+    const TutorViewPost(),
+  ];
 
   Future<String?> _getData() async {
     return await storage.read(key: "database");
@@ -245,7 +255,7 @@ class _TutorViewPostState extends State<TutorViewPost> {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(10),
-      height: 100,
+      height: 150,
       decoration: BoxDecoration(
         color: const Color(0xFFF9F9FB),
         borderRadius: BorderRadius.circular(30),

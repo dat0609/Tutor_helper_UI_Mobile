@@ -1,46 +1,56 @@
 {
-  "project_info": {
-    "project_number": "1083830889210",
-    "project_id": "tutor-helper-6faa2",
-    "storage_bucket": "tutor-helper-6faa2.appspot.com"
-  },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1083830889210:android:4bf90029afc906825b3743",
-        "android_client_info": {
-          "package_name": "com.example.tutor_helper"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1083830889210-86vn6svf2kkr5ogigt5nciu26lfs6ql2.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAaiGBUSUy4F85i0ti_JeZePuy88mkxF4o"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1083830889210-86vn6svf2kkr5ogigt5nciu26lfs6ql2.apps.googleusercontent.com",
-              "client_type": 3
+    "project_info": {
+        "project_number": "1083830889210",
+        "project_id": "tutor-helper-6faa2",
+        "storage_bucket": "tutor-helper-6faa2.appspot.com"
+    },
+    "client": [{
+        "client_info": {
+            "mobilesdk_app_id": "1:1083830889210:android:4bf90029afc906825b3743",
+            "android_client_info": {
+                "package_name": "com.example.tutor_helper"
+            }
+        },
+        "oauth_client": [{
+                "client_id": "1083830889210-0gcqtdtggg1s1h6mbdndcb7etqg0tr7k.apps.googleusercontent.com",
+                "client_type": 1,
+                "android_info": {
+                    "package_name": "com.example.tutor_helper",
+                    "certificate_hash": "45f6f40ff3f34cac64ad19b5f518ccf73547d680"
+                }
             },
             {
-              "client_id": "1083830889210-ugcbabf8rqe7ckh5ersevmtn08tenm92.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "tutor-hepler"
-              }
+                "client_id": "1083830889210-mv1oljkdki6iufkldhee1i3nlnibpqb9.apps.googleusercontent.com",
+                "client_type": 1,
+                "android_info": {
+                    "package_name": "com.example.tutor_helper",
+                    "certificate_hash": "80895850d7d5344b65c825916b183a152201536b"
+                }
+            },
+            {
+                "client_id": "1083830889210-86vn6svf2kkr5ogigt5nciu26lfs6ql2.apps.googleusercontent.com",
+                "client_type": 3
             }
-          ]
+        ],
+        "api_key": [{
+            "current_key": "AIzaSyAaiGBUSUy4F85i0ti_JeZePuy88mkxF4o"
+        }],
+        "services": {
+            "appinvite_service": {
+                "other_platform_oauth_client": [{
+                        "client_id": "1083830889210-86vn6svf2kkr5ogigt5nciu26lfs6ql2.apps.googleusercontent.com",
+                        "client_type": 3
+                    },
+                    {
+                        "client_id": "1083830889210-ugcbabf8rqe7ckh5ersevmtn08tenm92.apps.googleusercontent.com",
+                        "client_type": 2,
+                        "ios_info": {
+                            "bundle_id": "tutor-hepler"
+                        }
+                    }
+                ]
+            }
         }
-      }
-    }
-  ],
-  "configuration_version": "1"
+    }],
+    "configuration_version": "1"
 }

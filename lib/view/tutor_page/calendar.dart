@@ -7,7 +7,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/classes.dart';
 import 'package:tutor_helper/model/tutorcourses.dart';
-import 'package:tutor_helper/presenter/date_time_format.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class TutorCalendarPage extends StatefulWidget {
@@ -57,7 +56,8 @@ class _TutorCalendarPageState extends State<TutorCalendarPage> {
                           meetings.clear();
                           for (int i = 0; i < classData.length; i++) {
                             for (int k = 0; k < listCourseId.length; k++) {
-                              if (listCourseId[k] == classData[i].courseId) {
+                              if (listCourseId[k] == classData[i].courseId &&
+                                  classData[i].status == true) {
                                 meetings.add(Appointment(
                                     startTime: DateTime.parse(
                                         classData[i].startTime.toString()),
@@ -68,8 +68,6 @@ class _TutorCalendarPageState extends State<TutorCalendarPage> {
                               }
                             }
                           }
-                          log(listCourseId.length.toString());
-                          log(meetings.length.toString());
                           return SfCalendar(
                             view: CalendarView.week,
                             firstDayOfWeek: DateTime.monday,
@@ -106,6 +104,10 @@ class _TutorCalendarPageState extends State<TutorCalendarPage> {
             return const Text("");
           }
         },
+      ),
+      appBar: AppBar(
+        title: const Text("Calendar"),
+        actions: [],
       ),
     );
   }

@@ -188,4 +188,23 @@ class API_Management {
       throw Exception('Error while get Classes');
     }
   }
+
+  void updateClass(var token, int classid, int courseid, String title,
+      String description, String startTime, String endTime, bool status) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Charset': 'utf-8',
+      "Authorization": "Bearer " + token.toString()
+    };
+    final body = jsonEncode({
+      "id": classid,
+      "title": title,
+      "description": description,
+      "startTime": startTime,
+      "endTime": endTime,
+      "status": status,
+      "courseId": courseid
+    });
+    await http.put(Uri.parse(Strings.class_url), headers: headers, body: body);
+  }
 }

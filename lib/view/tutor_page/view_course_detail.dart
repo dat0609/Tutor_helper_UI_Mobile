@@ -4,8 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_management.dart';
+import 'package:tutor_helper/model/classes.dart';
+import 'package:tutor_helper/view/tutor_page/calendar.dart';
 import 'package:tutor_helper/view/tutor_page/create_class.dart';
+import 'package:tutor_helper/view/tutor_page/document.dart';
+import 'package:tutor_helper/view/tutor_page/home.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
+import 'package:tutor_helper/view/tutor_page/view_class_detail.dart';
+import 'package:tutor_helper/view/tutor_page/view_post.dart';
 
 class TutorViewCourseDetail extends StatefulWidget {
   const TutorViewCourseDetail({Key? key}) : super(key: key);
@@ -29,11 +35,14 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [_navigator(), _upper()]);
+    return Stack(
+      children: [_navigator(), _upper()],
+    );
   }
 
   AppBar _navigator() {
     return AppBar(
+      title: const Text("Course Infomation"),
       actions: <Widget>[
         IconButton(
           icon: const Icon(Icons.delete_forever),
@@ -50,19 +59,19 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
       margin: const EdgeInsets.only(top: 75),
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
       height: 800,
-      width: 400,
+      width: 500,
       decoration: const BoxDecoration(
         color: Color(0xFFF9F9FB),
       ),
-      child: Column(
-        children: [
-          listItem("Title", data_from_home_page["title"]),
-          listItem("Desc", data_from_home_page["description"]),
-          const SizedBox(
-            height: 440,
-          ),
-          _under(),
-        ],
+      child: Scaffold(
+        body: Column(
+          children: [
+            listItem("Title", data_from_home_page["title"]),
+            listItem("Desc", data_from_home_page["description"]),
+            _class(),
+            _under(),
+          ],
+        ),
       ),
     );
   }
@@ -136,6 +145,51 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
     );
   }
 
+  Container _class() {
+    return Container(
+      height: MediaQuery.of(context).size.height - 300,
+      width: MediaQuery.of(context).size.width,
+      child: FutureBuilder<Classes>(
+          future: API_Management().getAllClass(data_from_home_page["token"]),
+          builder: (context, classesData) {
+            if (classesData.hasData) {
+              var classData = classesData.data!.data;
+              return ListView.builder(
+                  itemCount: classData.length,
+                  itemBuilder: (context, index) {
+                    if (classData[index].courseId ==
+                            data_from_home_page["courseid"] &&
+                        classData[index].status == true) {
+                      return buildClassItem(
+                          classData[index].courseId,
+                          classData[index].title,
+                          classData[index].description,
+                          classData[index].startTime.toString(),
+                          classData[index].endTime.toString(),
+                          classData[index].id,
+                          data_from_home_page["token"]);
+                    } else {
+                      return const Visibility(
+                        child: Text(""),
+                        visible: false,
+                      );
+                    }
+                  });
+            } else if (classesData.hasError) {
+              return const Visibility(
+                child: Text(""),
+                visible: false,
+              );
+            } else {
+              return const Visibility(
+                child: Text(""),
+                visible: false,
+              );
+            }
+          }),
+    );
+  }
+
   showAlertDialog(BuildContext context) {
     Widget okButton = TextButton(
       child: const Text("OK"),
@@ -188,6 +242,66 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
       builder: (BuildContext context) {
         return firstAlert;
       },
+    );
+  }
+
+  Container buildClassItem(int courseid, String title, String description,
+      String startTime, String endTime, int classid, String token) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 15),
+      padding: const EdgeInsets.all(10),
+      height: 100,
+      decoration: BoxDecoration(
+        color: const Color(0xFFF9F9FB),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 150,
+                child: Text(
+                  title.trim(), //Subject Name
+                  overflow: TextOverflow.clip,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 150,
+                child: Text(
+                  description.trim(), //Address
+                  overflow: TextOverflow.clip,
+                  style: const TextStyle(color: Colors.black, fontSize: 13),
+                ),
+              )
+            ],
+          ),
+          Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  Get.to(() => const ViewClassDetail(), arguments: {
+                    "courseid": courseid,
+                    "title": title,
+                    "description": description,
+                    "startTime": startTime,
+                    "endTime": endTime,
+                    "classid": classid,
+                    "token": token,
+                  });
+                },
+                icon: const Icon(Icons.arrow_right_alt_rounded),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
