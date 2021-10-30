@@ -1,3 +1,4 @@
+// ignore: unused_import
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -5,13 +6,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/classes.dart';
-import 'package:tutor_helper/view/tutor_page/calendar.dart';
 import 'package:tutor_helper/view/tutor_page/create_class.dart';
-import 'package:tutor_helper/view/tutor_page/document.dart';
-import 'package:tutor_helper/view/tutor_page/home.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
 import 'package:tutor_helper/view/tutor_page/view_class_detail.dart';
-import 'package:tutor_helper/view/tutor_page/view_post.dart';
 
 class TutorViewCourseDetail extends StatefulWidget {
   const TutorViewCourseDetail({Key? key}) : super(key: key);
@@ -21,12 +18,9 @@ class TutorViewCourseDetail extends StatefulWidget {
 }
 
 class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
+  // ignore: non_constant_identifier_names
   var data_from_home_page = Get.arguments;
   final storage = const FlutterSecureStorage();
-
-  Future<String?> _getData() async {
-    return await storage.read(key: "database");
-  }
 
   @override
   void initState() {
@@ -35,8 +29,10 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [_navigator(), _upper()],
+    return Scaffold(
+      body: Stack(
+        children: [_navigator(), _upper(), _class(), _under()],
+      ),
     );
   }
 
@@ -68,8 +64,6 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
           children: [
             listItem("Title", data_from_home_page["title"]),
             listItem("Desc", data_from_home_page["description"]),
-            _class(),
-            _under(),
           ],
         ),
       ),
@@ -78,6 +72,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
 
   Container _under() {
     return Container(
+      margin: const EdgeInsets.only(top: 675),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -121,7 +116,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
   Material listItem(String left, String right) {
     return Material(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
@@ -147,34 +142,44 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
 
   Container _class() {
     return Container(
+      margin: const EdgeInsets.only(top: 220, bottom: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 30),
       height: MediaQuery.of(context).size.height - 300,
       width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        color: const Color(0xFFF9F9FB),
+        border: Border.all(color: Colors.black),
+        borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+        gradient: LinearGradient(colors: [Colors.cyan.shade100, Colors.cyan]),
+      ),
       child: FutureBuilder<Classes>(
           future: API_Management().getAllClass(data_from_home_page["token"]),
           builder: (context, classesData) {
             if (classesData.hasData) {
               var classData = classesData.data!.data;
-              return ListView.builder(
-                  itemCount: classData.length,
-                  itemBuilder: (context, index) {
-                    if (classData[index].courseId ==
-                            data_from_home_page["courseid"] &&
-                        classData[index].status == true) {
-                      return buildClassItem(
-                          classData[index].courseId,
-                          classData[index].title,
-                          classData[index].description,
-                          classData[index].startTime.toString(),
-                          classData[index].endTime.toString(),
-                          classData[index].id,
-                          data_from_home_page["token"]);
-                    } else {
-                      return const Visibility(
-                        child: Text(""),
-                        visible: false,
-                      );
-                    }
-                  });
+              return Expanded(
+                  child: ListView.builder(
+                      itemCount: classData.length,
+                      itemBuilder: (context, index) {
+                        if (classData[index].courseId ==
+                                data_from_home_page["courseid"] &&
+                            classData[index].status == true) {
+                          return buildClassItem(
+                              classData[index].courseId,
+                              classData[index].title,
+                              classData[index].description,
+                              classData[index].startTime.toString(),
+                              classData[index].endTime.toString(),
+                              classData[index].id,
+                              data_from_home_page["token"]);
+                        } else {
+                          return const Visibility(
+                            child: Text(""),
+                            visible: false,
+                          );
+                        }
+                      }));
             } else if (classesData.hasError) {
               return const Visibility(
                 child: Text(""),
@@ -252,9 +257,9 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
       padding: const EdgeInsets.all(10),
       height: 100,
       decoration: BoxDecoration(
-        color: const Color(0xFFF9F9FB),
-        borderRadius: BorderRadius.circular(30),
-      ),
+          color: const Color(0xFFF9F9FB),
+          border: Border.all(color: Colors.black),
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -263,7 +268,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SizedBox(
-                width: MediaQuery.of(context).size.width - 150,
+                width: MediaQuery.of(context).size.width - 132,
                 child: Text(
                   title.trim(), //Subject Name
                   overflow: TextOverflow.clip,
@@ -273,7 +278,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
                 ),
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width - 150,
+                width: MediaQuery.of(context).size.width - 132,
                 child: Text(
                   description.trim(), //Address
                   overflow: TextOverflow.clip,
@@ -284,19 +289,27 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
           ),
           Row(
             children: [
-              IconButton(
-                onPressed: () {
-                  Get.to(() => const ViewClassDetail(), arguments: {
-                    "courseid": courseid,
-                    "title": title,
-                    "description": description,
-                    "startTime": startTime,
-                    "endTime": endTime,
-                    "classid": classid,
-                    "token": token,
-                  });
-                },
-                icon: const Icon(Icons.arrow_right_alt_rounded),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.cyan[600],
+                    borderRadius: BorderRadius.circular(90)),
+                child: IconButton(
+                  onPressed: () {
+                    Get.to(() => const ViewClassDetail(), arguments: {
+                      "courseid": courseid,
+                      "title": title,
+                      "description": description,
+                      "startTime": startTime,
+                      "endTime": endTime,
+                      "classid": classid,
+                      "token": token,
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.keyboard_arrow_right_rounded,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ],
           ),

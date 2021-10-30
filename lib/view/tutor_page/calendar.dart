@@ -19,6 +19,7 @@ class TutorCalendarPage extends StatefulWidget {
 class _TutorCalendarPageState extends State<TutorCalendarPage> {
   List<Appointment> meetings = <Appointment>[];
   List<int> listCourseId = <int>[];
+  final CalendarController _controller = CalendarController();
   final storage = const FlutterSecureStorage();
 
   Future<String?> _getData() async {
@@ -38,7 +39,7 @@ class _TutorCalendarPageState extends State<TutorCalendarPage> {
             var token = data["data"]["jwtToken"];
             return FutureBuilder<TutorCourses>(
               future: API_Management()
-                  .getCoursesByTutorID(data["data"]['jwtToken'], tutorID),
+                  .getTutorByTutorID(data["data"]['jwtToken'], tutorID),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   var tutorCourse = snapshot.data!.data.courses;
@@ -64,14 +65,24 @@ class _TutorCalendarPageState extends State<TutorCalendarPage> {
                                     endTime: DateTime.parse(
                                         classData[i].endTime.toString()),
                                     subject: classData[i].title,
-                                    color: Colors.blue));
+                                    color: const Color(0XFF263064)));
                               }
                             }
                           }
                           return SfCalendar(
                             view: CalendarView.week,
+                            allowedViews: const [
+                              CalendarView.day,
+                              CalendarView.week,
+                              CalendarView.workWeek,
+                              CalendarView.month,
+                              CalendarView.timelineDay,
+                              CalendarView.timelineWeek,
+                              CalendarView.timelineWorkWeek
+                            ],
                             firstDayOfWeek: DateTime.monday,
                             dataSource: _MeetingDataSource(meetings),
+                            todayHighlightColor: const Color(0XFF263064),
                           );
                         } else if (classesData.hasError) {
                           return const Visibility(
@@ -91,9 +102,20 @@ class _TutorCalendarPageState extends State<TutorCalendarPage> {
                     visible: false,
                   );
                 } else {
-                  return const Visibility(
-                    child: Text(""),
-                    visible: false,
+                  return SfCalendar(
+                    view: CalendarView.week,
+                    allowedViews: const [
+                      CalendarView.day,
+                      CalendarView.week,
+                      CalendarView.workWeek,
+                      CalendarView.month,
+                      CalendarView.timelineDay,
+                      CalendarView.timelineWeek,
+                      CalendarView.timelineWorkWeek
+                    ],
+                    firstDayOfWeek: DateTime.monday,
+                    dataSource: _MeetingDataSource(meetings),
+                    todayHighlightColor: const Color(0XFF263064),
                   );
                 }
               },
@@ -107,9 +129,21 @@ class _TutorCalendarPageState extends State<TutorCalendarPage> {
       ),
       appBar: AppBar(
         title: const Text("Calendar"),
-        actions: [],
+        backgroundColor: const Color(0xFFD4E7FE),
+        foregroundColor: const Color(0XFF263064),
       ),
     );
+  }
+
+  void calendarTapped(CalendarTapDetails calendarTapDetails) {
+    if (_controller.view == CalendarView.month &&
+        calendarTapDetails.targetElement == CalendarElement.calendarCell) {
+      _controller.view = CalendarView.day;
+    } else if ((_controller.view == CalendarView.week ||
+            _controller.view == CalendarView.workWeek) &&
+        calendarTapDetails.targetElement == CalendarElement.viewHeader) {
+      _controller.view = CalendarView.day;
+    }
   }
 }
 

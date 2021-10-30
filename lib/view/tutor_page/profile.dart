@@ -1,17 +1,23 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_management.dart';
+import 'package:tutor_helper/model/tutorcourses.dart';
 import 'package:tutor_helper/view/login_screen.dart';
 
-class TutorEditProfilePage extends StatefulWidget {
+class SettingPage extends StatefulWidget {
+  const SettingPage({Key? key}) : super(key: key);
+
   @override
-  _TutorEditProfilePageState createState() => _TutorEditProfilePageState();
+  _SettingPageState createState() => _SettingPageState();
 }
 
-class _TutorEditProfilePageState extends State<TutorEditProfilePage> {
+class _SettingPageState extends State<SettingPage> {
+  String username = "";
+  String email = "";
   final storage = const FlutterSecureStorage();
   void _logOut() async {
     return await storage.deleteAll();
@@ -21,178 +27,151 @@ class _TutorEditProfilePageState extends State<TutorEditProfilePage> {
     return await storage.read(key: "database");
   }
 
-  String imageLink = "assets/images/default_avatar.png";
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Profile"),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: const Text("Setting"),
+        backgroundColor: const Color(0XFF263064),
         elevation: 1,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.blueGrey[200],
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout, color: Colors.black),
-            onPressed: () {
-              _logOut();
-              Get.offAll(() => const LoginPage());
-            },
-          ),
-        ],
       ),
       body: Container(
-        padding: const EdgeInsets.only(left: 16, top: 25, right: 16),
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: ListView(
-            children: [
-              const Text(
-                "Edit Profile",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Center(
-                child: Stack(
-                  children: [
-                    Container(
-                      width: 130,
-                      height: 130,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 4,
-                              color: Theme.of(context).scaffoldBackgroundColor),
-                          boxShadow: [
-                            BoxShadow(
-                                spreadRadius: 2,
-                                blurRadius: 10,
-                                color: Colors.black.withOpacity(0.1),
-                                offset: const Offset(0, 10))
-                          ],
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage(
-                                imageLink,
-                              ))),
-                    ),
-                    Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              width: 4,
-                              color: Theme.of(context).scaffoldBackgroundColor,
+        color: Colors.grey[300],
+        child: Column(
+          children: [
+            FutureBuilder<String?>(
+              future: _getData(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  var data = jsonDecode(snapshot.data.toString());
+                  var imagePath = data["data"]['imagePath'].toString();
+                  return FutureBuilder<TutorCourses>(
+                    future: API_Management().getTutorByTutorID(
+                        data["data"]['jwtToken'], data["data"]['tutorId']),
+                    builder: (context, tutorData) {
+                      if (tutorData.hasData) {
+                        email = data["data"]['email'];
+                        username = tutorData.data!.data.fullName;
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 7),
+                              padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
+                              color: Colors.white,
+                              width: MediaQuery.of(context).size.width,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: 80,
+                                    height: 80,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xff7c94b6),
+                                      image: DecorationImage(
+                                        image: NetworkImage(imagePath),
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(50.0)),
+                                      border: Border.all(
+                                        color: Colors.cyan,
+                                        width: 1,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    username,
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
+                                  ),
+                                ],
+                              ),
                             ),
-                            color: Colors.blue[500],
-                          ),
-                          child: const Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                          ),
-                        )),
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 7),
+                              padding:
+                                  const EdgeInsets.fromLTRB(20, 15, 10, 15),
+                              color: Colors.white,
+                              width: MediaQuery.of(context).size.width,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "Email",
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w900),
+                                  ),
+                                  Text(
+                                    email,
+                                    style: const TextStyle(color: Colors.cyan),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  const Text(
+                                    "Username",
+                                    style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w900),
+                                  ),
+                                  Text(
+                                    username,
+                                    style: const TextStyle(color: Colors.cyan),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return const Visibility(
+                          child: Text(""),
+                          visible: false,
+                        );
+                      }
+                    },
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                } else {
+                  return const Text("");
+                }
+              },
+            ),
+            Container(
+              margin: const EdgeInsets.only(bottom: 7),
+              padding: const EdgeInsets.fromLTRB(20, 15, 10, 15),
+              color: Colors.white,
+              child: TextButton(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      "Logout",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.black),
+                    ),
+                    Icon(Icons.exit_to_app)
                   ],
                 ),
-              ),
-              const SizedBox(
-                height: 35,
-              ),
-              FutureBuilder<String?>(
-                future: _getData(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    var data = jsonDecode(snapshot.data.toString());
-                    var fullName = data["data"]['fullName'].toString();
-                    var email = data["data"]['email'].toString();
-                    return ListView(
-                      children: [
-                        buildTextField("Full Name", fullName),
-                        buildTextField("E-mail", email),
-                      ],
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
-                  } else {
-                    return const Text("");
-                  }
+                onPressed: () {
+                  _logOut();
+                  Get.offAll(() => const LoginPage());
                 },
               ),
-              // buildTextField("Phone", phoneNumber),
-              const SizedBox(
-                height: 35,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  OutlineButton(
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text("CANCEL",
-                        style: TextStyle(
-                            fontSize: 14,
-                            letterSpacing: 2.2,
-                            color: Colors.black)),
-                  ),
-                  RaisedButton(
-                    onPressed: () {
-                      //Save xuống database
-                    },
-                    color: Colors.blue[500],
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    child: const Text(
-                      "SAVE",
-                      style: TextStyle(
-                          fontSize: 14,
-                          letterSpacing: 2.2,
-                          color: Colors.white),
-                    ),
-                  )
-                ],
-              )
-            ],
-          ),
+            ),
+          ],
         ),
-      ),
-    );
-  }
-
-  Widget buildTextField(String labelText, String placeholder) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 35.0),
-      child: TextField(
-        decoration: InputDecoration(
-            contentPadding: const EdgeInsets.only(bottom: 3),
-            labelText: labelText,
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            hintText: placeholder,
-            hintStyle: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            )),
       ),
     );
   }

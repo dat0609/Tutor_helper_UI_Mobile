@@ -7,18 +7,17 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:tutor_helper/constants/strings.dart';
-import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as https;
 
-class TutorLoginPage extends StatefulWidget {
-  const TutorLoginPage({Key? key}) : super(key: key);
+class StudentLoginPage extends StatefulWidget {
+  const StudentLoginPage({Key? key}) : super(key: key);
 
   @override
-  _TutorLoginPageState createState() => _TutorLoginPageState();
+  _StudentLoginPageState createState() => _StudentLoginPageState();
 }
 
-class _TutorLoginPageState extends State<TutorLoginPage> {
+class _StudentLoginPageState extends State<StudentLoginPage> {
   final storage = const FlutterSecureStorage();
   void _loginWithGoogle() async {
     setState(() {});
@@ -35,18 +34,17 @@ class _TutorLoginPageState extends State<TutorLoginPage> {
     Map<String, String> headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({
       "idToken": tokenResult,
-      "role": "Tutor",
+      "role": "Student",
       "accessToken": "string",
       "providerId": "string",
       "signInMethod": "Google"
     });
-    final response = await https.post(Uri.parse(Strings.tutor_signin_url),
+    final response = await https.post(Uri.parse(Strings.student_signin_url),
         headers: headers, body: body);
-    // log(response.statusCode.toString());
     if (response.statusCode == 200) {
-      log(response.body);
-      storage.write(key: "database", value: response.body);
-      Get.offAll(() => const TutorManagement());
+      // log(response.body);
+      // storage.write(key: "database", value: response.body);
+      // Get.offAll(() => const TutorManagement());
     } else if (response.statusCode == 500) {
       Alert(
           context: context,
@@ -93,7 +91,7 @@ class _TutorLoginPageState extends State<TutorLoginPage> {
                       height: 20,
                     ),
                     const Text(
-                      "Hello tutor,Let's Login to your account",
+                      "Hello student,Let's Login to your account",
                       style: TextStyle(
                           fontSize: 18,
                           color: Colors.black,

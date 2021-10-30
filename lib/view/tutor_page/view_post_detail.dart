@@ -4,12 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_management.dart';
-import 'package:tutor_helper/model/tutor_requests.dart';
-import 'package:tutor_helper/view/tutor_page/calendar.dart';
-import 'package:tutor_helper/view/tutor_page/document.dart';
-import 'package:tutor_helper/view/tutor_page/home.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
-import 'package:tutor_helper/view/tutor_page/view_post.dart';
 
 class TutorViewPostDetail extends StatefulWidget {
   const TutorViewPostDetail({Key? key}) : super(key: key);

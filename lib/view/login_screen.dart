@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tutor_helper/view/student_page/student_login_screen.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_login_screen.dart';
 
 class LoginPage extends StatefulWidget {
@@ -47,24 +48,24 @@ class _LoginPageState extends State<LoginPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        RaisedButton.icon(
+                        ElevatedButton.icon(
                           onPressed: () {
-                            const MaterialApp(
-                              debugShowCheckedModeBanner: false,
-                              // home: StudentLoginPage(),
-                            );
+                            Get.to(() => const StudentLoginPage());
                           },
                           icon: const Icon(Icons.book_online_outlined),
                           label: const Text("Student"),
-                          color: Colors.amberAccent,
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.purple[900]),
                         ),
-                        RaisedButton.icon(
-                            onPressed: () {
-                              Get.to(() => const TutorLoginPage());
-                            },
-                            icon: const Icon(Icons.class__outlined),
-                            label: const Text("Tutor"),
-                            color: Colors.cyan),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            Get.to(() => const TutorLoginPage());
+                          },
+                          icon: const Icon(Icons.class__outlined),
+                          label: const Text("Tutor"),
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.cyan[800]),
+                        )
                       ],
                     ),
                   ],

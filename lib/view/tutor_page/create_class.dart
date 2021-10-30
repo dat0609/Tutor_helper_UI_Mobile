@@ -7,14 +7,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/presenter/date_time_format.dart';
-import 'package:tutor_helper/view/tutor_page/home.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:day_picker/day_picker.dart';
-import 'package:tutor_helper/view/tutor_page/view_post.dart';
-
-import 'calendar.dart';
-import 'document.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class CreateClass extends StatefulWidget {
   const CreateClass({Key? key}) : super(key: key);
@@ -83,7 +79,11 @@ class _CreateClassState extends State<CreateClass> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [_navigator(), _upper()]);
+    return Stack(children: [
+      _navigator(),
+      _upper(),
+      _under(),
+    ]);
   }
 
   AppBar _navigator() {
@@ -97,7 +97,7 @@ class _CreateClassState extends State<CreateClass> {
       type: MaterialType.transparency,
       child: Container(
         margin: const EdgeInsets.only(top: 75),
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         height: 800,
         width: 500,
         decoration: const BoxDecoration(
@@ -268,107 +268,84 @@ class _CreateClassState extends State<CreateClass> {
                 ),
               ],
             ),
-            const SizedBox(
-              height: 50,
-            ),
-            _under(),
           ],
         ),
       ),
     );
   }
 
-  Row _under() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        TextButton(
-            onPressed: () {
-              classDateTimeData.clear();
-              for (int i = 0; i < weekdateData.length; i++) {
-                List<List<String>> dateTimeData =
-                    DateTimeTutor.getDaysInBetween(
-                        "${selectedStartDate.toLocal()}".split(' ')[0],
-                        "${selectedEndDate.toLocal()}".split(' ')[0],
-                        weekdateData[i],
-                        startTimeChanged,
-                        endTimeChanged);
-                for (int k = 0; k < dateTimeData.length; k++) {
-                  classDateTimeData.add(dateTimeData[k]);
+  Container _under() {
+    return Container(
+      margin: const EdgeInsets.only(top: 630),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          TextButton(
+              onPressed: () {
+                classDateTimeData.clear();
+                for (int i = 0; i < weekdateData.length; i++) {
+                  List<List<String>> dateTimeData =
+                      DateTimeTutor.getDaysInBetween(
+                          "${selectedStartDate.toLocal()}".split(' ')[0],
+                          "${selectedEndDate.toLocal()}".split(' ')[0],
+                          weekdateData[i],
+                          startTimeChanged,
+                          endTimeChanged);
+                  for (int k = 0; k < dateTimeData.length; k++) {
+                    classDateTimeData.add(dateTimeData[k]);
+                  }
                 }
-              }
-              showAlertDialog(context);
-            },
-            child: const Text(
-              "Create Class",
-              style: TextStyle(color: Colors.white),
-            ),
-            style: TextButton.styleFrom(
-              backgroundColor: Colors.cyan,
-              textStyle: const TextStyle(fontSize: 20),
-            ))
-      ],
-    );
-  }
-
-  showAlertDialog(BuildContext context) {
-    Widget okButton = TextButton(
-      child: const Text("OK"),
-      onPressed: () {
-        Get.offAll(() => const TutorManagement());
-      },
-    );
-    AlertDialog secondAlert = AlertDialog(
-      title: const Text("Class Created!"),
-      content: const Text("The class has been Created!!!"),
-      actions: [
-        okButton,
-      ],
-    );
-    Widget cancelButton = TextButton(
-      child: const Text("Cancel"),
-      onPressed: () {
-        Get.back();
-      },
-    );
-    Widget createButton = TextButton(
-      child: const Text("Create"),
-      onPressed: () {
-        for (int i = 0; i < classDateTimeData.length; i++) {
-          var date = classDateTimeData[i][0].split("T");
-          String dateStr = date[0];
-          API_Management().createClass(
-              data_from_course_detail["token"],
-              data_from_course_detail["courseid"],
-              "Class of " +
-                  data_from_course_detail["courseid"].toString() +
-                  " at $dateStr",
-              "This is Desc",
-              classDateTimeData[i][0],
-              classDateTimeData[i][1]);
-        }
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return secondAlert;
-          },
-        );
-      },
-    );
-    AlertDialog firstAlert = AlertDialog(
-      title: const Text("Create Class!"),
-      content: const Text("Are you sure you want to Create this Class?"),
-      actions: [
-        cancelButton,
-        createButton,
-      ],
-    );
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return firstAlert;
-      },
+                Alert(
+                    context: context,
+                    type: AlertType.warning,
+                    title: "Create Class",
+                    desc: "Are you sure you want to Create this Class?",
+                    buttons: [
+                      DialogButton(
+                          onPressed: () => Get.back(),
+                          child: const Text("Cancel")),
+                      DialogButton(
+                          onPressed: () {
+                            for (int i = 0; i < classDateTimeData.length; i++) {
+                              var date = classDateTimeData[i][0].split("T");
+                              String dateStr = date[0];
+                              API_Management().createClass(
+                                  data_from_course_detail["token"],
+                                  data_from_course_detail["courseid"],
+                                  "Class of " +
+                                      data_from_course_detail["courseid"]
+                                          .toString() +
+                                      " at $dateStr",
+                                  "This is Desc",
+                                  classDateTimeData[i][0],
+                                  classDateTimeData[i][1]);
+                            }
+                            Alert(
+                                context: context,
+                                type: AlertType.success,
+                                title: "Class Created!",
+                                desc:
+                                    "The class has been Created successfully!",
+                                buttons: [
+                                  DialogButton(
+                                      onPressed: () => Get.offAll(
+                                          () => const TutorManagement()),
+                                      child: const Text("OK")),
+                                ]).show();
+                          },
+                          child: const Text("Create")),
+                    ]).show();
+              },
+              child: const Text(
+                "Create Class",
+                style: TextStyle(color: Colors.white),
+              ),
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.cyan,
+                textStyle: const TextStyle(fontSize: 20),
+              ))
+        ],
+      ),
     );
   }
 }

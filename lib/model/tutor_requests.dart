@@ -37,7 +37,7 @@ class Data {
   late final int tutorRequestId;
   late final String title;
   late final String description;
-  late final bool status;
+  late final String status;
   late final int studentId;
   late final int subjectId;
   late final int gradeId;

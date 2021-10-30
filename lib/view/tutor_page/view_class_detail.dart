@@ -6,14 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_management.dart';
-import 'package:tutor_helper/presenter/date_time_format.dart';
-import 'package:tutor_helper/view/tutor_page/calendar.dart';
-import 'package:tutor_helper/view/tutor_page/document.dart';
-import 'package:tutor_helper/view/tutor_page/home.dart';
-import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
 import 'package:date_time_picker/date_time_picker.dart';
-import 'package:day_picker/day_picker.dart';
-import 'package:tutor_helper/view/tutor_page/view_post.dart';
 
 class ViewClassDetail extends StatefulWidget {
   const ViewClassDetail({Key? key}) : super(key: key);

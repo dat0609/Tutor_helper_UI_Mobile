@@ -1,8 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:tutor_helper/view/tutor_page/calendar.dart';
-import 'package:tutor_helper/view/tutor_page/document.dart';
+import 'package:tutor_helper/view/tutor_page/profile.dart';
 import 'package:tutor_helper/view/tutor_page/home.dart';
-import 'package:tutor_helper/view/tutor_page/view_post.dart';
 
 class TutorManagement extends StatefulWidget {
   const TutorManagement({Key? key}) : super(key: key);
@@ -18,7 +19,7 @@ class _TutorManagementState extends State<TutorManagement> {
     List pages = [
       const TutorHomePage(),
       const TutorCalendarPage(),
-      const TutorViewPost(),
+      const SettingPage(),
     ];
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -39,16 +40,15 @@ class _TutorManagementState extends State<TutorManagement> {
             items: const [
               BottomNavigationBarItem(
                 title: Text("Home"),
-                icon: Icon(Icons.home),
+                icon: Icon(Icons.home_outlined),
               ),
               BottomNavigationBarItem(
                 title: Text("Calendar"),
-                icon: Icon(Icons.calendar_today),
+                icon: Icon(Icons.calendar_today_outlined),
               ),
               BottomNavigationBarItem(
-                // ignore: deprecated_member_use
-                title: Text("Post"),
-                icon: Icon(Icons.table_view_rounded),
+                title: Text("Profile"),
+                icon: Icon(Icons.person_outlined),
               ),
             ],
           ),

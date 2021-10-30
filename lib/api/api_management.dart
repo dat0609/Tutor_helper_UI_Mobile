@@ -1,36 +1,17 @@
+// ignore_for_file: camel_case_types
+
 import 'dart:convert';
+// ignore: unused_import
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:tutor_helper/constants/strings.dart';
 import 'package:tutor_helper/model/classes.dart';
+import 'package:tutor_helper/model/students.dart';
+import 'package:tutor_helper/model/subjects.dart';
 import 'package:tutor_helper/model/tutor_requests.dart';
 import 'package:tutor_helper/model/tutorcourses.dart';
-import 'package:tutor_helper/model/tutors.dart';
 
 class API_Management {
-  void createCourses(var token, int courseid, String title, String description,
-      int tutorid, int tutorrequestid, int studentid) async {
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      "Authorization": "Bearer " + token.toString()
-    };
-    final body = jsonEncode({
-      "title": title,
-      "description": description,
-      "status": true,
-      "studentId": studentid,
-      "tutorId": tutorid,
-      "tutorRequestId": tutorrequestid
-    });
-    var response = await http.get(
-      Uri.parse(Strings.courses_url),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token.toString()
-      },
-    );
-  }
-
   Future<TutorRequests> getAllTutorRequests(String token) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -61,7 +42,7 @@ class API_Management {
       "tutorRequestId": tutorrequestId
     });
     await http.post(
-      Uri.parse(Strings.createCourses),
+      Uri.parse(Strings.create_course),
       headers: headers,
       body: body,
     );
@@ -98,7 +79,7 @@ class API_Management {
     } else {}
   }
 
-  Future<TutorCourses> getCoursesByTutorID(var token, int tutorId) async {
+  Future<TutorCourses> getTutorByTutorID(var token, int tutorId) async {
     var response = await http.get(
       Uri.parse(Strings.tutors_get_url(tutorId)),
       headers: {
@@ -110,23 +91,6 @@ class API_Management {
       var jsonString = response.body;
       var jsonMap = json.decode(jsonString);
       return TutorCourses.fromJson(jsonMap);
-    } else {
-      throw Exception('Error while get Course');
-    }
-  }
-
-  Future<Tutors> getTutorByTutorID(var token, int tutorId) async {
-    var response = await http.get(
-      Uri.parse(Strings.tutors_get_url(tutorId)),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token.toString()
-      },
-    );
-    if (response.statusCode == 200) {
-      var jsonString = response.body;
-      var jsonMap = json.decode(jsonString);
-      return Tutors.fromJson(jsonMap);
     } else {
       throw Exception('Error while get Course');
     }
@@ -177,14 +141,11 @@ class API_Management {
         "Authorization": "Bearer " + token.toString()
       },
     );
-    log(response.request.toString());
     if (response.statusCode == 200) {
       var jsonString = response.body;
       var jsonMap = json.decode(jsonString);
       return Classes.fromJson(jsonMap);
     } else {
-      log(response.body.toString());
-      log(response.headers.toString());
       throw Exception('Error while get Classes');
     }
   }
@@ -206,5 +167,39 @@ class API_Management {
       "courseId": courseid
     });
     await http.put(Uri.parse(Strings.class_url), headers: headers, body: body);
+  }
+
+  Future<Subjects> getSubjects(var token) async {
+    var response = await http.get(
+      Uri.parse(Strings.subject_url),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token.toString()
+      },
+    );
+    if (response.statusCode == 200) {
+      var jsonString = response.body;
+      var jsonMap = json.decode(jsonString);
+      return Subjects.fromJson(jsonMap);
+    } else {
+      throw Exception('Error while get Subjects');
+    }
+  }
+
+  Future<Students> getStudents(var token, int studentId) async {
+    var response = await http.get(
+      Uri.parse(Strings.student_get_url(studentId)),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token.toString()
+      },
+    );
+    if (response.statusCode == 200) {
+      var jsonString = response.body;
+      var jsonMap = json.decode(jsonString);
+      return Students.fromJson(jsonMap);
+    } else {
+      throw Exception('Error while get Students');
+    }
   }
 }

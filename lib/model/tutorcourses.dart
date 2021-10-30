@@ -29,16 +29,12 @@ class Data {
     required this.email,
     required this.fullName,
     required this.phoneNumber,
-    required this.createAt,
-    this.updateAt,
     required this.courses,
   });
   late final int tutorId;
   late final String email;
   late final String fullName;
   late final String phoneNumber;
-  late final String createAt;
-  late final Null updateAt;
   late final List<Courses> courses;
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -46,8 +42,6 @@ class Data {
     email = json['email'];
     fullName = json['fullName'];
     // phoneNumber = json['phoneNumber'];
-    createAt = json['createAt'];
-    updateAt = json['updateAt'];
     courses =
         List.from(json['courses']).map((e) => Courses.fromJson(e)).toList();
   }
@@ -58,8 +52,6 @@ class Data {
     _data['email'] = email;
     _data['fullName'] = fullName;
     _data['phoneNumber'] = phoneNumber;
-    _data['createAt'] = createAt;
-    _data['updateAt'] = updateAt;
     _data['courses'] = courses.map((e) => e.toJson()).toList();
     return _data;
   }
