@@ -346,7 +346,7 @@ class _TutorHomePageState extends State<TutorHomePage> {
       String gradeName) {
     return Container(
       margin: const EdgeInsets.fromLTRB(10, 15, 20, 0),
-      padding: const EdgeInsets.fromLTRB(10, 20, 0, 30),
+      padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
       decoration: BoxDecoration(
         color: const Color(0xFFfafafa),
         borderRadius: const BorderRadius.only(
@@ -445,7 +445,7 @@ class _TutorHomePageState extends State<TutorHomePage> {
                                   "title": courseTitle,
                                   "description": description,
                                   "gradeId": gradeId,
-                                  "studentid": studentid,
+                                  "studentId": studentid,
                                   "subjectId": subjectId,
                                 },
                               );

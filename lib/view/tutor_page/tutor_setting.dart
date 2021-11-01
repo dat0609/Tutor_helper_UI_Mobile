@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/tutorcourses.dart';
 import 'package:tutor_helper/view/login_screen.dart';
@@ -185,6 +186,40 @@ class _TutorSettingPageState extends State<TutorSettingPage> {
                   return const Text("");
                 }
               },
+            ),
+            Container(
+              margin: const EdgeInsets.only(bottom: 7),
+              padding: const EdgeInsets.fromLTRB(20, 15, 10, 15),
+              color: Colors.white,
+              child: TextButton(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      "Contact Us",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.black),
+                    ),
+                    Icon(Icons.info_outline_rounded)
+                  ],
+                ),
+                onPressed: () {
+                  Alert(
+                      context: context,
+                      type: AlertType.info,
+                      title: "About us",
+                      desc: "Phone: 0987654321\nEmail: admin@mailjdo.com",
+                      buttons: [
+                        DialogButton(
+                            child: const Text("OK"),
+                            onPressed: () {
+                              Get.back();
+                            })
+                      ]).show();
+                },
+              ),
             ),
             Container(
               margin: const EdgeInsets.only(bottom: 7),

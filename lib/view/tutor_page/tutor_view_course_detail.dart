@@ -19,7 +19,7 @@ class TutorViewCourseDetail extends StatefulWidget {
 
 class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
   // ignore: non_constant_identifier_names
-  var data_from_home_page = Get.arguments;
+  var data_from_course_page = Get.arguments;
   final storage = const FlutterSecureStorage();
 
   @override
@@ -62,8 +62,8 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
       child: Scaffold(
         body: Column(
           children: [
-            listItem("Title", data_from_home_page["title"]),
-            listItem("Desc", data_from_home_page["description"]),
+            listItem("Title", data_from_course_page["title"]),
+            listItem("Desc", data_from_course_page["description"]),
           ],
         ),
       ),
@@ -79,13 +79,13 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
           TextButton(
               onPressed: () {
                 Get.to(() => const CreateClass(), arguments: {
-                  "title": data_from_home_page["title"],
-                  "description": data_from_home_page["description"],
-                  "courseid": data_from_home_page["courseid"],
-                  "tutorid": data_from_home_page["tutorid"],
-                  "tutorrequestid": data_from_home_page["tutorrequestid"],
-                  "studentid": data_from_home_page["studentid"],
-                  "token": data_from_home_page["token"],
+                  "title": data_from_course_page["title"],
+                  "description": data_from_course_page["description"],
+                  "courseid": data_from_course_page["courseid"],
+                  "tutorid": data_from_course_page["tutorid"],
+                  "tutorrequestid": data_from_course_page["tutorrequestid"],
+                  "studentid": data_from_course_page["studentid"],
+                  "token": data_from_course_page["token"],
                 });
               },
               child: const Text(
@@ -154,7 +154,8 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
         gradient: LinearGradient(colors: [Colors.cyan.shade100, Colors.cyan]),
       ),
       child: FutureBuilder<Classes>(
-          future: API_Management().getAllClasses(data_from_home_page["token"]),
+          future:
+              API_Management().getAllClasses(data_from_course_page["token"]),
           builder: (context, classesData) {
             if (classesData.hasData) {
               var classData = classesData.data!.data;
@@ -163,7 +164,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
                       itemCount: classData.length,
                       itemBuilder: (context, index) {
                         if (classData[index].courseId ==
-                                data_from_home_page["courseid"] &&
+                                data_from_course_page["courseid"] &&
                             classData[index].status == true) {
                           return buildClassItem(
                               classData[index].courseId,
@@ -172,7 +173,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
                               classData[index].startTime.toString(),
                               classData[index].endTime.toString(),
                               classData[index].id,
-                              data_from_home_page["token"]);
+                              data_from_course_page["token"]);
                         } else {
                           return const Visibility(
                             child: Text(""),
@@ -219,12 +220,12 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
       child: const Text("Delete"),
       onPressed: () {
         API_Management().deleteCourse(
-            data_from_home_page["token"],
-            data_from_home_page["courseid"],
-            data_from_home_page["title"],
-            data_from_home_page["description"],
-            data_from_home_page["tutorid"],
-            data_from_home_page["tutorrequestid"]);
+            data_from_course_page["token"],
+            data_from_course_page["courseid"],
+            data_from_course_page["title"],
+            data_from_course_page["description"],
+            data_from_course_page["tutorid"],
+            data_from_course_page["tutorrequestid"]);
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -252,6 +253,12 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
 
   Container buildClassItem(int courseid, String title, String description,
       String startTime, String endTime, int classid, String token) {
+    var startTimeStr = startTime.split("T");
+    String date = startTimeStr[0];
+    var fromTimeStr = startTimeStr[1].split(":");
+    String fromTime = fromTimeStr[0] + ":" + fromTimeStr[1];
+    var toTimeStr = endTime.split("T")[1].split(":");
+    String toTime = toTimeStr[0] + ":" + toTimeStr[1];
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(10),
@@ -284,7 +291,23 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
                   overflow: TextOverflow.clip,
                   style: const TextStyle(color: Colors.black, fontSize: 13),
                 ),
-              )
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 132,
+                child: Text(
+                  "Date:${date.trim()}", //Address
+                  overflow: TextOverflow.clip,
+                  style: const TextStyle(color: Colors.black, fontSize: 13),
+                ),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 132,
+                child: Text(
+                  "${fromTime.trim()}-${toTime.trim()}", //Address
+                  overflow: TextOverflow.clip,
+                  style: const TextStyle(color: Colors.black, fontSize: 13),
+                ),
+              ),
             ],
           ),
           Row(
