@@ -18,9 +18,17 @@ class Strings {
 
   static String tutorrequests_url =
       "https://tutorhelper20210920193710.azurewebsites.net/api/v1/tutor-requests?PageSize=10000";
+
+  static String get_tutorrequests_by_subject_id_url(int subjectid) {
+    return "https://tutorhelper20210920193710.azurewebsites.net/api/v1/tutor-requests?s=$subjectid&PageSize=10000";
+  }
+
   static String tutorrequests_get_url(int id) {
     return "https://tutorhelper20210920193710.azurewebsites.net/api/v1/tutor-requests/$id";
   }
+
+  static String create_request_url =
+      "https://tutorhelper20210920193710.azurewebsites.net/api/v1/tutor-requests";
 
   static String student_signin_url =
       "https://tutorhelper20210920193710.azurewebsites.net/api/v1/auth/sign-in-student";
@@ -43,5 +51,9 @@ class Strings {
       "https://tutorhelper20210920193710.azurewebsites.net/api/v1/students?PageSize=10000";
   static String student_get_url(int id) {
     return "https://tutorhelper20210920193710.azurewebsites.net/api/v1/students/$id";
+  }
+
+  static String get_subject_by_grade_id(int gradeId) {
+    return "https://tutorhelper20210920193710.azurewebsites.net/api/v1/subjects?s=$gradeId&PageSize=50";
   }
 }

@@ -30,6 +30,24 @@ class API_Management {
     }
   }
 
+  Future<TutorRequests> getTutorRequestsBySubjectId(
+      String token, int subjectId) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      "Authorization": "Bearer " + token.toString()
+    };
+    var response = await http.get(
+        Uri.parse(Strings.get_tutorrequests_by_subject_id_url(subjectId)),
+        headers: headers);
+    if (response.statusCode == 200) {
+      var jsonString = response.body;
+      var jsonMap = json.decode(jsonString);
+      return TutorRequests.fromJson(jsonMap);
+    } else {
+      throw Exception('Error while get TutorRequests');
+    }
+  }
+
   void createCourseByRequest(var token, String title, String description,
       int tutorId, int tutorrequestId, int studentId) async {
     Map<String, String> headers = {
@@ -209,7 +227,41 @@ class API_Management {
   }
 
 //API for Student Only!!
+  void createRequest(var token, String title, String description, int studentId,
+      int gradeId, int subjectId) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Charset': 'utf-8',
+      "Authorization": "Bearer " + token.toString()
+    };
+    final body = jsonEncode({
+      "title": title,
+      "description": description,
+      "status": "Pending",
+      "studentId": studentId,
+      "gradeId": gradeId,
+      "subjectId": subjectId,
+    });
+    await http.post(Uri.parse(Strings.create_request_url),
+        headers: headers, body: body);
+  }
 
 //API for both
 
+  Future<Subjects> getSubjectByGrade(var token, int gradeId) async {
+    var response = await http.get(
+      Uri.parse(Strings.get_subject_by_grade_id(gradeId)),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token.toString()
+      },
+    );
+    if (response.statusCode == 200) {
+      var jsonString = response.body;
+      var jsonMap = json.decode(jsonString);
+      return Subjects.fromJson(jsonMap);
+    } else {
+      throw Exception('Error while get Subjects');
+    }
+  }
 }

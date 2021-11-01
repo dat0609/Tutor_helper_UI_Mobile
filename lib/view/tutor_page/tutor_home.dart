@@ -27,6 +27,30 @@ class _TutorHomePageState extends State<TutorHomePage> {
   final DateTime now = DateTime.now();
   DateTimeTutor dt = DateTimeTutor();
   final storage = const FlutterSecureStorage();
+  List<String> listGrades = [
+    "Grade 1",
+    "Grade 2",
+    "Grade 3",
+    "Grade 4",
+    "Grade 5",
+    "Grade 6",
+    "Grade 7",
+    "Grade 8",
+    "Grade 9",
+    "Grade 10",
+    "Grade 11",
+    "Grade 12",
+  ];
+  List<String> listSubjects = [];
+  Map<String, int> mapSubject = {};
+  String listGradeItem = "";
+  String listSubjectItem = "";
+  int gradeId = 0;
+  int subjectId = 0;
+  int gradeNow = 1;
+  int subjectNow = 1;
+  bool firstTime = true;
+  bool gradeChanged = false;
 
   Future<String?> _getData() async {
     return await storage.read(key: "database");
@@ -89,7 +113,6 @@ class _TutorHomePageState extends State<TutorHomePage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 var data = jsonDecode(snapshot.data.toString());
-
                 return FutureBuilder<TutorCourses>(
                     future: API_Management().getTutorByTutorID(
                         data["data"]["jwtToken"], data["data"]["tutorId"]),
@@ -168,16 +191,11 @@ class _TutorHomePageState extends State<TutorHomePage> {
   }
 
   Container _under() {
-    List<String> listGrade = [
-      "Grade 1",
-      "Grade 2",
-      "Grade 3",
-      "Grade 4",
-      "Grade 5"
-    ];
-    var listGradeItem = listGrade[0];
-    List<String> listSubject = ["Literature", "Math", "English"];
-    var listSubjectItem = listSubject[0];
+    if (firstTime) {
+      listGradeItem = listGrades[0].toString();
+      gradeChanged = true;
+      gradeNow = 1;
+    }
     return Container(
       margin: const EdgeInsets.only(top: 140),
       padding: const EdgeInsets.fromLTRB(20, 20, 5, 0),
@@ -199,27 +217,84 @@ class _TutorHomePageState extends State<TutorHomePage> {
                 fontSize: 20, color: Colors.black, fontWeight: FontWeight.w600),
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: const [
+              Text("Grade:", style: TextStyle(fontSize: 20)),
+              Text("Subject:", style: TextStyle(fontSize: 20)),
+            ],
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               DropdownButton(
                 value: listGradeItem,
                 icon: const Icon(Icons.keyboard_arrow_down),
-                items: listGrade.map((String items) {
-                  return DropdownMenuItem(value: items, child: Text(items));
-                }).toList(),
+                isDense: true,
                 onChanged: (newValue) {
-                  setState(() {});
+                  setState(() {
+                    listGradeItem = newValue.toString();
+                    gradeChanged = true;
+                  });
+                  var listGradeItemsStr = newValue.toString().split(" ");
+                  gradeNow = int.parse(listGradeItemsStr[1]);
+                  gradeId = gradeNow;
                 },
-              ),
-              DropdownButton(
-                value: listSubjectItem,
-                icon: const Icon(Icons.keyboard_arrow_down),
-                items: listSubject.map((String items) {
+                items: listGrades.map((String items) {
                   return DropdownMenuItem(value: items, child: Text(items));
                 }).toList(),
-                onChanged: (newValue) {
-                  setState(() {});
+              ),
+              FutureBuilder<String?>(
+                future: _getData(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    var data = jsonDecode(snapshot.data.toString());
+                    return FutureBuilder<Subjects>(
+                        future: API_Management().getSubjectByGrade(
+                            data["data"]["jwtToken"], gradeNow),
+                        builder: (context, subjectData) {
+                          if (subjectData.hasData) {
+                            var sData = subjectData.data!.data;
+                            listSubjects.clear();
+                            mapSubject.clear();
+                            for (int i = 0; i < sData.length; i++) {
+                              listSubjects.add(sData[i].subjectName);
+                              mapSubject[sData[i].subjectName] =
+                                  sData[i].subjectId;
+                            }
+                            if (gradeChanged) {
+                              listSubjectItem = listSubjects[0].toString();
+                            }
+                            firstTime = false;
+                            return DropdownButton(
+                              value: listSubjectItem,
+                              icon: const Icon(Icons.keyboard_arrow_down),
+                              items: listSubjects.map((String items) {
+                                return DropdownMenuItem(
+                                    value: items, child: Text(items));
+                              }).toList(),
+                              onChanged: (newValue) {
+                                setState(() {
+                                  listSubjectItem = newValue.toString();
+                                  subjectNow =
+                                      mapSubject[listSubjectItem]!.toInt();
+                                  gradeChanged = false;
+                                });
+                              },
+                            );
+                          } else {
+                            return const Visibility(
+                              child: Text(""),
+                              visible: false,
+                            );
+                          }
+                        });
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  } else {
+                    return const Text("");
+                  }
                 },
               ),
             ],
@@ -232,7 +307,8 @@ class _TutorHomePageState extends State<TutorHomePage> {
                 int tutorId = data['data']['tutorId'];
                 String token = data['data']['jwtToken'];
                 return FutureBuilder<TutorRequests>(
-                  future: API_Management().getAllTutorRequests(token),
+                  future: API_Management()
+                      .getTutorRequestsBySubjectId(token, subjectNow),
                   builder: (context, tutorRequestsData) {
                     if (tutorRequestsData.hasData) {
                       return Expanded(
@@ -385,14 +461,6 @@ class _TutorHomePageState extends State<TutorHomePage> {
                       const SizedBox(
                         height: 5,
                       ),
-                      // Text(
-                      //   description,
-                      //   style: const TextStyle(
-                      //       overflow: TextOverflow.clip,
-                      //       fontWeight: FontWeight.bold,
-                      //       color: Colors.black,
-                      //       fontSize: 15),
-                      // ),
                       Text(
                         "Grade $gradeName - $subjectName",
                         style: const TextStyle(
