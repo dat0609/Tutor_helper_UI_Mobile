@@ -1,27 +1,27 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:tutor_helper/view/tutor_page/tutor_calendar.dart';
-import 'package:tutor_helper/view/tutor_page/tutor_course.dart';
-import 'package:tutor_helper/view/tutor_page/tutor_setting.dart';
-import 'package:tutor_helper/view/tutor_page/tutor_home.dart';
+import 'package:tutor_helper/view/student_page/student_calendar.dart';
+import 'package:tutor_helper/view/student_page/student_request.dart';
+import 'package:tutor_helper/view/student_page/student_home.dart';
+import 'package:tutor_helper/view/student_page/student_setting.dart';
 
-class TutorManagement extends StatefulWidget {
-  const TutorManagement({Key? key}) : super(key: key);
+class StudentManagement extends StatefulWidget {
+  const StudentManagement({Key? key}) : super(key: key);
 
   @override
-  _TutorManagementState createState() => _TutorManagementState();
+  _StudentManagementState createState() => _StudentManagementState();
 }
 
-class _TutorManagementState extends State<TutorManagement> {
+class _StudentManagementState extends State<StudentManagement> {
   int _selectedItemIndex = 0;
   @override
   Widget build(BuildContext context) {
     List pages = [
-      const TutorHomePage(),
-      const TutorCoursePage(),
-      const TutorCalendarPage(),
-      const TutorSettingPage(),
+      const StudentHomePage(),
+      const StudentRequestPage(),
+      const StudentCalendarPage(),
+      const StudentSettingPage(),
     ];
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -45,7 +45,7 @@ class _TutorManagementState extends State<TutorManagement> {
                 icon: Icon(Icons.home_outlined),
               ),
               BottomNavigationBarItem(
-                title: Text("Course"),
+                title: Text("Request"),
                 icon: Icon(Icons.computer_outlined),
               ),
               BottomNavigationBarItem(

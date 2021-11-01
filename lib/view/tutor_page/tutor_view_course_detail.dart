@@ -6,9 +6,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/classes.dart';
-import 'package:tutor_helper/view/tutor_page/create_class.dart';
+import 'package:tutor_helper/view/tutor_page/tutor_create_class.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
-import 'package:tutor_helper/view/tutor_page/view_class_detail.dart';
+import 'package:tutor_helper/view/tutor_page/tutor_view_class_detail.dart';
 
 class TutorViewCourseDetail extends StatefulWidget {
   const TutorViewCourseDetail({Key? key}) : super(key: key);
@@ -84,7 +84,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
                   "courseid": data_from_home_page["courseid"],
                   "tutorid": data_from_home_page["tutorid"],
                   "tutorrequestid": data_from_home_page["tutorrequestid"],
-                  "studentid": data_from_home_page["tutorid"],
+                  "studentid": data_from_home_page["studentid"],
                   "token": data_from_home_page["token"],
                 });
               },
@@ -154,7 +154,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
         gradient: LinearGradient(colors: [Colors.cyan.shade100, Colors.cyan]),
       ),
       child: FutureBuilder<Classes>(
-          future: API_Management().getAllClass(data_from_home_page["token"]),
+          future: API_Management().getAllClasses(data_from_home_page["token"]),
           builder: (context, classesData) {
             if (classesData.hasData) {
               var classData = classesData.data!.data;
@@ -306,7 +306,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
                     });
                   },
                   icon: const Icon(
-                    Icons.keyboard_arrow_right_rounded,
+                    Icons.edit_outlined,
                     color: Colors.white,
                   ),
                 ),

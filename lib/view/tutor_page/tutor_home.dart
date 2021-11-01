@@ -5,14 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_management.dart';
+import 'package:tutor_helper/model/studentcourses.dart';
 import 'package:tutor_helper/model/students.dart';
 import 'package:tutor_helper/model/subjects.dart';
 import 'package:tutor_helper/model/tutor_requests.dart';
 import 'package:tutor_helper/model/tutorcourses.dart';
 import 'package:tutor_helper/presenter/date_time_format.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:tutor_helper/view/tutor_page/view_course_detail.dart';
-import 'package:tutor_helper/view/tutor_page/view_post_detail.dart';
+import 'package:tutor_helper/view/tutor_page/tutor_view_course_detail.dart';
+import 'package:tutor_helper/view/tutor_page/tutor_view_post_detail.dart';
 
 class TutorHomePage extends StatefulWidget {
   const TutorHomePage({Key? key}) : super(key: key);
@@ -41,15 +42,7 @@ class _TutorHomePageState extends State<TutorHomePage> {
     return Container(
       color: Colors.white,
       child: SingleChildScrollView(
-        child: Stack(children: [
-          _upper(),
-          Column(
-            children: [
-              _under(),
-              _under2(),
-            ],
-          )
-        ]),
+        child: Stack(children: [_upper(), _under()]),
       ),
     );
   }
@@ -142,12 +135,16 @@ class _TutorHomePageState extends State<TutorHomePage> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "Hi $username",
-                                  style: const TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.w900,
-                                    color: Color(0XFF343E87),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width - 120,
+                                  child: Text(
+                                    "Hi $username",
+                                    style: const TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w900,
+                                      color: Color(0XFF343E87),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -171,14 +168,27 @@ class _TutorHomePageState extends State<TutorHomePage> {
   }
 
   Container _under() {
+    List<String> listGrade = [
+      "Grade 1",
+      "Grade 2",
+      "Grade 3",
+      "Grade 4",
+      "Grade 5"
+    ];
+    var listGradeItem = listGrade[0];
+    List<String> listSubject = ["Literature", "Math", "English"];
+    var listSubjectItem = listSubject[0];
     return Container(
       margin: const EdgeInsets.only(top: 140),
       padding: const EdgeInsets.fromLTRB(20, 20, 5, 0),
-      height: MediaQuery.of(context).size.height - 400,
+      height: MediaQuery.of(context).size.height - 200,
       width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(30),
+        gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFFD4E7FE), Colors.cyan, Color(0xFFF0F0F0)]),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,6 +197,32 @@ class _TutorHomePageState extends State<TutorHomePage> {
             "Student's Request",
             style: TextStyle(
                 fontSize: 20, color: Colors.black, fontWeight: FontWeight.w600),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              DropdownButton(
+                value: listGradeItem,
+                icon: const Icon(Icons.keyboard_arrow_down),
+                items: listGrade.map((String items) {
+                  return DropdownMenuItem(value: items, child: Text(items));
+                }).toList(),
+                onChanged: (newValue) {
+                  setState(() {});
+                },
+              ),
+              DropdownButton(
+                value: listSubjectItem,
+                icon: const Icon(Icons.keyboard_arrow_down),
+                items: listSubject.map((String items) {
+                  return DropdownMenuItem(value: items, child: Text(items));
+                }).toList(),
+                onChanged: (newValue) {
+                  setState(() {});
+                },
+              ),
+            ],
           ),
           FutureBuilder<String?>(
             future: _getData(),
@@ -202,7 +238,7 @@ class _TutorHomePageState extends State<TutorHomePage> {
                       return Expanded(
                           child: ListView.builder(
                               shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
+                              scrollDirection: Axis.vertical,
                               itemCount: tutorRequestsData.data!.data.length,
                               itemBuilder: (context, index) {
                                 var trData =
@@ -231,9 +267,9 @@ class _TutorHomePageState extends State<TutorHomePage> {
                                                   .toString();
                                             }
                                           }
-                                          return FutureBuilder<Students>(
+                                          return FutureBuilder<StudentCourses>(
                                               future: API_Management()
-                                                  .getStudents(
+                                                  .getStudentByStudentId(
                                                       token, trData.studentId),
                                               builder: (context, studentData) {
                                                 if (studentData.hasData) {
@@ -286,7 +322,10 @@ class _TutorHomePageState extends State<TutorHomePage> {
                 return const Text("");
               }
             },
-          )
+          ),
+          // const SizedBox(
+          //   height: 30,
+          // ),
         ],
       ),
     );
@@ -306,9 +345,8 @@ class _TutorHomePageState extends State<TutorHomePage> {
       String subjectName,
       String gradeName) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(10, 15, 50, 10),
-      padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
-      height: 500,
+      margin: const EdgeInsets.fromLTRB(10, 15, 20, 0),
+      padding: const EdgeInsets.fromLTRB(10, 20, 0, 30),
       decoration: BoxDecoration(
         color: const Color(0xFFfafafa),
         borderRadius: const BorderRadius.only(
@@ -329,7 +367,7 @@ class _TutorHomePageState extends State<TutorHomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           SizedBox(
-              width: 295,
+              width: MediaQuery.of(context).size.height - 450,
               child: Stack(
                 children: [
                   Column(
@@ -347,14 +385,14 @@ class _TutorHomePageState extends State<TutorHomePage> {
                       const SizedBox(
                         height: 5,
                       ),
-                      Text(
-                        description,
-                        style: const TextStyle(
-                            overflow: TextOverflow.clip,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            fontSize: 15),
-                      ),
+                      // Text(
+                      //   description,
+                      //   style: const TextStyle(
+                      //       overflow: TextOverflow.clip,
+                      //       fontWeight: FontWeight.bold,
+                      //       color: Colors.black,
+                      //       fontSize: 15),
+                      // ),
                       Text(
                         "Grade $gradeName - $subjectName",
                         style: const TextStyle(
@@ -365,7 +403,7 @@ class _TutorHomePageState extends State<TutorHomePage> {
                     ],
                   ),
                   Container(
-                    padding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(0, 120, 0, 0),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -392,7 +430,7 @@ class _TutorHomePageState extends State<TutorHomePage> {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.fromLTRB(110, 220, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(110, 120, 0, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -421,144 +459,6 @@ class _TutorHomePageState extends State<TutorHomePage> {
                   )
                 ],
               )),
-        ],
-      ),
-    );
-  }
-
-  Container _under2() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      height: MediaQuery.of(context).size.height - 180,
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Your Courses",
-            style: TextStyle(
-                fontSize: 20, color: Colors.black, fontWeight: FontWeight.w600),
-          ),
-          Expanded(
-            child: FutureBuilder<String?>(
-              future: _getData(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  var data = jsonDecode(snapshot.data.toString());
-                  int tutorID = data["data"]["tutorId"];
-                  return FutureBuilder<TutorCourses>(
-                    future: API_Management()
-                        .getTutorByTutorID(data["data"]['jwtToken'], tutorID),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        var tutorCourse = snapshot.data!.data.courses;
-                        return ListView.builder(
-                            itemCount: tutorCourse.length,
-                            itemBuilder: (context, index) {
-                              var courseData =
-                                  snapshot.data!.data.courses[index];
-                              if (courseData.status == true) {
-                                return buildClassItem2(
-                                    courseData.title,
-                                    courseData.description,
-                                    courseData.courseId,
-                                    courseData.tutorId,
-                                    courseData.tutorRequestId,
-                                    courseData.tutorId,
-                                    data["data"]['jwtToken']);
-                              } else {
-                                return const Visibility(
-                                  child: Text("data"),
-                                  visible: false,
-                                );
-                              }
-                            });
-                      } else if (snapshot.hasError) {
-                        return const Text("");
-                      } else {
-                        return const Text("");
-                      }
-                    },
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                } else {
-                  return const Text("");
-                }
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Container buildClassItem2(String title, String description, int courseid,
-      int tutorid, int tutorrequestid, int studentid, String token) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 15, right: 7, left: 5),
-      padding: const EdgeInsets.all(10),
-      height: 100,
-      decoration: BoxDecoration(
-        color: const Color(0xFFF9F9FB),
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 1,
-            blurRadius: 5, // changes position of shadow
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width - 120,
-                child: Text(
-                  title.trim(), //Subject Name
-                  overflow: TextOverflow.clip,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width - 120,
-                child: Text(
-                  description.trim(), //Address
-                  overflow: TextOverflow.clip,
-                  style: const TextStyle(color: Colors.black, fontSize: 13),
-                ),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              IconButton(
-                onPressed: () {
-                  Get.to(() => const TutorViewCourseDetail(), arguments: {
-                    "title": title,
-                    "description": description,
-                    "courseid": courseid,
-                    "tutorid": tutorid,
-                    "tutorrequestid": tutorrequestid,
-                    "studentid": studentid,
-                    "token": token,
-                  });
-                },
-                icon: const Icon(Icons.arrow_right_alt_rounded),
-              ),
-            ],
-          ),
         ],
       ),
     );

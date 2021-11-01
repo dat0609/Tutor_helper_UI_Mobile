@@ -34,16 +34,22 @@ class _LoginPageState extends State<LoginPage> {
                 Column(
                   children: <Widget>[
                     const Text(
-                      "Please login...",
+                      "Tutor Helper",
                       style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(
-                      height: 20,
+                    Image.network(
+                      "https://cdn-icons-png.flaticon.com/512/3449/3449692.png",
+                      cacheHeight: 250,
+                      cacheWidth: 250,
                     ),
                     const Text(
                       "What role are you?",
-                      style: TextStyle(fontSize: 18, color: Colors.black),
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 20,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,

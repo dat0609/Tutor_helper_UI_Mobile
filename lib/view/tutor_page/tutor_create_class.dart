@@ -318,7 +318,9 @@ class _CreateClassState extends State<CreateClass> {
                                       " at $dateStr",
                                   "This is Desc",
                                   classDateTimeData[i][0],
-                                  classDateTimeData[i][1]);
+                                  classDateTimeData[i][1],
+                                  data_from_course_detail["tutorid"],
+                                  data_from_course_detail["studentid"]);
                             }
                             Alert(
                                 context: context,

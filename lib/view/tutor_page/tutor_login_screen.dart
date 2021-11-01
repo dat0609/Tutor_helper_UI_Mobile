@@ -48,6 +48,8 @@ class _TutorLoginPageState extends State<TutorLoginPage> {
       storage.write(key: "database", value: response.body);
       Get.offAll(() => const TutorManagement());
     } else if (response.statusCode == 500) {
+      await GoogleSignIn().disconnect();
+      await FirebaseAuth.instance.signOut();
       Alert(
           context: context,
           type: AlertType.error,

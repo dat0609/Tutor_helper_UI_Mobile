@@ -6,12 +6,14 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:tutor_helper/constants/strings.dart';
 import 'package:tutor_helper/model/classes.dart';
+import 'package:tutor_helper/model/studentcourses.dart';
 import 'package:tutor_helper/model/students.dart';
 import 'package:tutor_helper/model/subjects.dart';
 import 'package:tutor_helper/model/tutor_requests.dart';
 import 'package:tutor_helper/model/tutorcourses.dart';
 
 class API_Management {
+  //API for Tutor Only!!
   Future<TutorRequests> getAllTutorRequests(String token) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -29,7 +31,7 @@ class API_Management {
   }
 
   void createCourseByRequest(var token, String title, String description,
-      int tutorId, int tutorrequestId) async {
+      int tutorId, int tutorrequestId, int studentId) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       "Authorization": "Bearer " + token.toString()
@@ -39,7 +41,8 @@ class API_Management {
       "description": description,
       "status": true,
       "tutorId": tutorId,
-      "tutorRequestId": tutorrequestId
+      "tutorRequestId": tutorrequestId,
+      "studentId": studentId
     });
     await http.post(
       Uri.parse(Strings.create_course),
@@ -66,7 +69,7 @@ class API_Management {
       "tutorRequestId": tutorrequestid,
       "title": title,
       "description": description,
-      "status": false,
+      "status": "Accepted",
       "studentId": studentid,
       "gradeId": gradeid,
       "subjectId": subjectId,
@@ -75,7 +78,7 @@ class API_Management {
         headers: headers, body: body);
     if (response.statusCode == 200) {
       API_Management().createCourseByRequest(
-          token, title, description, tutorid, tutorrequestid);
+          token, title, description, tutorid, tutorrequestid, studentid);
     } else {}
   }
 
@@ -116,7 +119,7 @@ class API_Management {
   }
 
   void createClass(var token, int courseid, String title, String description,
-      String startTime, String endTime) async {
+      String startTime, String endTime, int tutorId, int studentId) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'Charset': 'utf-8',
@@ -128,12 +131,14 @@ class API_Management {
       "status": true,
       "courseId": courseid,
       "startTime": startTime,
+      "tutorID": tutorId,
+      "studentID": studentId,
       "endTime": endTime
     });
     await http.post(Uri.parse(Strings.class_url), headers: headers, body: body);
   }
 
-  Future<Classes> getAllClass(var token) async {
+  Future<Classes> getAllClasses(var token) async {
     var response = await http.get(
       Uri.parse(Strings.class_for_calendar_url),
       headers: {
@@ -186,7 +191,7 @@ class API_Management {
     }
   }
 
-  Future<Students> getStudents(var token, int studentId) async {
+  Future<StudentCourses> getStudentByStudentId(var token, int studentId) async {
     var response = await http.get(
       Uri.parse(Strings.student_get_url(studentId)),
       headers: {
@@ -197,9 +202,14 @@ class API_Management {
     if (response.statusCode == 200) {
       var jsonString = response.body;
       var jsonMap = json.decode(jsonString);
-      return Students.fromJson(jsonMap);
+      return StudentCourses.fromJson(jsonMap);
     } else {
       throw Exception('Error while get Students');
     }
   }
+
+//API for Student Only!!
+
+//API for both
+
 }

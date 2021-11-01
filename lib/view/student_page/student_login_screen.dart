@@ -9,6 +9,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:tutor_helper/constants/strings.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as https;
+import 'package:tutor_helper/view/student_page/student_management.dart';
 
 class StudentLoginPage extends StatefulWidget {
   const StudentLoginPage({Key? key}) : super(key: key);
@@ -42,10 +43,12 @@ class _StudentLoginPageState extends State<StudentLoginPage> {
     final response = await https.post(Uri.parse(Strings.student_signin_url),
         headers: headers, body: body);
     if (response.statusCode == 200) {
-      // log(response.body);
-      // storage.write(key: "database", value: response.body);
-      // Get.offAll(() => const TutorManagement());
+      log(response.body);
+      storage.write(key: "database", value: response.body);
+      Get.offAll(() => const StudentManagement());
     } else if (response.statusCode == 500) {
+      await GoogleSignIn().disconnect();
+      await FirebaseAuth.instance.signOut();
       Alert(
           context: context,
           type: AlertType.error,

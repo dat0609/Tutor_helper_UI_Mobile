@@ -50,7 +50,7 @@ class _TutorCalendarPageState extends State<TutorCalendarPage> {
                     }
                   }
                   return FutureBuilder<Classes>(
-                      future: API_Management().getAllClass(token),
+                      future: API_Management().getAllClasses(token),
                       builder: (context, classesData) {
                         if (classesData.hasData) {
                           var classData = classesData.data!.data;

@@ -29,19 +29,22 @@ class Data {
     required this.email,
     required this.fullName,
     required this.phoneNumber,
+    required this.imagePath,
     required this.courses,
   });
   late final int tutorId;
   late final String email;
   late final String fullName;
   late final String phoneNumber;
+  late final String imagePath;
   late final List<Courses> courses;
 
   Data.fromJson(Map<String, dynamic> json) {
     tutorId = json['tutorId'];
     email = json['email'];
     fullName = json['fullName'];
-    // phoneNumber = json['phoneNumber'];
+    phoneNumber = json['phoneNumber'];
+    imagePath = json['imagePath'];
     courses =
         List.from(json['courses']).map((e) => Courses.fromJson(e)).toList();
   }
@@ -52,6 +55,7 @@ class Data {
     _data['email'] = email;
     _data['fullName'] = fullName;
     _data['phoneNumber'] = phoneNumber;
+    _data['imagePath'] = imagePath;
     _data['courses'] = courses.map((e) => e.toJson()).toList();
     return _data;
   }
@@ -65,7 +69,7 @@ class Courses {
     required this.status,
     required this.tutorId,
     required this.tutorRequestId,
-    required this.createAt,
+    required this.studentId,
   });
   late final int courseId;
   late final String title;
@@ -73,7 +77,7 @@ class Courses {
   late final bool status;
   late final int tutorId;
   late final int tutorRequestId;
-  late final String createAt;
+  late final int studentId;
 
   Courses.fromJson(Map<String, dynamic> json) {
     courseId = json['courseId'];
@@ -82,7 +86,7 @@ class Courses {
     status = json['status'];
     tutorId = json['tutorId'];
     tutorRequestId = json['tutorRequestId'];
-    // createAt = json['createAt'];
+    studentId = json['studentId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -93,7 +97,7 @@ class Courses {
     _data['status'] = status;
     _data['tutorId'] = tutorId;
     _data['tutorRequestId'] = tutorRequestId;
-    _data['createAt'] = createAt;
+    _data['studentId'] = studentId;
     return _data;
   }
 }
