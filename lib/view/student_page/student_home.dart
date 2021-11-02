@@ -38,14 +38,11 @@ class _StudentHomePageState extends State<StudentHomePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
-      child: SingleChildScrollView(
+        color: Colors.white,
         child: Stack(children: [
           _upper(),
           _under(),
-        ]),
-      ),
-    );
+        ]));
   }
 
   Container _upper() {
@@ -196,33 +193,20 @@ class _StudentHomePageState extends State<StudentHomePage> {
                 if (snapshot.hasData) {
                   var data = jsonDecode(snapshot.data.toString());
                   int studentId = data["data"]["studentId"];
-                  return FutureBuilder<StudentCourses>(
-                    future: API_Management().getStudentByStudentId(
+                  return FutureBuilder<Courses>(
+                    future: API_Management().getCourseByStudentId(
                         data["data"]['jwtToken'], studentId),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        var studentCourse = snapshot.data!.data.courses;
-                        return ListView.builder(
-                            itemCount: studentCourse.length,
-                            itemBuilder: (context, index) {
-                              var courseData =
-                                  snapshot.data!.data.courses[index];
-                              if (courseData.status == true) {
-                                return buildClassItem(
-                                    courseData.title,
-                                    courseData.description,
-                                    courseData.courseId,
-                                    courseData.tutorId,
-                                    courseData.tutorRequestId,
-                                    courseData.studentId,
-                                    data["data"]['jwtToken']);
-                              } else {
-                                return const Visibility(
-                                  child: Text("data"),
-                                  visible: false,
-                                );
-                              }
-                            });
+                        var studentCourse = snapshot.data;
+                        return buildClassItem(
+                            studentCourse!.title,
+                            studentCourse.description,
+                            studentCourse.courseId,
+                            studentCourse.tutorId,
+                            studentCourse.tutorRequestId,
+                            studentCourse.studentId,
+                            data["data"]['jwtToken']);
                       } else if (snapshot.hasError) {
                         return const Text("");
                       } else {

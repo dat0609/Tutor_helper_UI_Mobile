@@ -246,6 +246,23 @@ class API_Management {
         headers: headers, body: body);
   }
 
+  Future<Courses> getCourseByStudentId(var token, int studentId) async {
+    var response = await http.get(
+      Uri.parse(Strings.get_courses_by_studentId_url(studentId)),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token.toString()
+      },
+    );
+    if (response.statusCode == 200) {
+      var jsonString = response.body;
+      var jsonMap = json.decode(jsonString)["data"];
+      return Courses.fromJson(jsonMap[0]);
+    } else {
+      throw Exception('Error while get Students');
+    }
+  }
+
 //API for both
 
   Future<Subjects> getSubjectByGrade(var token, int gradeId) async {

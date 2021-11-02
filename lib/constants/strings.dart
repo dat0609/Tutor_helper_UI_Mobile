@@ -9,6 +9,9 @@ class Strings {
 
   static String create_course =
       "https://tutorhelper20210920193710.azurewebsites.net/api/v1/courses";
+  static String get_courses_by_studentId_url(int studentId) {
+    return "https://tutorhelper20210920193710.azurewebsites.net/api/v1/courses/query?s=$studentId&PageSize=10000";
+  }
 
   static String tutors_url =
       "https://tutorhelper20210920193710.azurewebsites.net/api/v1/tutors?PageSize=10000";

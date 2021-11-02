@@ -65,6 +65,8 @@ class _StudentCreateRequestState extends State<StudentCreateRequest> {
       listGradeItem = listGrades[0].toString();
       gradeChanged = true;
       gradeNow = 1;
+      gradeId = 1;
+      subjectId = 1;
     }
     return Container(
       margin: const EdgeInsets.only(top: 75),

@@ -195,6 +195,7 @@ class _TutorHomePageState extends State<TutorHomePage> {
       listGradeItem = listGrades[0].toString();
       gradeChanged = true;
       gradeNow = 1;
+      subjectNow = 1;
     }
     return Container(
       margin: const EdgeInsets.only(top: 140),
@@ -355,19 +356,27 @@ class _TutorHomePageState extends State<TutorHomePage> {
                                                       .toString();
                                                   studentName =
                                                       stuData.fullName;
-                                                  return buildClassItem(
-                                                      trData.title,
-                                                      trData.description,
-                                                      studentName,
-                                                      imageUrl,
-                                                      trData.tutorRequestId,
-                                                      tutorId,
-                                                      token,
-                                                      trData.gradeId,
-                                                      trData.studentId,
-                                                      trData.subjectId,
-                                                      subject,
-                                                      grade);
+                                                  if (trData.subjectId ==
+                                                      subjectNow) {
+                                                    return buildClassItem(
+                                                        trData.title,
+                                                        trData.description,
+                                                        studentName,
+                                                        imageUrl,
+                                                        trData.tutorRequestId,
+                                                        tutorId,
+                                                        token,
+                                                        trData.gradeId,
+                                                        trData.studentId,
+                                                        trData.subjectId,
+                                                        subject,
+                                                        grade);
+                                                  } else {
+                                                    return const Visibility(
+                                                      child: Text(""),
+                                                      visible: false,
+                                                    );
+                                                  }
                                                 } else {
                                                   return const Visibility(
                                                     child: Text(""),

@@ -53,7 +53,7 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
           ),
           listItem("Desc:", datafromPost["description"]),
           //Hiển thị grade
-          listItem("Grade:", datafromPost["gradeId"].toString()),
+          listItem("Grade:", "Grade " + datafromPost["gradeId"].toString()),
           //hiển thị môn
           listItem("subject:", datafromPost["subjectId"].toString()),
           //Hiển thị thông tin học sinh
@@ -150,7 +150,7 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
             datafromPost["token"],
             datafromPost["tutorId"],
             datafromPost["tutorRequestID"],
-            datafromPost["studentid"],
+            datafromPost["studentId"],
             datafromPost["gradeId"],
             datafromPost["title"],
             datafromPost["description"],

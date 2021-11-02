@@ -221,74 +221,67 @@ class _StudentRequestPageState extends State<StudentRequestPage> {
                               itemBuilder: (context, index) {
                                 var trData =
                                     tutorRequestsData.data!.data[index];
-                                if (trData.status == "Approved") {
-                                  return FutureBuilder<Subjects>(
-                                      future:
-                                          API_Management().getSubjects(token),
-                                      builder: (context, subjectData) {
-                                        if (subjectData.hasData) {
-                                          String grade = "noGrade";
-                                          String subject = "noSubject";
-                                          var subData = subjectData.data!.data;
-                                          for (int i = 0;
-                                              i < subData.length;
-                                              i++) {
-                                            // ignore: unrelated_type_equality_checks
-                                            if (subData[i].subjectId ==
-                                                trData.subjectId) {
-                                              grade =
-                                                  subData[i].gradeId.toString();
-                                              subject = subData[i]
-                                                  .subjectName
-                                                  .toString();
-                                            }
+                                return FutureBuilder<Subjects>(
+                                    future: API_Management().getSubjects(token),
+                                    builder: (context, subjectData) {
+                                      if (subjectData.hasData) {
+                                        String grade = "noGrade";
+                                        String subject = "noSubject";
+                                        var subData = subjectData.data!.data;
+                                        for (int i = 0;
+                                            i < subData.length;
+                                            i++) {
+                                          // ignore: unrelated_type_equality_checks
+                                          if (subData[i].subjectId ==
+                                              trData.subjectId) {
+                                            grade =
+                                                subData[i].gradeId.toString();
+                                            subject = subData[i]
+                                                .subjectName
+                                                .toString();
                                           }
-                                          return FutureBuilder<StudentCourses>(
-                                              future: API_Management()
-                                                  .getStudentByStudentId(
-                                                      token, trData.studentId),
-                                              builder: (context, studentData) {
-                                                if (studentData.hasData) {
-                                                  var stuData =
-                                                      studentData.data!.data;
-                                                  if (stuData.studentId ==
-                                                      studentId) {
-                                                    return buildClassItem(
-                                                        trData.title,
-                                                        trData.description,
-                                                        trData.tutorRequestId,
-                                                        token,
-                                                        trData.gradeId,
-                                                        trData.studentId,
-                                                        trData.subjectId,
-                                                        subject,
-                                                        grade);
-                                                  } else {
-                                                    return const Visibility(
-                                                      child: Text(""),
-                                                      visible: false,
-                                                    );
-                                                  }
+                                        }
+                                        return FutureBuilder<StudentCourses>(
+                                            future: API_Management()
+                                                .getStudentByStudentId(
+                                                    token, trData.studentId),
+                                            builder: (context, studentData) {
+                                              if (studentData.hasData) {
+                                                var stuData =
+                                                    studentData.data!.data;
+                                                if (stuData.studentId ==
+                                                    studentId) {
+                                                  return buildClassItem(
+                                                      trData.title,
+                                                      trData.description,
+                                                      trData.tutorRequestId,
+                                                      token,
+                                                      trData.gradeId,
+                                                      trData.studentId,
+                                                      trData.subjectId,
+                                                      subject,
+                                                      grade,
+                                                      trData.status);
                                                 } else {
                                                   return const Visibility(
                                                     child: Text(""),
                                                     visible: false,
                                                   );
                                                 }
-                                              });
-                                        } else {
-                                          return const Visibility(
-                                            child: Text(""),
-                                            visible: false,
-                                          );
-                                        }
-                                      });
-                                } else {
-                                  return const Visibility(
-                                    child: Text(""),
-                                    visible: false,
-                                  );
-                                }
+                                              } else {
+                                                return const Visibility(
+                                                  child: Text(""),
+                                                  visible: false,
+                                                );
+                                              }
+                                            });
+                                      } else {
+                                        return const Visibility(
+                                          child: Text(""),
+                                          visible: false,
+                                        );
+                                      }
+                                    });
                               }));
                     } else {
                       return const Text("");
@@ -317,7 +310,8 @@ class _StudentRequestPageState extends State<StudentRequestPage> {
       int studentid,
       int subjectId,
       String subjectName,
-      String gradeName) {
+      String gradeName,
+      String status) {
     return Container(
       margin: const EdgeInsets.fromLTRB(10, 15, 20, 0),
       padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
@@ -367,6 +361,13 @@ class _StudentRequestPageState extends State<StudentRequestPage> {
                             fontSize: 15),
                       ),
                     ],
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(0, 120, 0, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [Text(status)],
+                    ),
                   ),
                   Container(
                     padding: const EdgeInsets.fromLTRB(110, 120, 0, 0),
