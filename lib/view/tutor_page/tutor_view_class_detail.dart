@@ -26,9 +26,10 @@ class _ViewClassDetailState extends State<ViewClassDetail> {
   String endTimeChanged = '';
   String endTimeToValidate = '';
   String endTimeSaved = '';
+  String date = "";
   String title = "";
   String description = "";
-  String date = "";
+  bool firstTime = true;
 
   _startDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -88,12 +89,19 @@ class _ViewClassDetailState extends State<ViewClassDetail> {
     date = startDateTimeStr[0];
     var startTimeStr = startDateTimeStr[1].split(":");
     String startTime = startTimeStr[0] + ":" + startTimeStr[1];
-    startTimeChanged = startTime;
+
     var endDateTimeStr =
         data_from_course_detail["endTime"].toString().split("T");
     var endTimeStr = endDateTimeStr[1].split(":");
     String endTime = endTimeStr[0] + ":" + endTimeStr[1];
-    endTimeChanged = endTime;
+
+    if (firstTime) {
+      startTimeChanged = startTime;
+      endTimeChanged = endTime;
+      title = data_from_course_detail["title"];
+      description = data_from_course_detail["description"];
+      firstTime = false;
+    }
 
     return Material(
       type: MaterialType.transparency,
