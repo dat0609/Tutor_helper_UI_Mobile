@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_management.dart';
+import 'package:tutor_helper/model/studentcourses.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
 
 class TutorViewPostDetail extends StatefulWidget {
@@ -44,6 +45,48 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
       child: Column(
         children: [
           // listItem("Student:", datafromPost),
+          FutureBuilder<StudentCourses>(
+              future: API_Management().getStudentByStudentId(
+                  datafromPost["token"], datafromPost["studentId"]),
+              builder: (context, studentData) {
+                if (studentData.hasData) {
+                  var stuData = studentData.data!.data;
+                  return Column(
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: const Color(0xff7c94b6),
+                          image: DecorationImage(
+                            image: NetworkImage(stuData.imagePath),
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(50.0)),
+                          border: Border.all(
+                            color: Colors.cyan,
+                            width: 1,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      listItem("Name", stuData.fullName),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      listItem("Email", stuData.email),
+                    ],
+                  );
+                } else {
+                  return const Visibility(
+                    child: Text(""),
+                    visible: false,
+                  );
+                }
+              }),
           const SizedBox(
             height: 10,
           ),
@@ -52,10 +95,19 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
             height: 10,
           ),
           listItem("Desc:", datafromPost["description"]),
+          const SizedBox(
+            height: 10,
+          ),
           //Hiển thị grade
           listItem("Grade:", "Grade " + datafromPost["gradeId"].toString()),
+          const SizedBox(
+            height: 10,
+          ),
           //hiển thị môn
-          listItem("subject:", datafromPost["subjectId"].toString()),
+          listItem("Subject:", datafromPost["subjectName"]),
+          const SizedBox(
+            height: 10,
+          ),
           //Hiển thị thông tin học sinh
           listItem("student:", datafromPost["studentId"].toString()),
           const SizedBox(

@@ -366,11 +366,11 @@ class _StudentRequestPageState extends State<StudentRequestPage> {
                     padding: const EdgeInsets.fromLTRB(0, 120, 0, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: [Text(status)],
+                      children: [Text("Status: $status")],
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.fromLTRB(110, 120, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(110, 110, 0, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -391,7 +391,7 @@ class _StudentRequestPageState extends State<StudentRequestPage> {
                               // );
                             },
                             child: const Text(
-                              "More detail >>>",
+                              "",
                               style: TextStyle(fontStyle: FontStyle.italic),
                             ))
                       ],

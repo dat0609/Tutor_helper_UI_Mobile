@@ -1,5 +1,5 @@
-class Courses {
-  Courses({
+class Coursess {
+  Coursess({
     required this.message,
     required this.data,
     required this.status,
@@ -8,7 +8,7 @@ class Courses {
   late final List<Data> data;
   late final String status;
 
-  Courses.fromJson(Map<String, dynamic> json) {
+  Coursess.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     data = List.from(json['data']).map((e) => Data.fromJson(e)).toList();
     status = json['status'];

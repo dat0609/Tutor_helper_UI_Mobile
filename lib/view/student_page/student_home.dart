@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_management.dart';
+import 'package:tutor_helper/model/courses.dart';
 import 'package:tutor_helper/model/studentcourses.dart';
 import 'package:tutor_helper/model/students.dart';
 import 'package:tutor_helper/model/subjects.dart';
@@ -12,6 +13,7 @@ import 'package:tutor_helper/model/tutor_requests.dart';
 import 'package:tutor_helper/model/tutorcourses.dart';
 import 'package:tutor_helper/presenter/date_time_format.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:tutor_helper/view/student_page/student_view_course_detail.dart';
 
 class StudentHomePage extends StatefulWidget {
   const StudentHomePage({Key? key}) : super(key: key);
@@ -87,7 +89,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 var data = jsonDecode(snapshot.data.toString());
-
                 return FutureBuilder<StudentCourses>(
                     future: API_Management().getStudentByStudentId(
                         data["data"]["jwtToken"], data["data"]["studentId"]),
@@ -193,20 +194,24 @@ class _StudentHomePageState extends State<StudentHomePage> {
                 if (snapshot.hasData) {
                   var data = jsonDecode(snapshot.data.toString());
                   int studentId = data["data"]["studentId"];
-                  return FutureBuilder<Courses>(
+                  return FutureBuilder<Coursess>(
                     future: API_Management().getCourseByStudentId(
                         data["data"]['jwtToken'], studentId),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        var studentCourse = snapshot.data;
-                        return buildClassItem(
-                            studentCourse!.title,
-                            studentCourse.description,
-                            studentCourse.courseId,
-                            studentCourse.tutorId,
-                            studentCourse.tutorRequestId,
-                            studentCourse.studentId,
-                            data["data"]['jwtToken']);
+                        var studentCourse = snapshot.data!.data;
+                        return ListView.builder(
+                            itemCount: studentCourse.length,
+                            itemBuilder: (context, index) {
+                              return buildClassItem(
+                                  studentCourse[index].title,
+                                  studentCourse[index].description,
+                                  studentCourse[index].courseId,
+                                  studentCourse[index].tutorId,
+                                  studentCourse[index].tutorRequestId,
+                                  studentCourse[index].studentId,
+                                  data["data"]['jwtToken']);
+                            });
                       } else if (snapshot.hasError) {
                         return const Text("");
                       } else {
@@ -275,15 +280,15 @@ class _StudentHomePageState extends State<StudentHomePage> {
             children: [
               IconButton(
                 onPressed: () {
-                  // Get.to(() => const TutorViewCourseDetail(), arguments: {
-                  //   "title": title,
-                  //   "description": description,
-                  //   "courseid": courseid,
-                  //   "tutorid": tutorid,
-                  //   "tutorrequestid": tutorrequestid,
-                  //   "studentid": studentid,
-                  //   "token": token,
-                  // });
+                  Get.to(() => const StudentViewCourseDetail(), arguments: {
+                    "title": title,
+                    "description": description,
+                    "courseid": courseid,
+                    "tutorid": tutorid,
+                    "tutorrequestid": tutorrequestid,
+                    "studentid": studentid,
+                    "token": token,
+                  });
                 },
                 icon: const Icon(Icons.arrow_right_alt_rounded),
               ),

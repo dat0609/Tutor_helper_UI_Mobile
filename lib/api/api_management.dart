@@ -6,6 +6,7 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:tutor_helper/constants/strings.dart';
 import 'package:tutor_helper/model/classes.dart';
+import 'package:tutor_helper/model/courses.dart';
 import 'package:tutor_helper/model/studentcourses.dart';
 import 'package:tutor_helper/model/students.dart';
 import 'package:tutor_helper/model/subjects.dart';
@@ -149,9 +150,9 @@ class API_Management {
       "status": true,
       "courseId": courseid,
       "startTime": startTime,
+      "endTime": endTime,
       "tutorID": tutorId,
       "studentID": studentId,
-      "endTime": endTime
     });
     await http.post(Uri.parse(Strings.class_url), headers: headers, body: body);
   }
@@ -246,7 +247,7 @@ class API_Management {
         headers: headers, body: body);
   }
 
-  Future<Courses> getCourseByStudentId(var token, int studentId) async {
+  Future<Coursess> getCourseByStudentId(var token, int studentId) async {
     var response = await http.get(
       Uri.parse(Strings.get_courses_by_studentId_url(studentId)),
       headers: {
@@ -256,8 +257,8 @@ class API_Management {
     );
     if (response.statusCode == 200) {
       var jsonString = response.body;
-      var jsonMap = json.decode(jsonString)["data"];
-      return Courses.fromJson(jsonMap[0]);
+      var jsonMap = json.decode(jsonString);
+      return Coursess.fromJson(jsonMap);
     } else {
       throw Exception('Error while get Students');
     }

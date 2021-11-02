@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/classes.dart';
+import 'package:tutor_helper/model/courses.dart';
 import 'package:tutor_helper/model/studentcourses.dart';
 import 'package:tutor_helper/model/tutorcourses.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -38,12 +39,12 @@ class _StudentCalendarPageState extends State<StudentCalendarPage> {
             var data = jsonDecode(snapshot.data.toString());
             int studentId = data["data"]["studentId"];
             var token = data["data"]["jwtToken"];
-            return FutureBuilder<StudentCourses>(
+            return FutureBuilder<Coursess>(
               future: API_Management()
-                  .getStudentByStudentId(data["data"]['jwtToken'], studentId),
+                  .getCourseByStudentId(data["data"]['jwtToken'], studentId),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  var studentCourse = snapshot.data!.data.courses;
+                  var studentCourse = snapshot.data!.data;
                   listCourseId.clear();
                   for (int i = 0; i < studentCourse.length; i++) {
                     if (studentCourse[i].status == true) {

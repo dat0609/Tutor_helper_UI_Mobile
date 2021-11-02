@@ -59,6 +59,8 @@ class _TutorCalendarPageState extends State<TutorCalendarPage> {
                             for (int k = 0; k < listCourseId.length; k++) {
                               if (listCourseId[k] == classData[i].courseId &&
                                   classData[i].status == true) {
+                                log(classData[i].title);
+                                log(meetings.length.toString());
                                 meetings.add(Appointment(
                                     startTime: DateTime.parse(
                                         classData[i].startTime.toString()),

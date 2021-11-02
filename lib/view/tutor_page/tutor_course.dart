@@ -172,7 +172,7 @@ class _TutorCoursePageState extends State<TutorCoursePage> {
   Container _under() {
     return Container(
       margin: const EdgeInsets.only(top: 140),
-      padding: const EdgeInsets.fromLTRB(20, 20, 5, 0),
+      padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
       height: MediaQuery.of(context).size.height - 200,
       width: MediaQuery.of(context).size.width,
       decoration: const BoxDecoration(
@@ -180,7 +180,7 @@ class _TutorCoursePageState extends State<TutorCoursePage> {
         gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFFD4E7FE), Colors.cyan]),
+            colors: [Color(0xFFD4E7FE), Colors.cyan, Color(0xFFF0F0F0)]),
         // borderRadius: BorderRadius.circular(30),
       ),
       child: Column(

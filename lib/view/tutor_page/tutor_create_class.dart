@@ -97,7 +97,7 @@ class _CreateClassState extends State<CreateClass> {
       type: MaterialType.transparency,
       child: Container(
         margin: const EdgeInsets.only(top: 75),
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 20),
         height: 800,
         width: 500,
         decoration: const BoxDecoration(
@@ -312,11 +312,8 @@ class _CreateClassState extends State<CreateClass> {
                               API_Management().createClass(
                                   data_from_course_detail["token"],
                                   data_from_course_detail["courseid"],
-                                  "Class of " +
-                                      data_from_course_detail["courseid"]
-                                          .toString() +
-                                      " at $dateStr",
-                                  "This is Desc",
+                                  title,
+                                  description,
                                   classDateTimeData[i][0],
                                   classDateTimeData[i][1],
                                   data_from_course_detail["tutorid"],

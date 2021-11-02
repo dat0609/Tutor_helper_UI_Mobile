@@ -524,6 +524,7 @@ class _TutorHomePageState extends State<TutorHomePage> {
                                   "gradeId": gradeId,
                                   "studentId": studentid,
                                   "subjectId": subjectId,
+                                  "subjectName": subjectName
                                 },
                               );
                             },
