@@ -74,10 +74,10 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
                         height: 30,
                       ),
                       listItem("Name", stuData.fullName),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      listItem("Email", stuData.email),
+                      // const SizedBox(
+                      //   height: 10,
+                      // ),
+                      // listItem("Email", stuData.email),
                     ],
                   );
                 } else {
@@ -109,7 +109,7 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
             height: 10,
           ),
           //Hiển thị thông tin học sinh
-          listItem("student:", datafromPost["studentId"].toString()),
+          // listItem("student:", datafromPost["studentId"].toString()),
           const SizedBox(
             height: 200,
           ),

@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/classes.dart';
+import 'package:tutor_helper/view/student_page/student_view_tutor_info.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_create_class.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_view_class_detail.dart';
@@ -33,7 +34,7 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
-        children: [_navigator(), _upper(), _class()],
+        children: [_navigator(), _upper(), _class(), _under()],
       ),
     );
   }
@@ -80,33 +81,13 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
         children: [
           TextButton(
               onPressed: () {
-                Get.to(() => const CreateClass(), arguments: {
-                  "title": data_from_home_page["title"],
-                  "description": data_from_home_page["description"],
-                  "courseid": data_from_home_page["courseid"],
-                  "tutorid": data_from_home_page["tutorid"],
-                  "tutorrequestid": data_from_home_page["tutorrequestid"],
-                  "studentid": data_from_home_page["studentid"],
+                Get.to(() => const StudentViewTutorInfo(), arguments: {
                   "token": data_from_home_page["token"],
+                  "tutorId": data_from_home_page["tutorid"],
                 });
               },
               child: const Text(
-                "Create Class",
-                style: TextStyle(color: Colors.white),
-              ),
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.cyan,
-                textStyle: const TextStyle(fontSize: 20),
-              )),
-          TextButton(
-              onPressed: () {
-                Get.to(() => const TutorViewStudentInfo(), arguments: {
-                  "token": data_from_home_page["token"],
-                  "studentId": data_from_home_page["studentid"],
-                });
-              },
-              child: const Text(
-                "Student Info",
+                "Tutor Info",
                 style: TextStyle(color: Colors.white),
               ),
               style: TextButton.styleFrom(
@@ -197,61 +178,6 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
               );
             }
           }),
-    );
-  }
-
-  showAlertDialog(BuildContext context) {
-    Widget okButton = TextButton(
-      child: const Text("OK"),
-      onPressed: () {
-        Get.offAll(() => const TutorManagement());
-      },
-    );
-    AlertDialog secondAlert = AlertDialog(
-      title: const Text("Deleted!"),
-      content: const Text("The course has been deleted!!!"),
-      actions: [
-        okButton,
-      ],
-    );
-    Widget cancelButton = TextButton(
-      child: const Text("Cancel"),
-      onPressed: () {
-        Get.back();
-      },
-    );
-    Widget deleteButton = TextButton(
-      child: const Text("Delete"),
-      onPressed: () {
-        API_Management().deleteCourse(
-            data_from_home_page["token"],
-            data_from_home_page["courseid"],
-            data_from_home_page["title"],
-            data_from_home_page["description"],
-            data_from_home_page["tutorid"],
-            data_from_home_page["tutorrequestid"]);
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return secondAlert;
-          },
-        );
-      },
-    );
-    AlertDialog firstAlert = AlertDialog(
-      title: const Text("Delete!"),
-      content: const Text("Are you sure you want to Delete this course?"),
-      actions: [
-        cancelButton,
-        deleteButton,
-      ],
-    );
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return firstAlert;
-      },
     );
   }
 
