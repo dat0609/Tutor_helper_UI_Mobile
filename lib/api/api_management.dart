@@ -58,6 +58,7 @@ class API_Management {
     final body = jsonEncode({
       "title": title,
       "description": description,
+      "linkUrl": "",
       "status": true,
       "tutorId": tutorId,
       "tutorRequestId": tutorrequestId,
@@ -119,7 +120,7 @@ class API_Management {
   }
 
   void deleteCourse(var token, int courseid, String title, String description,
-      int tutorId, int tutorRequestId) async {
+      int tutorId, int tutorRequestId, int studentID) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'Charset': 'utf-8',
@@ -131,7 +132,8 @@ class API_Management {
       "description": description,
       "status": false,
       "tutorId": tutorId,
-      "tutorRequestId": tutorRequestId
+      "tutorRequestId": tutorRequestId,
+      "studentID": studentID,
     });
     await http.put(Uri.parse(Strings.courses_url),
         headers: headers, body: body);
@@ -225,6 +227,26 @@ class API_Management {
     } else {
       throw Exception('Error while get Students');
     }
+  }
+
+  void deleteRequest(var token, int tutorRequestId, String title,
+      String description, int studentId, int gradeId, int subjectId) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Charset': 'utf-8',
+      "Authorization": "Bearer " + token.toString()
+    };
+    final body = jsonEncode({
+      "tutorRequestId": tutorRequestId,
+      "title": title,
+      "description": description,
+      "status": "Deleted",
+      "studentId": studentId,
+      "gradeId": gradeId,
+      "subjectId": subjectId,
+    });
+    await http.put(Uri.parse(Strings.create_request_url),
+        headers: headers, body: body);
   }
 
 //API for Student Only!!

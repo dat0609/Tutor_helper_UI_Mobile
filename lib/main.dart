@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tutor_helper/api/noti_api.dart';
 import 'package:tutor_helper/view/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -17,6 +18,13 @@ class TutorHelper extends StatefulWidget {
 }
 
 class _TutorHelperState extends State<TutorHelper> {
+  @override
+  void initState() {
+    super.initState();
+
+    NotiApi.init();
+  }
+
   @override
   Widget build(BuildContext context) {
     return const GetMaterialApp(

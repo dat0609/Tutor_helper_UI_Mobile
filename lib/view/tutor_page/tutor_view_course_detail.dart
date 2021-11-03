@@ -229,7 +229,8 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
             data_from_course_page["title"],
             data_from_course_page["description"],
             data_from_course_page["tutorid"],
-            data_from_course_page["tutorrequestid"]);
+            data_from_course_page["tutorrequestid"],
+            data_from_course_page["studentid"]);
         showDialog(
           context: context,
           builder: (BuildContext context) {

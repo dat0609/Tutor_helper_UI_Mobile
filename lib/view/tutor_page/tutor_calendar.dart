@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:tutor_helper/api/api_management.dart';
+import 'package:tutor_helper/api/noti_api.dart';
 import 'package:tutor_helper/model/classes.dart';
 import 'package:tutor_helper/model/tutorcourses.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -59,6 +60,19 @@ class _TutorCalendarPageState extends State<TutorCalendarPage> {
                             for (int k = 0; k < listCourseId.length; k++) {
                               if (listCourseId[k] == classData[i].courseId &&
                                   classData[i].status == true) {
+                                if (DateTime.parse(
+                                        classData[i].startTime.toString())
+                                    .subtract(const Duration(minutes: 10))
+                                    .isAfter(DateTime.now())) {
+                                  NotiApi.showScheduleNoti(
+                                      id: i,
+                                      title: "You have a class today!",
+                                      body: classData[i].title,
+                                      scheduleDate: DateTime.parse(
+                                              classData[i].startTime.toString())
+                                          .subtract(
+                                              const Duration(minutes: 10)));
+                                }
                                 meetings.add(Appointment(
                                     startTime: DateTime.parse(
                                         classData[i].startTime.toString()),

@@ -91,7 +91,6 @@ class _TutorCoursePageState extends State<TutorCoursePage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 var data = jsonDecode(snapshot.data.toString());
-
                 return FutureBuilder<TutorCourses>(
                     future: API_Management().getTutorByTutorID(
                         data["data"]["jwtToken"], data["data"]["tutorId"]),
