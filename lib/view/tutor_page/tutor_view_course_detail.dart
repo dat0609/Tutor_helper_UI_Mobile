@@ -8,6 +8,7 @@ import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/classes.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_create_class.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_create_event.dart';
+import 'package:tutor_helper/view/tutor_page/tutor_edit_link_class.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_view_class_detail.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_view_student_info.dart';
@@ -136,38 +137,16 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
                   )),
               TextButton(
                 onPressed: () {
-                  AlertDialog(
-                    title: const Text("Edit Link url"),
-                    content: TextFormField(
-                      initialValue: data_from_course_page["linkUrl"],
-                      keyboardType: TextInputType.url,
-                      onChanged: (value) {
-                        linkUrl = value;
-                      },
-                    ),
-                    actions: [
-                      TextButton(
-                        child: const Text("Cancel"),
-                        onPressed: () {
-                          Get.back();
-                        },
-                      ),
-                      TextButton(
-                        child: const Text("Update"),
-                        onPressed: () {
-                          API_Management().updateCourse(
-                              data_from_course_page["token"],
-                              data_from_course_page["courseId"],
-                              data_from_course_page["title"],
-                              data_from_course_page["description"],
-                              data_from_course_page["tutorId"],
-                              data_from_course_page["tutorrequestId"],
-                              data_from_course_page["studentId"],
-                              linkUrl);
-                        },
-                      ),
-                    ],
-                  );
+                  Get.to(() => const EditLinkClass(), arguments: {
+                    "token": data_from_course_page["token"],
+                    "courseId": data_from_course_page["courseId"],
+                    "title": data_from_course_page["title"],
+                    "description": data_from_course_page["description"],
+                    "tutorId": data_from_course_page["tutorId"],
+                    "tutorrequestId": data_from_course_page["tutorrequestId"],
+                    "studentId": data_from_course_page["studentId"],
+                    "linkUrl": data_from_course_page["linkUrl"]
+                  });
                 },
                 child: const Text(
                   "Edit Link",
@@ -201,20 +180,20 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
                     textStyle: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.w800),
                   )),
-              TextButton(
-                onPressed: () {
-                  log("Document");
-                },
-                child: const Text(
-                  "Document",
-                  style: TextStyle(color: Colors.white),
-                ),
-                style: TextButton.styleFrom(
-                  backgroundColor: const Color(0xFF00bf8c),
-                  textStyle: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w800),
-                ),
-              ),
+              // TextButton(
+              //   onPressed: () {
+              //     log("Document");
+              //   },
+              //   child: const Text(
+              //     "Document",
+              //     style: TextStyle(color: Colors.white),
+              //   ),
+              //   style: TextButton.styleFrom(
+              //     backgroundColor: const Color(0xFF00bf8c),
+              //     textStyle: const TextStyle(
+              //         fontSize: 20, fontWeight: FontWeight.w800),
+              //   ),
+              // ),
             ],
           )
         ],
