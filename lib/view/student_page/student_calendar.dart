@@ -75,13 +75,25 @@ class _StudentCalendarPageState extends State<StudentCalendarPage> {
                                           .subtract(
                                               const Duration(minutes: 10)));
                                 }
-                                meetings.add(Appointment(
-                                    startTime: DateTime.parse(
-                                        classData[i].startTime.toString()),
-                                    endTime: DateTime.parse(
-                                        classData[i].endTime.toString()),
-                                    subject: classData[i].title,
-                                    color: const Color(0XFF263064)));
+                                if (DateTime.parse(
+                                        classData[i].startTime.toString())
+                                    .isAfter(DateTime.now())) {
+                                  meetings.add(Appointment(
+                                      startTime: DateTime.parse(
+                                          classData[i].startTime.toString()),
+                                      endTime: DateTime.parse(
+                                          classData[i].endTime.toString()),
+                                      subject: classData[i].title,
+                                      color: const Color(0XFF263064)));
+                                } else {
+                                  meetings.add(Appointment(
+                                      startTime: DateTime.parse(
+                                          classData[i].startTime.toString()),
+                                      endTime: DateTime.parse(
+                                          classData[i].endTime.toString()),
+                                      subject: classData[i].title,
+                                      color: const Color(0XFF919191)));
+                                }
                               }
                             }
                           }

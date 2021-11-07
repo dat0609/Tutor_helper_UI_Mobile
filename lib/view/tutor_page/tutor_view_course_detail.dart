@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/classes.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_create_class.dart';
+import 'package:tutor_helper/view/tutor_page/tutor_create_event.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_view_class_detail.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_view_student_info.dart';
@@ -23,6 +24,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
   // ignore: non_constant_identifier_names
   var data_from_course_page = Get.arguments;
   final storage = const FlutterSecureStorage();
+  String linkUrl = "";
 
   @override
   void initState() {
@@ -72,7 +74,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
 
   Container _under() {
     return Container(
-      margin: const EdgeInsets.only(top: 625),
+      margin: const EdgeInsets.only(top: 575),
       child: Column(
         children: [
           Row(
@@ -134,6 +136,73 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
                   )),
               TextButton(
                 onPressed: () {
+                  AlertDialog(
+                    title: const Text("Edit Link url"),
+                    content: TextFormField(
+                      initialValue: data_from_course_page["linkUrl"],
+                      keyboardType: TextInputType.url,
+                      onChanged: (value) {
+                        linkUrl = value;
+                      },
+                    ),
+                    actions: [
+                      TextButton(
+                        child: const Text("Cancel"),
+                        onPressed: () {
+                          Get.back();
+                        },
+                      ),
+                      TextButton(
+                        child: const Text("Update"),
+                        onPressed: () {
+                          API_Management().updateCourse(
+                              data_from_course_page["token"],
+                              data_from_course_page["courseId"],
+                              data_from_course_page["title"],
+                              data_from_course_page["description"],
+                              data_from_course_page["tutorId"],
+                              data_from_course_page["tutorrequestId"],
+                              data_from_course_page["studentId"],
+                              linkUrl);
+                        },
+                      ),
+                    ],
+                  );
+                },
+                child: const Text(
+                  "Edit Link",
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: TextButton.styleFrom(
+                  backgroundColor: const Color(0xFF00bf8c),
+                  textStyle: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w800),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextButton(
+                  onPressed: () =>
+                      Get.to(() => const CreateEvent(), arguments: {
+                        'token': data_from_course_page['token'],
+                        'courseId': data_from_course_page['courseId'],
+                        'tutorId': data_from_course_page['tutorId'],
+                        'studentId': data_from_course_page['studentId'],
+                      }),
+                  child: const Text(
+                    "Create Event",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: TextButton.styleFrom(
+                    backgroundColor: const Color(0xFF3f2180),
+                    textStyle: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w800),
+                  )),
+              TextButton(
+                onPressed: () {
                   log("Document");
                 },
                 child: const Text(
@@ -184,7 +253,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
     return Container(
       margin: const EdgeInsets.only(top: 175, bottom: 20),
       padding: const EdgeInsets.symmetric(horizontal: 30),
-      height: MediaQuery.of(context).size.height - 300,
+      height: MediaQuery.of(context).size.height - 350,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: const Color(0xFFF9F9FB),

@@ -140,6 +140,27 @@ class API_Management {
         headers: headers, body: body);
   }
 
+  void updateCourse(var token, int courseId, String title, String description,
+      int tutorId, int tutorRequestId, int studentId, String linkUrl) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Charset': 'utf-8',
+      "Authorization": "Bearer " + token.toString()
+    };
+    final body = jsonEncode({
+      "courseId": courseId,
+      "title": title,
+      "description": description,
+      "linkUrl": linkUrl,
+      "status": true,
+      "tutorId": tutorId,
+      "tutorRequestId": tutorRequestId,
+      "studentId": studentId,
+    });
+    await http.put(Uri.parse(Strings.courses_url),
+        headers: headers, body: body);
+  }
+
   void createClass(var token, int courseId, String title, String description,
       String startTime, String endTime, int tutorId, int studentId) async {
     Map<String, String> headers = {
