@@ -7,6 +7,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
 
 class EditLinkClass extends StatefulWidget {
   const EditLinkClass({Key? key}) : super(key: key);
@@ -68,6 +69,7 @@ class _EditLinkClassState extends State<EditLinkClass> {
             ],
           ),
           TextFormField(
+            initialValue: linkUrl,
             keyboardType: TextInputType.url,
             onChanged: (value) {
               linkUrl = value;
@@ -106,6 +108,17 @@ class _EditLinkClassState extends State<EditLinkClass> {
                                 data_from_course_detail["tutorrequestId"],
                                 data_from_course_detail["studentId"],
                                 linkUrl);
+                            Alert(
+                                context: context,
+                                type: AlertType.success,
+                                title: "Successfully",
+                                desc: "This Link has been update successfully!",
+                                buttons: [
+                                  DialogButton(
+                                      onPressed: () => Get.offAll(
+                                          () => const TutorManagement()),
+                                      child: const Text("OK")),
+                                ]).show();
                           },
                           child: const Text("Edit")),
                     ]).show();

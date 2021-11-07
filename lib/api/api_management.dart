@@ -157,8 +157,9 @@ class API_Management {
       "tutorRequestId": tutorRequestId,
       "studentId": studentId,
     });
-    await http.put(Uri.parse(Strings.courses_url),
+    var res = await http.put(Uri.parse(Strings.courses_url),
         headers: headers, body: body);
+    log(res.statusCode.toString());
   }
 
   void createClass(var token, int courseId, String title, String description,
