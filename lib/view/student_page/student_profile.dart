@@ -4,8 +4,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/studentcourses.dart';
+import 'package:tutor_helper/view/student_page/student_management.dart';
+import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
 
 class StudentProfilePage extends StatefulWidget {
   const StudentProfilePage({Key? key}) : super(key: key);
@@ -18,6 +21,12 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
   String username = "";
   String email = "";
   String phone = "";
+  String token = "";
+  String imagePath = "";
+  bool firstTime = true;
+  int schoolId = 0;
+  int gradeId = 0;
+  int studentId = 0;
   final storage = const FlutterSecureStorage();
 
   Future<String?> _getData() async {
@@ -47,15 +56,26 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   var data = jsonDecode(snapshot.data.toString());
-                  var imagePath = data["data"]['imagePath'].toString();
+                  imagePath = data["data"]['imagePath'].toString();
+                  token = data["data"]['jwtToken'];
                   return FutureBuilder<StudentCourses>(
-                    future: API_Management().getStudentByStudentId(
+                    future: API_Management().getStudentBystudentId(
                         data["data"]['jwtToken'], data["data"]['studentId']),
                     builder: (context, studentData) {
                       if (studentData.hasData) {
                         email = data["data"]['email'];
-                        username = studentData.data!.data.fullName;
-                        phone = studentData.data!.data.phoneNumber;
+                        imagePath = studentData.data!.data.imagePath;
+                        studentId = studentData.data!.data.studentId;
+                        schoolId = studentData.data!.data.schoolId;
+                        gradeId = studentData.data!.data.gradeId;
+                        if (firstTime) {
+                          username = studentData.data!.data.fullName;
+                          phone = studentData.data!.data.phoneNumber;
+                          if (phone == "00000") {
+                            phone = "";
+                          }
+                          firstTime = false;
+                        }
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -84,7 +104,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                                     ),
                                   ),
                                   Text(
-                                    username,
+                                    studentData.data!.data.fullName,
                                     style: const TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
@@ -173,8 +193,72 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  log(username);
-                  log(phone);
+                  if (phone == "" || phone == "00000") {
+                    Alert(
+                        context: context,
+                        type: AlertType.error,
+                        title: "Phone Error",
+                        desc: "Please input your phone number!",
+                        buttons: [
+                          DialogButton(
+                            child: const Text(
+                              "OK",
+                            ),
+                            onPressed: () {
+                              Get.back();
+                            },
+                          )
+                        ]).show();
+                  } else {
+                    Alert(
+                        context: context,
+                        type: AlertType.warning,
+                        title: "Update Profile!",
+                        desc: "Are you sure to update your profile?",
+                        buttons: [
+                          DialogButton(
+                            child: const Text(
+                              "Cancel",
+                            ),
+                            onPressed: () {
+                              Get.back();
+                            },
+                          ),
+                          DialogButton(
+                            child: const Text(
+                              "Update",
+                            ),
+                            onPressed: () {
+                              API_Management().updateStudentProfile(
+                                  token,
+                                  studentId,
+                                  email,
+                                  username,
+                                  phone,
+                                  schoolId,
+                                  gradeId,
+                                  imagePath);
+                              Alert(
+                                  context: context,
+                                  type: AlertType.success,
+                                  title: "Completed!",
+                                  desc:
+                                      "Your profile has been updated successfully!",
+                                  buttons: [
+                                    DialogButton(
+                                      child: const Text(
+                                        "OK",
+                                      ),
+                                      onPressed: () {
+                                        Get.offAll(
+                                            () => const StudentManagement());
+                                      },
+                                    )
+                                  ]).show();
+                            },
+                          )
+                        ]).show();
+                  }
                 },
                 child: const Text(
                   "Update",

@@ -21,7 +21,7 @@ class StudentCalendarPage extends StatefulWidget {
 
 class _StudentCalendarPageState extends State<StudentCalendarPage> {
   List<Appointment> meetings = <Appointment>[];
-  List<int> listCourseId = <int>[];
+  List<int> listcourseId = <int>[];
   final CalendarController _controller = CalendarController();
   final storage = const FlutterSecureStorage();
 
@@ -42,14 +42,14 @@ class _StudentCalendarPageState extends State<StudentCalendarPage> {
             var token = data["data"]["jwtToken"];
             return FutureBuilder<Coursess>(
               future: API_Management()
-                  .getCourseByStudentId(data["data"]['jwtToken'], studentId),
+                  .getCourseBystudentId(data["data"]['jwtToken'], studentId),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   var studentCourse = snapshot.data!.data;
-                  listCourseId.clear();
+                  listcourseId.clear();
                   for (int i = 0; i < studentCourse.length; i++) {
                     if (studentCourse[i].status == true) {
-                      listCourseId.add(studentCourse[i].courseId);
+                      listcourseId.add(studentCourse[i].courseId);
                     }
                   }
                   return FutureBuilder<Classes>(
@@ -59,8 +59,8 @@ class _StudentCalendarPageState extends State<StudentCalendarPage> {
                           var classData = classesData.data!.data;
                           meetings.clear();
                           for (int i = 0; i < classData.length; i++) {
-                            for (int k = 0; k < listCourseId.length; k++) {
-                              if (listCourseId[k] == classData[i].courseId &&
+                            for (int k = 0; k < listcourseId.length; k++) {
+                              if (listcourseId[k] == classData[i].courseId &&
                                   classData[i].status == true) {
                                 if (DateTime.parse(
                                         classData[i].startTime.toString())

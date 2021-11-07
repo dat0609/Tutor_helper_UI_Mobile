@@ -7,10 +7,7 @@ import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/classes.dart';
 import 'package:tutor_helper/view/student_page/student_view_tutor_info.dart';
-import 'package:tutor_helper/view/tutor_page/tutor_create_class.dart';
-import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
-import 'package:tutor_helper/view/tutor_page/tutor_view_class_detail.dart';
-import 'package:tutor_helper/view/tutor_page/tutor_view_student_info.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StudentViewCourseDetail extends StatefulWidget {
   const StudentViewCourseDetail({Key? key}) : super(key: key);
@@ -37,6 +34,14 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
         children: [_navigator(), _upper(), _class(), _under()],
       ),
     );
+  }
+
+  static Future<void> openClass(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      log("Can't open url!!!");
+    }
   }
 
   AppBar _navigator() {
@@ -80,20 +85,43 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           TextButton(
-              onPressed: () {
-                Get.to(() => const StudentViewTutorInfo(), arguments: {
-                  "token": data_from_home_page["token"],
-                  "tutorId": data_from_home_page["tutorid"],
-                });
-              },
-              child: const Text(
-                "Tutor Info",
-                style: TextStyle(color: Colors.white),
-              ),
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.green,
-                textStyle: const TextStyle(fontSize: 20),
-              )),
+            onPressed: () {
+              Get.to(() => const StudentViewTutorInfo(), arguments: {
+                "token": data_from_home_page["token"],
+                "tutorId": data_from_home_page["tutorId"],
+              });
+            },
+            child: const Text(
+              "Tutor Info",
+              style: TextStyle(color: Colors.white),
+            ),
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.green,
+              textStyle: const TextStyle(fontSize: 20),
+            ),
+          ),
+          TextButton(
+            onPressed: () => launch(data_from_home_page["linkUrl"]),
+            child: const Text(
+              "Class Link",
+              style: TextStyle(color: Colors.white),
+            ),
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.green,
+              textStyle: const TextStyle(fontSize: 20),
+            ),
+          ),
+          TextButton(
+            onPressed: () {},
+            child: const Text(
+              "Document",
+              style: TextStyle(color: Colors.white),
+            ),
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.green,
+              textStyle: const TextStyle(fontSize: 20),
+            ),
+          ),
         ],
       ),
     );
@@ -149,7 +177,7 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
                       itemCount: classData.length,
                       itemBuilder: (context, index) {
                         if (classData[index].courseId ==
-                                data_from_home_page["courseid"] &&
+                                data_from_home_page["courseId"] &&
                             classData[index].status == true) {
                           return buildClassItem(
                               classData[index].courseId,
@@ -181,8 +209,8 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
     );
   }
 
-  Container buildClassItem(int courseid, String title, String description,
-      String startTime, String endTime, int classid, String token) {
+  Container buildClassItem(int courseId, String title, String description,
+      String startTime, String endTime, int classId, String token) {
     var startTimeStr = startTime.split("T");
     String date = startTimeStr[0];
     var fromTimeStr = startTimeStr[1].split(":");
@@ -225,7 +253,7 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 132,
                 child: Text(
-                  "Date:${date.trim()}", //Address
+                  "Date: ${date.trim()}", //Address
                   overflow: TextOverflow.clip,
                   style: const TextStyle(color: Colors.black, fontSize: 13),
                 ),
@@ -233,7 +261,7 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 132,
                 child: Text(
-                  "${fromTime.trim()}-${toTime.trim()}", //Address
+                  "${fromTime.trim()} - ${toTime.trim()}", //Address
                   overflow: TextOverflow.clip,
                   style: const TextStyle(color: Colors.black, fontSize: 13),
                 ),
@@ -249,12 +277,12 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
           //       child: IconButton(
           //         onPressed: () {
           //           Get.to(() => const ViewClassDetail(), arguments: {
-          //             "courseid": courseid,
+          //             "courseId": courseId,
           //             "title": title,
           //             "description": description,
           //             "startTime": startTime,
           //             "endTime": endTime,
-          //             "classid": classid,
+          //             "classId": classId,
           //             "token": token,
           //           });
           //         },

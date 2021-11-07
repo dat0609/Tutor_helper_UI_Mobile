@@ -4,9 +4,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/tutorcourses.dart';
 import 'package:tutor_helper/view/login_screen.dart';
+import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
 
 class TutorProfilePage extends StatefulWidget {
   const TutorProfilePage({Key? key}) : super(key: key);
@@ -19,6 +21,10 @@ class _TutorProfilePageState extends State<TutorProfilePage> {
   String username = "";
   String email = "";
   String phone = "";
+  String token = "";
+  String imagePath = "";
+  bool firstTime = true;
+  int tutorId = 0;
   final storage = const FlutterSecureStorage();
 
   Future<String?> _getData() async {
@@ -48,15 +54,24 @@ class _TutorProfilePageState extends State<TutorProfilePage> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   var data = jsonDecode(snapshot.data.toString());
-                  var imagePath = data["data"]['imagePath'].toString();
+                  imagePath = data["data"]['imagePath'].toString();
+                  token = data["data"]['jwtToken'];
                   return FutureBuilder<TutorCourses>(
                     future: API_Management().getTutorByTutorID(
                         data["data"]['jwtToken'], data["data"]['tutorId']),
                     builder: (context, tutorData) {
                       if (tutorData.hasData) {
                         email = data["data"]['email'];
-                        username = tutorData.data!.data.fullName;
-                        phone = tutorData.data!.data.phoneNumber;
+                        imagePath = tutorData.data!.data.imagePath;
+                        tutorId = tutorData.data!.data.tutorId;
+                        if (firstTime) {
+                          username = tutorData.data!.data.fullName;
+                          phone = tutorData.data!.data.phoneNumber;
+                          if (phone == "00000") {
+                            phone = "";
+                          }
+                          firstTime = false;
+                        }
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -85,7 +100,7 @@ class _TutorProfilePageState extends State<TutorProfilePage> {
                                     ),
                                   ),
                                   Text(
-                                    username,
+                                    tutorData.data!.data.fullName,
                                     style: const TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
@@ -174,8 +189,46 @@ class _TutorProfilePageState extends State<TutorProfilePage> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  log(username);
-                  log(phone);
+                  Alert(
+                      context: context,
+                      type: AlertType.warning,
+                      title: "Update Profile!",
+                      desc: "Are you sure to update your profile?",
+                      buttons: [
+                        DialogButton(
+                          child: const Text(
+                            "Cancel",
+                          ),
+                          onPressed: () {
+                            Get.back();
+                          },
+                        ),
+                        DialogButton(
+                          child: const Text(
+                            "Update",
+                          ),
+                          onPressed: () {
+                            API_Management().updateTutorProfile(token, tutorId,
+                                email, username, phone, imagePath);
+                            Alert(
+                                context: context,
+                                type: AlertType.success,
+                                title: "Completed!",
+                                desc:
+                                    "Your profile has been updated successfully!",
+                                buttons: [
+                                  DialogButton(
+                                    child: const Text(
+                                      "OK",
+                                    ),
+                                    onPressed: () {
+                                      Get.offAll(() => const TutorManagement());
+                                    },
+                                  )
+                                ]).show();
+                          },
+                        )
+                      ]).show();
                 },
                 child: const Text(
                   "Update",

@@ -90,7 +90,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
               if (snapshot.hasData) {
                 var data = jsonDecode(snapshot.data.toString());
                 return FutureBuilder<StudentCourses>(
-                    future: API_Management().getStudentByStudentId(
+                    future: API_Management().getStudentBystudentId(
                         data["data"]["jwtToken"], data["data"]["studentId"]),
                     builder: (context, studentData) {
                       if (studentData.hasData) {
@@ -195,7 +195,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                   var data = jsonDecode(snapshot.data.toString());
                   int studentId = data["data"]["studentId"];
                   return FutureBuilder<Coursess>(
-                    future: API_Management().getCourseByStudentId(
+                    future: API_Management().getCourseBystudentId(
                         data["data"]['jwtToken'], studentId),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
@@ -210,7 +210,8 @@ class _StudentHomePageState extends State<StudentHomePage> {
                                   studentCourse[index].tutorId,
                                   studentCourse[index].tutorRequestId,
                                   studentCourse[index].studentId,
-                                  data["data"]['jwtToken']);
+                                  data["data"]['jwtToken'],
+                                  studentCourse[index].linkUrl);
                             });
                       } else if (snapshot.hasError) {
                         return const Text("");
@@ -232,8 +233,15 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  Container buildClassItem(String title, String description, int courseid,
-      int tutorid, int tutorrequestid, int studentid, String token) {
+  Container buildClassItem(
+      String title,
+      String description,
+      int courseId,
+      int tutorId,
+      int tutorrequestId,
+      int studentId,
+      String token,
+      String linkUrl) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15, right: 7, left: 5),
       padding: const EdgeInsets.all(10),
@@ -283,11 +291,12 @@ class _StudentHomePageState extends State<StudentHomePage> {
                   Get.to(() => const StudentViewCourseDetail(), arguments: {
                     "title": title,
                     "description": description,
-                    "courseid": courseid,
-                    "tutorid": tutorid,
-                    "tutorrequestid": tutorrequestid,
-                    "studentid": studentid,
+                    "courseId": courseId,
+                    "tutorId": tutorId,
+                    "tutorrequestId": tutorrequestId,
+                    "studentId": studentId,
                     "token": token,
+                    "linkUrl": linkUrl,
                   });
                 },
                 icon: const Icon(Icons.arrow_right_alt_rounded),

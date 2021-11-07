@@ -47,8 +47,10 @@ class _StudentLoginPageState extends State<StudentLoginPage> {
       storage.write(key: "database", value: response.body);
       Get.offAll(() => const StudentManagement());
     } else if (response.statusCode == 500) {
-      await GoogleSignIn().disconnect();
-      await FirebaseAuth.instance.signOut();
+      if (await GoogleSignIn().isSignedIn()) {
+        await GoogleSignIn().disconnect();
+        await FirebaseAuth.instance.signOut();
+      }
       Alert(
           context: context,
           type: AlertType.error,

@@ -51,6 +51,7 @@ dependencies:
   flutter_local_notifications: ^9.0.2
   timezone: ^0.8.0
   rxdart: ^0.27.2
+  url_launcher: ^6.0.12
   
 dev_dependencies:
   flutter_test:

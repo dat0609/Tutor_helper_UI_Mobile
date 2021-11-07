@@ -28,6 +28,7 @@ class Data {
     required this.courseId,
     required this.title,
     required this.description,
+    required this.linkUrl,
     required this.status,
     required this.tutorId,
     required this.tutorRequestId,
@@ -36,6 +37,7 @@ class Data {
   late final int courseId;
   late final String title;
   late final String description;
+  late final String linkUrl;
   late final bool status;
   late final int tutorId;
   late final int tutorRequestId;
@@ -45,6 +47,7 @@ class Data {
     courseId = json['courseId'];
     title = json['title'];
     description = json['description'];
+    linkUrl = json['linkUrl'];
     status = json['status'];
     tutorId = json['tutorId'];
     tutorRequestId = json['tutorRequestId'];
@@ -56,6 +59,7 @@ class Data {
     _data['courseId'] = courseId;
     _data['title'] = title;
     _data['description'] = description;
+    _data['linkUrl'] = linkUrl;
     _data['status'] = status;
     _data['tutorId'] = tutorId;
     _data['tutorRequestId'] = tutorRequestId;

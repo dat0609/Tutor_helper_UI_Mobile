@@ -46,7 +46,7 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
         children: [
           // listItem("Student:", datafromPost),
           FutureBuilder<StudentCourses>(
-              future: API_Management().getStudentByStudentId(
+              future: API_Management().getStudentBystudentId(
                   datafromPost["token"], datafromPost["studentId"]),
               builder: (context, studentData) {
                 if (studentData.hasData) {

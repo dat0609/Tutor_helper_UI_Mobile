@@ -311,13 +311,13 @@ class _CreateClassState extends State<CreateClass> {
                               String dateStr = date[0];
                               API_Management().createClass(
                                   data_from_course_detail["token"],
-                                  data_from_course_detail["courseid"],
+                                  data_from_course_detail["courseId"],
                                   title,
                                   description,
                                   classDateTimeData[i][0],
                                   classDateTimeData[i][1],
-                                  data_from_course_detail["tutorid"],
-                                  data_from_course_detail["studentid"]);
+                                  data_from_course_detail["tutorId"],
+                                  data_from_course_detail["studentId"]);
                             }
                             Alert(
                                 context: context,

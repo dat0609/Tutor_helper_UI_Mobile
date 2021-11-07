@@ -105,7 +105,7 @@ class _StudentRequestPageState extends State<StudentRequestPage> {
                 token = data["data"]["jwtToken"];
                 studentId = data["data"]["studentId"];
                 return FutureBuilder<StudentCourses>(
-                    future: API_Management().getStudentByStudentId(
+                    future: API_Management().getStudentBystudentId(
                         data["data"]["jwtToken"], data["data"]["studentId"]),
                     builder: (context, studentData) {
                       if (studentData.hasData) {
@@ -243,14 +243,16 @@ class _StudentRequestPageState extends State<StudentRequestPage> {
                                         }
                                         return FutureBuilder<StudentCourses>(
                                             future: API_Management()
-                                                .getStudentByStudentId(
+                                                .getStudentBystudentId(
                                                     token, trData.studentId),
                                             builder: (context, studentData) {
                                               if (studentData.hasData) {
                                                 var stuData =
                                                     studentData.data!.data;
                                                 if (stuData.studentId ==
-                                                    studentId) {
+                                                        studentId &&
+                                                    trData.status !=
+                                                        "Deleted") {
                                                   return buildClassItem(
                                                       trData.title,
                                                       trData.description,
@@ -312,6 +314,13 @@ class _StudentRequestPageState extends State<StudentRequestPage> {
       String subjectName,
       String gradeName,
       String status) {
+    Map<String, Color> color = const {
+      "Pending": Color(0xFF000000),
+      "Approved": Color(0xFF007514),
+      "Rejected": Color(0xFFed0202),
+      "Accepted": Color(0xFF007850),
+    };
+
     return Container(
       margin: const EdgeInsets.fromLTRB(10, 15, 20, 0),
       padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
@@ -365,38 +374,23 @@ class _StudentRequestPageState extends State<StudentRequestPage> {
                   Container(
                     padding: const EdgeInsets.fromLTRB(0, 120, 0, 0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [Text("Status: $status")],
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(110, 110, 0, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        Text(
+                          "Status: $status",
+                          style: TextStyle(
+                              color: color[status],
+                              fontWeight: FontWeight.w700),
+                        ),
                         TextButton(
-                            onPressed: () {
-                              // Get.to(
-                              //   () => const TutorViewPostDetail(),
-                              //   arguments: {
-                              //     "tutorRequestID": tutorRequestID,
-                              //     "tutorId": tutorId,
-                              //     "token": token,
-                              //     "title": courseTitle,
-                              //     "description": description,
-                              //     "gradeId": gradeId,
-                              //     "studentId": studentid,
-                              //     "subjectId": subjectId,
-                              //   },
-                              // );
-                            },
-                            child: const Text(
-                              "",
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ))
+                          onPressed: () {
+                            log("delete");
+                          },
+                          child: const Text("Delete"),
+                        )
                       ],
                     ),
-                  )
+                  ),
                 ],
               )),
         ],

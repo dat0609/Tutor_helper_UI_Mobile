@@ -55,7 +55,7 @@ class _StudentSettingPageState extends State<StudentSettingPage> {
                   var data = jsonDecode(snapshot.data.toString());
                   var imagePath = data["data"]['imagePath'].toString();
                   return FutureBuilder<StudentCourses>(
-                    future: API_Management().getStudentByStudentId(
+                    future: API_Management().getStudentBystudentId(
                         data["data"]['jwtToken'], data["data"]['studentId']),
                     builder: (context, studentData) {
                       if (studentData.hasData) {

@@ -10,6 +10,7 @@ import 'package:tutor_helper/view/tutor_page/tutor_create_class.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_view_class_detail.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_view_student_info.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TutorViewCourseDetail extends StatefulWidget {
   const TutorViewCourseDetail({Key? key}) : super(key: key);
@@ -54,9 +55,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
   Container _upper() {
     return Container(
       margin: const EdgeInsets.only(top: 75),
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
-      height: 800,
-      width: 500,
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
       decoration: const BoxDecoration(
         color: Color(0xFFF9F9FB),
       ),
@@ -73,45 +72,82 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
 
   Container _under() {
     return Container(
-      margin: const EdgeInsets.only(top: 675),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      margin: const EdgeInsets.only(top: 625),
+      child: Column(
         children: [
-          TextButton(
-              onPressed: () {
-                Get.to(() => const CreateClass(), arguments: {
-                  "title": data_from_course_page["title"],
-                  "description": data_from_course_page["description"],
-                  "courseid": data_from_course_page["courseid"],
-                  "tutorid": data_from_course_page["tutorid"],
-                  "tutorrequestid": data_from_course_page["tutorrequestid"],
-                  "studentid": data_from_course_page["studentid"],
-                  "token": data_from_course_page["token"],
-                });
-              },
-              child: const Text(
-                "Create Class",
-                style: TextStyle(color: Colors.white),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextButton(
+                  onPressed: () {
+                    Get.to(() => const CreateClass(), arguments: {
+                      "title": data_from_course_page["title"],
+                      "description": data_from_course_page["description"],
+                      "courseId": data_from_course_page["courseId"],
+                      "tutorId": data_from_course_page["tutorId"],
+                      "tutorrequestId": data_from_course_page["tutorrequestId"],
+                      "studentId": data_from_course_page["studentId"],
+                      "token": data_from_course_page["token"],
+                    });
+                  },
+                  child: const Text(
+                    "Create Class",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.cyan[800],
+                    textStyle: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w800),
+                  )),
+              TextButton(
+                onPressed: () {
+                  Get.to(() => const TutorViewStudentInfo(), arguments: {
+                    "token": data_from_course_page["token"],
+                    "studentId": data_from_course_page["studentId"],
+                  });
+                },
+                child: const Text(
+                  "Student Info",
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  textStyle: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w800),
+                ),
               ),
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.cyan,
-                textStyle: const TextStyle(fontSize: 20),
-              )),
-          TextButton(
-              onPressed: () {
-                Get.to(() => const TutorViewStudentInfo(), arguments: {
-                  "token": data_from_course_page["token"],
-                  "studentId": data_from_course_page["studentid"],
-                });
-              },
-              child: const Text(
-                "Student Info",
-                style: TextStyle(color: Colors.white),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextButton(
+                  onPressed: () => launch(data_from_course_page["linkUrl"]),
+                  child: const Text(
+                    "Link Class",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                    textStyle: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w800),
+                  )),
+              TextButton(
+                onPressed: () {
+                  log("Document");
+                },
+                child: const Text(
+                  "Document",
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: TextButton.styleFrom(
+                  backgroundColor: const Color(0xFF00bf8c),
+                  textStyle: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w800),
+                ),
               ),
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.green,
-                textStyle: const TextStyle(fontSize: 20),
-              )),
+            ],
+          )
         ],
       ),
     );
@@ -146,7 +182,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
 
   Container _class() {
     return Container(
-      margin: const EdgeInsets.only(top: 220, bottom: 20),
+      margin: const EdgeInsets.only(top: 175, bottom: 20),
       padding: const EdgeInsets.symmetric(horizontal: 30),
       height: MediaQuery.of(context).size.height - 300,
       width: MediaQuery.of(context).size.width,
@@ -168,8 +204,10 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
                       itemCount: classData.length,
                       itemBuilder: (context, index) {
                         if (classData[index].courseId ==
-                                data_from_course_page["courseid"] &&
-                            classData[index].status == true) {
+                                data_from_course_page["courseId"] &&
+                            classData[index].status == true &&
+                            DateTime.parse(classData[index].startTime)
+                                .isAfter(DateTime.now())) {
                           return buildClassItem(
                               classData[index].courseId,
                               classData[index].title,
@@ -225,12 +263,13 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
       onPressed: () {
         API_Management().deleteCourse(
             data_from_course_page["token"],
-            data_from_course_page["courseid"],
+            data_from_course_page["courseId"],
             data_from_course_page["title"],
             data_from_course_page["description"],
-            data_from_course_page["tutorid"],
-            data_from_course_page["tutorrequestid"],
-            data_from_course_page["studentid"]);
+            data_from_course_page["tutorId"],
+            data_from_course_page["tutorrequestId"],
+            data_from_course_page["studentId"],
+            data_from_course_page["linkUrl"]);
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -256,8 +295,8 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
     );
   }
 
-  Container buildClassItem(int courseid, String title, String description,
-      String startTime, String endTime, int classid, String token) {
+  Container buildClassItem(int courseId, String title, String description,
+      String startTime, String endTime, int classId, String token) {
     var startTimeStr = startTime.split("T");
     String date = startTimeStr[0];
     var fromTimeStr = startTimeStr[1].split(":");
@@ -292,7 +331,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 132,
                 child: Text(
-                  description.trim(), //Address
+                  description.trim(),
                   overflow: TextOverflow.clip,
                   style: const TextStyle(color: Colors.black, fontSize: 13),
                 ),
@@ -300,7 +339,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 132,
                 child: Text(
-                  "Date:${date.trim()}", //Address
+                  "Date: ${date.trim()}",
                   overflow: TextOverflow.clip,
                   style: const TextStyle(color: Colors.black, fontSize: 13),
                 ),
@@ -324,12 +363,12 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
                 child: IconButton(
                   onPressed: () {
                     Get.to(() => const ViewClassDetail(), arguments: {
-                      "courseid": courseid,
+                      "courseId": courseId,
                       "title": title,
                       "description": description,
                       "startTime": startTime,
                       "endTime": endTime,
-                      "classid": classid,
+                      "classId": classId,
                       "token": token,
                     });
                   },

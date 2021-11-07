@@ -62,7 +62,7 @@ class _TutorViewStudentInfoState extends State<TutorViewStudentInfo> {
       ),
       child: Scaffold(
           body: FutureBuilder<StudentCourses>(
-              future: API_Management().getStudentByStudentId(
+              future: API_Management().getStudentBystudentId(
                   data_from_course_detail_page["token"],
                   data_from_course_detail_page["studentId"]),
               builder: (context, studentData) {

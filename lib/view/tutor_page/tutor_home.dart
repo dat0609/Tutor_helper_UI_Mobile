@@ -346,7 +346,7 @@ class _TutorHomePageState extends State<TutorHomePage> {
                                           }
                                           return FutureBuilder<StudentCourses>(
                                               future: API_Management()
-                                                  .getStudentByStudentId(
+                                                  .getStudentBystudentId(
                                                       token, trData.studentId),
                                               builder: (context, studentData) {
                                                 if (studentData.hasData) {
@@ -425,7 +425,7 @@ class _TutorHomePageState extends State<TutorHomePage> {
       int tutorId,
       String token,
       int gradeId,
-      int studentid,
+      int studentId,
       int subjectId,
       String subjectName,
       String gradeName) {
@@ -522,7 +522,7 @@ class _TutorHomePageState extends State<TutorHomePage> {
                                   "title": courseTitle,
                                   "description": description,
                                   "gradeId": gradeId,
-                                  "studentId": studentid,
+                                  "studentId": studentId,
                                   "subjectId": subjectId,
                                   "subjectName": subjectName
                                 },

@@ -219,7 +219,8 @@ class _TutorCoursePageState extends State<TutorCoursePage> {
                                     courseData.tutorId,
                                     courseData.tutorRequestId,
                                     courseData.studentId,
-                                    data["data"]['jwtToken']);
+                                    data["data"]['jwtToken'],
+                                    courseData.linkUrl);
                               } else {
                                 return const Visibility(
                                   child: Text("data"),
@@ -247,8 +248,15 @@ class _TutorCoursePageState extends State<TutorCoursePage> {
     );
   }
 
-  Container buildClassItem(String title, String description, int courseid,
-      int tutorid, int tutorrequestid, int studentid, String token) {
+  Container buildClassItem(
+      String title,
+      String description,
+      int courseId,
+      int tutorId,
+      int tutorrequestId,
+      int studentId,
+      String token,
+      String linkUrl) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15, right: 7, left: 5),
       padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
@@ -298,11 +306,12 @@ class _TutorCoursePageState extends State<TutorCoursePage> {
                   Get.to(() => const TutorViewCourseDetail(), arguments: {
                     "title": title,
                     "description": description,
-                    "courseid": courseid,
-                    "tutorid": tutorid,
-                    "tutorrequestid": tutorrequestid,
-                    "studentid": studentid,
+                    "courseId": courseId,
+                    "tutorId": tutorId,
+                    "tutorrequestId": tutorrequestId,
+                    "studentId": studentId,
                     "token": token,
+                    "linkUrl": linkUrl,
                   });
                 },
                 icon: const Icon(Icons.arrow_right_alt_rounded),

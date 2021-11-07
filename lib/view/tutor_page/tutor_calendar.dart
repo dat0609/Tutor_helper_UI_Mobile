@@ -19,7 +19,7 @@ class TutorCalendarPage extends StatefulWidget {
 
 class _TutorCalendarPageState extends State<TutorCalendarPage> {
   List<Appointment> meetings = <Appointment>[];
-  List<int> listCourseId = <int>[];
+  List<int> listcourseId = <int>[];
   final CalendarController _controller = CalendarController();
   final storage = const FlutterSecureStorage();
 
@@ -44,10 +44,10 @@ class _TutorCalendarPageState extends State<TutorCalendarPage> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   var tutorCourse = snapshot.data!.data.courses;
-                  listCourseId.clear();
+                  listcourseId.clear();
                   for (int i = 0; i < tutorCourse.length; i++) {
                     if (tutorCourse[i].status == true) {
-                      listCourseId.add(tutorCourse[i].courseId);
+                      listcourseId.add(tutorCourse[i].courseId);
                     }
                   }
                   return FutureBuilder<Classes>(
@@ -57,8 +57,8 @@ class _TutorCalendarPageState extends State<TutorCalendarPage> {
                           var classData = classesData.data!.data;
                           meetings.clear();
                           for (int i = 0; i < classData.length; i++) {
-                            for (int k = 0; k < listCourseId.length; k++) {
-                              if (listCourseId[k] == classData[i].courseId &&
+                            for (int k = 0; k < listcourseId.length; k++) {
+                              if (listcourseId[k] == classData[i].courseId &&
                                   classData[i].status == true) {
                                 if (DateTime.parse(
                                         classData[i].startTime.toString())
@@ -73,13 +73,25 @@ class _TutorCalendarPageState extends State<TutorCalendarPage> {
                                           .subtract(
                                               const Duration(minutes: 10)));
                                 }
-                                meetings.add(Appointment(
-                                    startTime: DateTime.parse(
-                                        classData[i].startTime.toString()),
-                                    endTime: DateTime.parse(
-                                        classData[i].endTime.toString()),
-                                    subject: classData[i].title,
-                                    color: const Color(0XFF263064)));
+                                if (DateTime.parse(
+                                        classData[i].startTime.toString())
+                                    .isAfter(DateTime.now())) {
+                                  meetings.add(Appointment(
+                                      startTime: DateTime.parse(
+                                          classData[i].startTime.toString()),
+                                      endTime: DateTime.parse(
+                                          classData[i].endTime.toString()),
+                                      subject: classData[i].title,
+                                      color: const Color(0XFF263064)));
+                                } else {
+                                  meetings.add(Appointment(
+                                      startTime: DateTime.parse(
+                                          classData[i].startTime.toString()),
+                                      endTime: DateTime.parse(
+                                          classData[i].endTime.toString()),
+                                      subject: classData[i].title,
+                                      color: const Color(0XFF919191)));
+                                }
                               }
                             }
                           }

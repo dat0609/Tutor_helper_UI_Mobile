@@ -73,9 +73,9 @@ class API_Management {
 
   void acceptTutorRequest(
       var token,
-      int tutorid,
-      int tutorrequestid,
-      int studentid,
+      int tutorId,
+      int tutorrequestId,
+      int studentId,
       int gradeid,
       String title,
       String description,
@@ -86,11 +86,11 @@ class API_Management {
       "Authorization": "Bearer " + token.toString()
     };
     final body = jsonEncode({
-      "tutorRequestId": tutorrequestid,
+      "tutorRequestId": tutorrequestId,
       "title": title,
       "description": description,
       "status": "Accepted",
-      "studentId": studentid,
+      "studentId": studentId,
       "gradeId": gradeid,
       "subjectId": subjectId,
     });
@@ -98,7 +98,7 @@ class API_Management {
         headers: headers, body: body);
     if (response.statusCode == 200) {
       API_Management().createCourseByRequest(
-          token, title, description, tutorid, tutorrequestid, studentid);
+          token, title, description, tutorId, tutorrequestId, studentId);
     } else {}
   }
 
@@ -119,27 +119,28 @@ class API_Management {
     }
   }
 
-  void deleteCourse(var token, int courseid, String title, String description,
-      int tutorId, int tutorRequestId, int studentID) async {
+  void deleteCourse(var token, int courseId, String title, String description,
+      int tutorId, int tutorRequestId, int studentId, String linkUrl) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'Charset': 'utf-8',
       "Authorization": "Bearer " + token.toString()
     };
     final body = jsonEncode({
-      "courseId": courseid,
+      "courseId": courseId,
       "title": title,
       "description": description,
+      "linkUrl": linkUrl,
       "status": false,
       "tutorId": tutorId,
       "tutorRequestId": tutorRequestId,
-      "studentID": studentID,
+      "studentId": studentId,
     });
     await http.put(Uri.parse(Strings.courses_url),
         headers: headers, body: body);
   }
 
-  void createClass(var token, int courseid, String title, String description,
+  void createClass(var token, int courseId, String title, String description,
       String startTime, String endTime, int tutorId, int studentId) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json; charset=UTF-8',
@@ -150,11 +151,11 @@ class API_Management {
       "title": title,
       "description": description,
       "status": true,
-      "courseId": courseid,
+      "courseId": courseId,
       "startTime": startTime,
       "endTime": endTime,
       "tutorID": tutorId,
-      "studentID": studentId,
+      "studentId": studentId,
     });
     await http.post(Uri.parse(Strings.class_url), headers: headers, body: body);
   }
@@ -176,7 +177,7 @@ class API_Management {
     }
   }
 
-  void updateClass(var token, int classid, int courseid, String title,
+  void updateClass(var token, int classId, int courseId, String title,
       String description, String startTime, String endTime, bool status) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json; charset=UTF-8',
@@ -184,13 +185,13 @@ class API_Management {
       "Authorization": "Bearer " + token.toString()
     };
     final body = jsonEncode({
-      "id": classid,
+      "id": classId,
       "title": title,
       "description": description,
       "startTime": startTime,
       "endTime": endTime,
       "status": status,
-      "courseId": courseid
+      "courseId": courseId
     });
     await http.put(Uri.parse(Strings.class_url), headers: headers, body: body);
   }
@@ -212,7 +213,7 @@ class API_Management {
     }
   }
 
-  Future<StudentCourses> getStudentByStudentId(var token, int studentId) async {
+  Future<StudentCourses> getStudentBystudentId(var token, int studentId) async {
     var response = await http.get(
       Uri.parse(Strings.student_get_url(studentId)),
       headers: {
@@ -249,6 +250,24 @@ class API_Management {
         headers: headers, body: body);
   }
 
+  void updateTutorProfile(var token, int tutorId, String email, String fullName,
+      String phoneNumber, String imagePath) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Charset': 'utf-8',
+      "Authorization": "Bearer " + token.toString()
+    };
+    final body = jsonEncode({
+      "tutorId": tutorId,
+      "email": email,
+      "fullName": fullName,
+      "phoneNumber": phoneNumber,
+      "imagePath": imagePath
+    });
+    await http.put(Uri.parse(Strings.tutor_put_url),
+        headers: headers, body: body);
+  }
+
 //API for Student Only!!
   void createRequest(var token, String title, String description, int studentId,
       int gradeId, int subjectId) async {
@@ -269,7 +288,7 @@ class API_Management {
         headers: headers, body: body);
   }
 
-  Future<Coursess> getCourseByStudentId(var token, int studentId) async {
+  Future<Coursess> getCourseBystudentId(var token, int studentId) async {
     var response = await http.get(
       Uri.parse(Strings.get_courses_by_studentId_url(studentId)),
       headers: {
@@ -286,6 +305,32 @@ class API_Management {
     }
   }
 
+  void updateStudentProfile(
+      var token,
+      int studentId,
+      String email,
+      String fullName,
+      String phoneNumber,
+      int schoolId,
+      int gradeId,
+      String imagePath) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Charset': 'utf-8',
+      "Authorization": "Bearer " + token.toString()
+    };
+    final body = jsonEncode({
+      "studentId": studentId,
+      "email": email,
+      "fullName": fullName,
+      "phoneNumber": phoneNumber,
+      "schoolId": schoolId,
+      "gradeId": gradeId,
+      "imagePath": imagePath,
+    });
+    await http.put(Uri.parse(Strings.student_put_url),
+        headers: headers, body: body);
+  }
 //API for both
 
   Future<Subjects> getSubjectByGrade(var token, int gradeId) async {

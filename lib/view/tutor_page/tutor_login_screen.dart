@@ -22,6 +22,7 @@ class _TutorLoginPageState extends State<TutorLoginPage> {
   final storage = const FlutterSecureStorage();
   void _loginWithGoogle() async {
     setState(() {});
+
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser!.authentication;
@@ -48,8 +49,10 @@ class _TutorLoginPageState extends State<TutorLoginPage> {
       storage.write(key: "database", value: response.body);
       Get.offAll(() => const TutorManagement());
     } else if (response.statusCode == 500) {
-      await GoogleSignIn().disconnect();
-      await FirebaseAuth.instance.signOut();
+      if (await GoogleSignIn().isSignedIn()) {
+        await GoogleSignIn().disconnect();
+        await FirebaseAuth.instance.signOut();
+      }
       Alert(
           context: context,
           type: AlertType.error,

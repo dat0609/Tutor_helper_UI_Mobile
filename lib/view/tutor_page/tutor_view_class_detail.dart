@@ -259,8 +259,8 @@ class _ViewClassDetailState extends State<ViewClassDetail> {
           builder: (BuildContext context) {
             API_Management().updateClass(
                 data_from_course_detail["token"],
-                data_from_course_detail["classid"],
-                data_from_course_detail["courseid"],
+                data_from_course_detail["classId"],
+                data_from_course_detail["courseId"],
                 title,
                 description,
                 date + "T" + startTimeChanged + ":00",
@@ -318,8 +318,8 @@ class _ViewClassDetailState extends State<ViewClassDetail> {
           builder: (BuildContext context) {
             API_Management().updateClass(
                 data_from_course_detail["token"],
-                data_from_course_detail["classid"],
-                data_from_course_detail["courseid"],
+                data_from_course_detail["classId"],
+                data_from_course_detail["courseId"],
                 title,
                 description,
                 date + "T" + startTimeChanged + ":00",
