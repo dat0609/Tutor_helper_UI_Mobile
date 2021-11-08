@@ -208,24 +208,49 @@ class _TutorProfilePageState extends State<TutorProfilePage> {
                             "Update",
                           ),
                           onPressed: () {
-                            API_Management().updateTutorProfile(token, tutorId,
-                                email, username, phone, imagePath);
-                            Alert(
-                                context: context,
-                                type: AlertType.success,
-                                title: "Completed!",
-                                desc:
-                                    "Your profile has been updated successfully!",
-                                buttons: [
-                                  DialogButton(
-                                    child: const Text(
-                                      "OK",
-                                    ),
-                                    onPressed: () {
-                                      Get.offAll(() => const TutorManagement());
-                                    },
-                                  )
-                                ]).show();
+                            RegExp regExp = RegExp(
+                              r"^0\d{9}$",
+                              caseSensitive: false,
+                              multiLine: false,
+                            );
+                            if (regExp.hasMatch(phone)) {
+                              API_Management().updateTutorProfile(token,
+                                  tutorId, email, username, phone, imagePath);
+                              Alert(
+                                  context: context,
+                                  type: AlertType.success,
+                                  title: "Completed!",
+                                  desc:
+                                      "Your profile has been updated successfully!",
+                                  buttons: [
+                                    DialogButton(
+                                      child: const Text(
+                                        "OK",
+                                      ),
+                                      onPressed: () {
+                                        Get.offAll(
+                                            () => const TutorManagement());
+                                      },
+                                    )
+                                  ]).show();
+                            } else {
+                              Alert(
+                                  context: context,
+                                  type: AlertType.error,
+                                  title: "Error!",
+                                  desc: "Your phone has some problem!",
+                                  buttons: [
+                                    DialogButton(
+                                      child: const Text(
+                                        "OK",
+                                      ),
+                                      onPressed: () {
+                                        Get.back();
+                                        Get.back();
+                                      },
+                                    )
+                                  ]).show();
+                            }
                           },
                         )
                       ]).show();

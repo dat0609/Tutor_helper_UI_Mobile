@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/classes.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_create_class.dart';
@@ -125,7 +126,9 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               TextButton(
-                  onPressed: () => launch(data_from_course_page["linkUrl"]),
+                  onPressed: () async {
+                    await launch(data_from_course_page["linkUrl"]);
+                  },
                   child: const Text(
                     "Link Class",
                     style: TextStyle(color: Colors.white),

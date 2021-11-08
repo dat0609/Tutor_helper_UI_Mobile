@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:tutor_helper/api/api_management.dart';
+import 'package:tutor_helper/api/noti_api.dart';
 import 'package:tutor_helper/model/studentcourses.dart';
 import 'package:tutor_helper/model/students.dart';
 import 'package:tutor_helper/model/subjects.dart';
@@ -28,6 +29,7 @@ class _StudentRequestPageState extends State<StudentRequestPage> {
   final storage = const FlutterSecureStorage();
   String token = "";
   int studentId = 0;
+  bool acceptStatus = false;
 
   Future<String?> _getData() async {
     return await storage.read(key: "database");

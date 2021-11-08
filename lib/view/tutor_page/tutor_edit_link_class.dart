@@ -99,26 +99,48 @@ class _EditLinkClassState extends State<EditLinkClass> {
                           child: const Text("Cancel")),
                       DialogButton(
                           onPressed: () {
-                            API_Management().updateCourse(
-                                data_from_course_detail["token"],
-                                data_from_course_detail["courseId"],
-                                data_from_course_detail["title"],
-                                data_from_course_detail["description"],
-                                data_from_course_detail["tutorId"],
-                                data_from_course_detail["tutorrequestId"],
-                                data_from_course_detail["studentId"],
-                                linkUrl);
-                            Alert(
-                                context: context,
-                                type: AlertType.success,
-                                title: "Successfully",
-                                desc: "This Link has been update successfully!",
-                                buttons: [
-                                  DialogButton(
-                                      onPressed: () => Get.offAll(
-                                          () => const TutorManagement()),
-                                      child: const Text("OK")),
-                                ]).show();
+                            RegExp regExp = RegExp(
+                              r"^https:\/\/meet.google.com\/\w{3}-\w{4}-\w{3}$",
+                              caseSensitive: false,
+                              multiLine: false,
+                            );
+                            if (regExp.hasMatch(linkUrl)) {
+                              API_Management().updateCourse(
+                                  data_from_course_detail["token"],
+                                  data_from_course_detail["courseId"],
+                                  data_from_course_detail["title"],
+                                  data_from_course_detail["description"],
+                                  data_from_course_detail["tutorId"],
+                                  data_from_course_detail["tutorrequestId"],
+                                  data_from_course_detail["studentId"],
+                                  linkUrl);
+                              Alert(
+                                  context: context,
+                                  type: AlertType.success,
+                                  title: "Successfully",
+                                  desc:
+                                      "This Link has been update successfully!",
+                                  buttons: [
+                                    DialogButton(
+                                        onPressed: () => Get.offAll(
+                                            () => const TutorManagement()),
+                                        child: const Text("OK")),
+                                  ]).show();
+                            } else {
+                              Alert(
+                                  context: context,
+                                  type: AlertType.error,
+                                  title: "Link Error",
+                                  desc: "This Link is not google meet Link!",
+                                  buttons: [
+                                    DialogButton(
+                                        onPressed: () {
+                                          Get.back();
+                                          Get.back();
+                                        },
+                                        child: const Text("OK")),
+                                  ]).show();
+                            }
                           },
                           child: const Text("Edit")),
                     ]).show();

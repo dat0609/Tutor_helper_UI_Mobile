@@ -69,6 +69,10 @@ class _StudentViewTutorInfoState extends State<StudentViewTutorInfo> {
               builder: (context, tutorData) {
                 if (tutorData.hasData) {
                   var tData = tutorData.data!.data;
+                  String phone = tData.phoneNumber;
+                  if (phone == "00000") {
+                    phone = "";
+                  }
                   return Column(
                     children: [
                       Container(
@@ -99,7 +103,7 @@ class _StudentViewTutorInfoState extends State<StudentViewTutorInfo> {
                       const SizedBox(
                         height: 10,
                       ),
-                      listItem("Phone", tData.phoneNumber),
+                      listItem("Phone", phone),
                     ],
                   );
                 } else {

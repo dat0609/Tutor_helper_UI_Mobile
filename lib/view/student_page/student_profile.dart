@@ -229,32 +229,56 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                               "Update",
                             ),
                             onPressed: () {
-                              API_Management().updateStudentProfile(
-                                  token,
-                                  studentId,
-                                  email,
-                                  username,
-                                  phone,
-                                  schoolId,
-                                  gradeId,
-                                  imagePath);
-                              Alert(
-                                  context: context,
-                                  type: AlertType.success,
-                                  title: "Completed!",
-                                  desc:
-                                      "Your profile has been updated successfully!",
-                                  buttons: [
-                                    DialogButton(
-                                      child: const Text(
-                                        "OK",
-                                      ),
-                                      onPressed: () {
-                                        Get.offAll(
-                                            () => const StudentManagement());
-                                      },
-                                    )
-                                  ]).show();
+                              RegExp regExp = RegExp(
+                                r"^0\d{9}$",
+                                caseSensitive: false,
+                                multiLine: false,
+                              );
+                              if (regExp.hasMatch(phone)) {
+                                API_Management().updateStudentProfile(
+                                    token,
+                                    studentId,
+                                    email,
+                                    username,
+                                    phone,
+                                    schoolId,
+                                    gradeId,
+                                    imagePath);
+                                Alert(
+                                    context: context,
+                                    type: AlertType.success,
+                                    title: "Completed!",
+                                    desc:
+                                        "Your profile has been updated successfully!",
+                                    buttons: [
+                                      DialogButton(
+                                        child: const Text(
+                                          "OK",
+                                        ),
+                                        onPressed: () {
+                                          Get.offAll(
+                                              () => const TutorManagement());
+                                        },
+                                      )
+                                    ]).show();
+                              } else {
+                                Alert(
+                                    context: context,
+                                    type: AlertType.error,
+                                    title: "Error!",
+                                    desc: "Your phone has some problem!",
+                                    buttons: [
+                                      DialogButton(
+                                        child: const Text(
+                                          "OK",
+                                        ),
+                                        onPressed: () {
+                                          Get.back();
+                                          Get.back();
+                                        },
+                                      )
+                                    ]).show();
+                              }
                             },
                           )
                         ]).show();
