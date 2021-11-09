@@ -40,7 +40,7 @@ class _StudentViewTutorInfoState extends State<StudentViewTutorInfo> {
 
   AppBar _navigator() {
     return AppBar(
-      title: const Text("Student Infomation"),
+      title: const Text("Tutor Infomation"),
       // actions: <Widget>[
       //   IconButton(
       //     icon: const Icon(Icons.delete_forever),
