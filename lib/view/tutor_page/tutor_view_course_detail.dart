@@ -126,8 +126,27 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               TextButton(
-                  onPressed: () async {
-                    await launch(data_from_course_page["linkUrl"]);
+                  onPressed: () {
+                    String link = data_from_course_page["linkUrl"];
+                    if (link != "") {
+                      launch(link);
+                    } else {
+                      Alert(
+                          context: context,
+                          type: AlertType.warning,
+                          title: "Link isn't exist!",
+                          desc: "Please update the link!",
+                          buttons: [
+                            DialogButton(
+                              child: const Text(
+                                "OK",
+                              ),
+                              onPressed: () {
+                                Get.back();
+                              },
+                            )
+                          ]).show();
+                    }
                   },
                   child: const Text(
                     "Link Class",

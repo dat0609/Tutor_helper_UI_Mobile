@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/classes.dart';
 import 'package:tutor_helper/view/student_page/student_view_tutor_info.dart';
@@ -101,7 +102,28 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
             ),
           ),
           TextButton(
-            onPressed: () => launch(data_from_home_page["linkUrl"]),
+            onPressed: () {
+              String link = data_from_home_page["linkUrl"];
+              if (link != "") {
+                launch(link);
+              } else {
+                Alert(
+                    context: context,
+                    type: AlertType.warning,
+                    title: "Link isn't exist!",
+                    desc: "Please wait for the link updated by tutor!",
+                    buttons: [
+                      DialogButton(
+                        child: const Text(
+                          "OK",
+                        ),
+                        onPressed: () {
+                          Get.back();
+                        },
+                      )
+                    ]).show();
+              }
+            },
             child: const Text(
               "Class Link",
               style: TextStyle(color: Colors.white),
