@@ -375,6 +375,7 @@ class _StudentRequestPageState extends State<StudentRequestPage> {
                   ),
                   Container(
                     padding: const EdgeInsets.fromLTRB(0, 120, 0, 0),
+                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -384,12 +385,12 @@ class _StudentRequestPageState extends State<StudentRequestPage> {
                               color: color[status],
                               fontWeight: FontWeight.w700),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            log("delete");
-                          },
-                          child: const Text("Delete"),
-                        )
+                        // TextButton(
+                        //   onPressed: () {
+                        //     log("delete");
+                        //   },
+                        //   child: const Text("Delete"),
+                        // )
                       ],
                     ),
                   ),

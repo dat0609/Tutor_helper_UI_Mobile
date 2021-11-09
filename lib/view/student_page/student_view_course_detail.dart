@@ -111,17 +111,17 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
               textStyle: const TextStyle(fontSize: 20),
             ),
           ),
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              "Document",
-              style: TextStyle(color: Colors.white),
-            ),
-            style: TextButton.styleFrom(
-              backgroundColor: Colors.green,
-              textStyle: const TextStyle(fontSize: 20),
-            ),
-          ),
+          // TextButton(
+          //   onPressed: () {},
+          //   child: const Text(
+          //     "Document",
+          //     style: TextStyle(color: Colors.white),
+          //   ),
+          //   style: TextButton.styleFrom(
+          //     backgroundColor: Colors.green,
+          //     textStyle: const TextStyle(fontSize: 20),
+          //   ),
+          // ),
         ],
       ),
     );

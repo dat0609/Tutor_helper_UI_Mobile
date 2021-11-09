@@ -104,7 +104,13 @@ class _EditLinkClassState extends State<EditLinkClass> {
                               caseSensitive: false,
                               multiLine: false,
                             );
-                            if (regExp.hasMatch(linkUrl)) {
+                            RegExp regExp2 = RegExp(
+                              r"^meet.google.com\/\w{3}-\w{4}-\w{3}$",
+                              caseSensitive: false,
+                              multiLine: false,
+                            );
+                            if (regExp.hasMatch(linkUrl) ||
+                                regExp2.hasMatch(linkUrl)) {
                               API_Management().updateCourse(
                                   data_from_course_detail["token"],
                                   data_from_course_detail["courseId"],
