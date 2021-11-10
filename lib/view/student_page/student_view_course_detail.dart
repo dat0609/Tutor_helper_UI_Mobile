@@ -37,17 +37,9 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
     );
   }
 
-  static Future<void> openClass(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      log("Can't open url!!!");
-    }
-  }
-
   AppBar _navigator() {
     return AppBar(
-      title: const Text("Course Infomation"),
+      title: Text(data_from_home_page["title"]),
       // actions: <Widget>[
       //   IconButton(
       //     icon: const Icon(Icons.delete_forever),
