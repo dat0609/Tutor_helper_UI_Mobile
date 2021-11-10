@@ -128,11 +128,10 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
               TextButton(
                   onPressed: () {
                     String link = data_from_course_page["linkUrl"];
-                    log(link.split("meet")[0].toString());
-                    if (link.split("meet")[0] == "") {
-                      link = "https://" + data_from_course_page["linkUrl"];
-                    }
                     if (link != "") {
+                      if (link.split("meet")[0] == "") {
+                        link = "https://" + data_from_course_page["linkUrl"];
+                      }
                       launch(link);
                     } else {
                       Alert(

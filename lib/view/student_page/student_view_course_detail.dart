@@ -97,6 +97,9 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
             onPressed: () {
               String link = data_from_home_page["linkUrl"];
               if (link != "") {
+                if (link.split("meet")[0] == "") {
+                  link = "https://" + data_from_home_page["linkUrl"];
+                }
                 launch(link);
               } else {
                 Alert(
