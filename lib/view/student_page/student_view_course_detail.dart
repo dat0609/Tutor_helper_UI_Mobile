@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/classes.dart';
-import 'package:tutor_helper/view/student_page/student_view_tutor_info.dart';
+import 'package:tutor_helper/model/tutorcourses.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StudentViewCourseDetail extends StatefulWidget {
@@ -79,10 +79,107 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
         children: [
           TextButton(
             onPressed: () {
-              Get.to(() => const StudentViewTutorInfo(), arguments: {
-                "token": data_from_home_page["token"],
-                "tutorId": data_from_home_page["tutorId"],
-              });
+              showModalBottomSheet<void>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 50),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFF9F9FB),
+                      ),
+                      child: Scaffold(
+                          body: FutureBuilder<TutorCourses>(
+                              future: API_Management().getTutorByTutorID(
+                                  data_from_home_page["token"],
+                                  data_from_home_page["tutorId"]),
+                              builder: (context, tutorData) {
+                                if (tutorData.hasData) {
+                                  var tData = tutorData.data!.data;
+                                  String phone = tData.phoneNumber;
+                                  if (phone == "00000") {
+                                    phone = "";
+                                  }
+                                  return Column(
+                                    children: [
+                                      Container(
+                                        width: 80,
+                                        height: 80,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xff7c94b6),
+                                          image: DecorationImage(
+                                            image:
+                                                NetworkImage(tData.imagePath),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(50.0)),
+                                          border: Border.all(
+                                            color: Colors.cyan,
+                                            width: 1,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 30,
+                                      ),
+                                      listItem("Name", tData.fullName),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      listItem("Email", tData.email),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      listItem("Phone", phone),
+                                      const SizedBox(
+                                        height: 35,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                if (phone == "" ||
+                                                    phone == "00000") {
+                                                  Alert(
+                                                      context: context,
+                                                      title: "Error",
+                                                      desc:
+                                                          "This user has't update phone yet!",
+                                                      buttons: [
+                                                        DialogButton(
+                                                            child: const Text(
+                                                                "OK"),
+                                                            onPressed: () =>
+                                                                Get.back())
+                                                      ]).show();
+                                                } else {
+                                                  launch("tel:$phone");
+                                                }
+                                              },
+                                              child: const Text("Call")),
+                                          ElevatedButton(
+                                              onPressed: () =>
+                                                  launch("mailto:$tData.email"),
+                                              child: const Text("Mail"))
+                                        ],
+                                      ),
+                                      ElevatedButton(
+                                          onPressed: () => Get.back(),
+                                          child: const Text("Back")),
+                                    ],
+                                  );
+                                } else {
+                                  return const Visibility(
+                                    child: Text(""),
+                                    visible: false,
+                                  );
+                                }
+                              })),
+                    );
+                  });
             },
             child: const Text(
               "Tutor Info",

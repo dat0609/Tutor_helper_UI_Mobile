@@ -7,12 +7,11 @@ import 'package:get/get.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:tutor_helper/api/api_management.dart';
 import 'package:tutor_helper/model/classes.dart';
+import 'package:tutor_helper/model/studentcourses.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_create_class.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_create_event.dart';
-import 'package:tutor_helper/view/tutor_page/tutor_edit_link_class.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_management.dart';
 import 'package:tutor_helper/view/tutor_page/tutor_view_class_detail.dart';
-import 'package:tutor_helper/view/tutor_page/tutor_view_student_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TutorViewCourseDetail extends StatefulWidget {
@@ -105,10 +104,103 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
                   )),
               TextButton(
                 onPressed: () {
-                  Get.to(() => const TutorViewStudentInfo(), arguments: {
-                    "token": data_from_course_page["token"],
-                    "studentId": data_from_course_page["studentId"],
-                  });
+                  showModalBottomSheet<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 50),
+                          child: FutureBuilder<StudentCourses>(
+                              future: API_Management().getStudentBystudentId(
+                                  data_from_course_page["token"],
+                                  data_from_course_page["studentId"]),
+                              builder: (context, studentData) {
+                                if (studentData.hasData) {
+                                  var stuData = studentData.data!.data;
+                                  String phone = stuData.phoneNumber;
+                                  if (phone == "00000") {
+                                    phone = "";
+                                  }
+                                  return Column(
+                                    children: [
+                                      Container(
+                                        width: 80,
+                                        height: 80,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xff7c94b6),
+                                          image: DecorationImage(
+                                            image:
+                                                NetworkImage(stuData.imagePath),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(50.0)),
+                                          border: Border.all(
+                                            color: Colors.cyan,
+                                            width: 1,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 30,
+                                      ),
+                                      listItem("Name", stuData.fullName),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      listItem("Email", stuData.email),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      listItem("Phone", phone),
+                                      const SizedBox(
+                                        height: 35,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                if (phone == "" ||
+                                                    phone == "00000") {
+                                                  Alert(
+                                                      context: context,
+                                                      title: "Error",
+                                                      desc:
+                                                          "This user has't update phone yet!",
+                                                      buttons: [
+                                                        DialogButton(
+                                                            child: const Text(
+                                                                "OK"),
+                                                            onPressed: () =>
+                                                                Get.back())
+                                                      ]).show();
+                                                } else {
+                                                  launch("tel:$phone");
+                                                }
+                                              },
+                                              child: const Text("Call")),
+                                          ElevatedButton(
+                                              onPressed: () => launch(
+                                                  "mailto:$stuData.email"),
+                                              child: const Text("Mail"))
+                                        ],
+                                      ),
+                                      ElevatedButton(
+                                          onPressed: () => Get.back(),
+                                          child: const Text("Back")),
+                                    ],
+                                  );
+                                } else {
+                                  return const Visibility(
+                                    child: Text(""),
+                                    visible: false,
+                                  );
+                                }
+                              }),
+                        );
+                      });
                 },
                 child: const Text(
                   "Student Info",
@@ -162,16 +254,141 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
                   )),
               TextButton(
                 onPressed: () {
-                  Get.to(() => const EditLinkClass(), arguments: {
-                    "token": data_from_course_page["token"],
-                    "courseId": data_from_course_page["courseId"],
-                    "title": data_from_course_page["title"],
-                    "description": data_from_course_page["description"],
-                    "tutorId": data_from_course_page["tutorId"],
-                    "tutorrequestId": data_from_course_page["tutorrequestId"],
-                    "studentId": data_from_course_page["studentId"],
-                    "linkUrl": data_from_course_page["linkUrl"]
-                  });
+                  bool firstTime = true;
+                  if (firstTime) {
+                    linkUrl = data_from_course_page["linkUrl"];
+                    firstTime = false;
+                  }
+                  showModalBottomSheet<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 50),
+                          child: Column(children: [
+                            Row(
+                              children: const [
+                                Text(
+                                  "Link URL",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                            TextFormField(
+                              initialValue: linkUrl,
+                              keyboardType: TextInputType.url,
+                              onChanged: (value) {
+                                linkUrl = value;
+                              },
+                            ),
+                            const SizedBox(
+                              height: 100,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                TextButton(
+                                    onPressed: () => Get.back(),
+                                    child: const Text("Cancel"),
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.cyan.shade100,
+                                      textStyle: const TextStyle(fontSize: 20),
+                                    )),
+                                TextButton(
+                                    onPressed: () {
+                                      Alert(
+                                          context: context,
+                                          type: AlertType.warning,
+                                          title: "Edit Link",
+                                          desc:
+                                              "Are you sure you want to Edit this Link?",
+                                          buttons: [
+                                            DialogButton(
+                                                onPressed: () => Get.back(),
+                                                child: const Text("Cancel")),
+                                            DialogButton(
+                                                onPressed: () {
+                                                  RegExp regExp = RegExp(
+                                                    r"^https:\/\/meet.google.com\/\w{3}-\w{4}-\w{3}$",
+                                                    caseSensitive: false,
+                                                    multiLine: false,
+                                                  );
+                                                  RegExp regExp2 = RegExp(
+                                                    r"^meet.google.com\/\w{3}-\w{4}-\w{3}$",
+                                                    caseSensitive: false,
+                                                    multiLine: false,
+                                                  );
+                                                  if (regExp
+                                                          .hasMatch(linkUrl) ||
+                                                      regExp2
+                                                          .hasMatch(linkUrl)) {
+                                                    API_Management().updateCourse(
+                                                        data_from_course_page[
+                                                            "token"],
+                                                        data_from_course_page[
+                                                            "courseId"],
+                                                        data_from_course_page[
+                                                            "title"],
+                                                        data_from_course_page[
+                                                            "description"],
+                                                        data_from_course_page[
+                                                            "tutorId"],
+                                                        data_from_course_page[
+                                                            "tutorrequestId"],
+                                                        data_from_course_page[
+                                                            "studentId"],
+                                                        linkUrl);
+                                                    Alert(
+                                                        context: context,
+                                                        type: AlertType.success,
+                                                        title: "Successfully",
+                                                        desc:
+                                                            "This Link has been update successfully!",
+                                                        buttons: [
+                                                          DialogButton(
+                                                              onPressed: () =>
+                                                                  Get.offAll(() =>
+                                                                      const TutorManagement()),
+                                                              child: const Text(
+                                                                  "OK")),
+                                                        ]).show();
+                                                  } else {
+                                                    Alert(
+                                                        context: context,
+                                                        type: AlertType.error,
+                                                        title: "Link Error",
+                                                        desc:
+                                                            "This Link is not google meet Link!",
+                                                        buttons: [
+                                                          DialogButton(
+                                                              onPressed: () {
+                                                                Get.back();
+                                                                Get.back();
+                                                              },
+                                                              child: const Text(
+                                                                  "OK")),
+                                                        ]).show();
+                                                  }
+                                                },
+                                                child: const Text("Edit")),
+                                          ]).show();
+                                    },
+                                    child: const Text(
+                                      "Edit Link",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.cyan,
+                                      textStyle: const TextStyle(fontSize: 20),
+                                    ))
+                              ],
+                            )
+                          ]),
+                        );
+                      });
                 },
                 child: const Text(
                   "Edit Link",
