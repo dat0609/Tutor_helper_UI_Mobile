@@ -21,53 +21,63 @@ class TutorLoginPage extends StatefulWidget {
 class _TutorLoginPageState extends State<TutorLoginPage> {
   final storage = const FlutterSecureStorage();
   void _loginWithGoogle() async {
-    setState(() {});
+    try {
+      setState(() {});
 
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser!.authentication;
-    final OAuthCredential googleCredential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    await FirebaseAuth.instance.signInWithCredential(googleCredential);
-    final tokenResult =
-        await FirebaseAuth.instance.currentUser!.getIdToken(true);
-    Map<String, String> headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode({
-      "idToken": tokenResult,
-      "role": "Tutor",
-      "accessToken": "string",
-      "providerId": "string",
-      "signInMethod": "Google"
-    });
-    final response = await https.post(Uri.parse(Strings.tutor_signin_url),
-        headers: headers, body: body);
-    // log(response.statusCode.toString());
-    if (response.statusCode == 200) {
-      log(response.body);
-      storage.write(key: "database", value: response.body);
-      Get.offAll(() => const TutorManagement());
-    } else if (response.statusCode == 500) {
-      if (await GoogleSignIn().isSignedIn()) {
-        await GoogleSignIn().disconnect();
-        await FirebaseAuth.instance.signOut();
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser!.authentication;
+      final OAuthCredential googleCredential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      await FirebaseAuth.instance.signInWithCredential(googleCredential);
+      final tokenResult =
+          await FirebaseAuth.instance.currentUser!.getIdToken(true);
+      Map<String, String> headers = {'Content-Type': 'application/json'};
+      final body = jsonEncode({
+        "idToken": tokenResult,
+        "role": "Tutor",
+        "accessToken": "string",
+        "providerId": "string",
+        "signInMethod": "Google"
+      });
+      final response = await https.post(Uri.parse(Strings.tutor_signin_url),
+          headers: headers, body: body);
+      // log(response.statusCode.toString());
+      if (response.statusCode == 200) {
+        log(response.body);
+        storage.write(key: "database", value: response.body);
+        Get.offAll(() => const TutorManagement());
+      } else if (response.statusCode == 500) {
+        if (await GoogleSignIn().isSignedIn()) {
+          await GoogleSignIn().disconnect();
+          await FirebaseAuth.instance.signOut();
+        }
+        Alert(
+            context: context,
+            type: AlertType.error,
+            title: "Wrong Role!",
+            desc: "You have login to wrong role!",
+            buttons: [
+              DialogButton(
+                child: const Text(
+                  "Change Role",
+                ),
+                onPressed: () {
+                  Get.back();
+                  Get.back();
+                },
+              )
+            ]).show();
       }
+    } catch (PlatformException) {
       Alert(
           context: context,
-          type: AlertType.error,
-          title: "Wrong Role!",
-          desc: "You have login to wrong role!",
+          title: "Error",
+          desc: "Google Login failed!!!",
           buttons: [
-            DialogButton(
-              child: const Text(
-                "Change Role",
-              ),
-              onPressed: () {
-                Get.back();
-                Get.back();
-              },
-            )
+            DialogButton(child: const Text("OK"), onPressed: () => Get.back())
           ]).show();
     }
   }

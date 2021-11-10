@@ -44,7 +44,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
 
   AppBar _navigator() {
     return AppBar(
-      title: const Text("Course Infomation"),
+      title: Text(data_from_course_page["title"]),
       actions: <Widget>[
         IconButton(
           icon: const Icon(Icons.delete_forever),
