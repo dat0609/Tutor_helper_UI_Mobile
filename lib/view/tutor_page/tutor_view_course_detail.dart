@@ -392,18 +392,6 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
                                     ))
                               ],
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                TextButton(
-                                    onPressed: () => Get.back(),
-                                    child: const Text("Cancel"),
-                                    style: TextButton.styleFrom(
-                                      backgroundColor: Colors.cyan.shade100,
-                                      textStyle: const TextStyle(fontSize: 20),
-                                    )),
-                              ],
-                            )
                           ]),
                         );
                       });
