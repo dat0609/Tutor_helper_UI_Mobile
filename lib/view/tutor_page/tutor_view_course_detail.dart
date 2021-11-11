@@ -285,14 +285,14 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
                               },
                             ),
                             const SizedBox(
-                              height: 100,
+                              height: 50,
                             ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 TextButton(
-                                    onPressed: () => Get.back(),
-                                    child: const Text("Cancel"),
+                                    onPressed: () =>
+                                        launch("https://meet.google.com/"),
+                                    child: const Text("Google Meet"),
                                     style: TextButton.styleFrom(
                                       backgroundColor: Colors.cyan.shade100,
                                       textStyle: const TextStyle(fontSize: 20),
@@ -384,6 +384,18 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
                                       backgroundColor: Colors.cyan,
                                       textStyle: const TextStyle(fontSize: 20),
                                     ))
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                TextButton(
+                                    onPressed: () => Get.back(),
+                                    child: const Text("Cancel"),
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.cyan.shade100,
+                                      textStyle: const TextStyle(fontSize: 20),
+                                    )),
                               ],
                             )
                           ]),
