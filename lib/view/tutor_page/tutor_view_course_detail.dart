@@ -288,14 +288,20 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
                               height: 50,
                             ),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 TextButton(
                                     onPressed: () =>
                                         launch("https://meet.google.com/"),
-                                    child: const Text("Google Meet"),
+                                    child: const Text(
+                                      "Google Meet",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                     style: TextButton.styleFrom(
-                                      backgroundColor: Colors.cyan.shade100,
-                                      textStyle: const TextStyle(fontSize: 20),
+                                      backgroundColor:
+                                          Colors.greenAccent.shade700,
+                                      textStyle: const TextStyle(
+                                          fontSize: 20, color: Colors.white),
                                     )),
                                 TextButton(
                                     onPressed: () {
