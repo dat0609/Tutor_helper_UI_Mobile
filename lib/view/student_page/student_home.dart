@@ -249,7 +249,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 1,
-            blurRadius: 5, // changes position of shadow
+            blurRadius: 5,
           ),
         ],
       ),
@@ -263,7 +263,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 120,
                 child: Text(
-                  title.trim(), //Subject Name
+                  title.trim(),
                   overflow: TextOverflow.clip,
                   style: const TextStyle(
                     fontWeight: FontWeight.w700,
@@ -273,7 +273,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 120,
                 child: Text(
-                  description.trim(), //Address
+                  description.trim(),
                   overflow: TextOverflow.clip,
                   style: const TextStyle(color: Colors.black, fontSize: 13),
                 ),

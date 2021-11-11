@@ -79,7 +79,6 @@ class _StudentCreateRequestState extends State<StudentCreateRequest> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // listItem("Student:", datafromPost),
           const SizedBox(
             height: 10,
           ),

@@ -80,7 +80,6 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
-                              // margin: const EdgeInsets.only(bottom: 7),
                               padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
                               color: Colors.white,
                               width: MediaQuery.of(context).size.width,

@@ -408,9 +408,6 @@ class _TutorHomePageState extends State<TutorHomePage> {
               }
             },
           ),
-          // const SizedBox(
-          //   height: 30,
-          // ),
         ],
       ),
     );

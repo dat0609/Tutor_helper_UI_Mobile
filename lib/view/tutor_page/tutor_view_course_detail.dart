@@ -440,20 +440,6 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
                     textStyle: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.w800),
                   )),
-              // TextButton(
-              //   onPressed: () {
-              //     log("Document");
-              //   },
-              //   child: const Text(
-              //     "Document",
-              //     style: TextStyle(color: Colors.white),
-              //   ),
-              //   style: TextButton.styleFrom(
-              //     backgroundColor: const Color(0xFF00bf8c),
-              //     textStyle: const TextStyle(
-              //         fontSize: 20, fontWeight: FontWeight.w800),
-              //   ),
-              // ),
             ],
           )
         ],
@@ -475,7 +461,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
           SizedBox(
             width: MediaQuery.of(context).size.width - 135,
             child: Text(
-              right.trim(), //Address
+              right.trim(),
               overflow: TextOverflow.clip,
               style: const TextStyle(
                   color: Colors.black,
@@ -594,7 +580,6 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
         deleteButton,
       ],
     );
-    // show the dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -629,7 +614,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 132,
                 child: Text(
-                  title.trim(), //Subject Name
+                  title.trim(),
                   overflow: TextOverflow.clip,
                   style: const TextStyle(
                     fontWeight: FontWeight.w700,
@@ -655,7 +640,7 @@ class _TutorViewCourseDetailState extends State<TutorViewCourseDetail> {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 132,
                 child: Text(
-                  "${fromTime.trim()}-${toTime.trim()}", //Address
+                  "${fromTime.trim()}-${toTime.trim()}",
                   overflow: TextOverflow.clip,
                   style: const TextStyle(color: Colors.black, fontSize: 13),
                 ),

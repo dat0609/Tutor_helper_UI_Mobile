@@ -28,7 +28,6 @@ class Data {
     required this.studentId,
     required this.email,
     required this.fullName,
-    // required this.grade,
     required this.phoneNumber,
     required this.imagePath,
     required this.schoolId,
@@ -37,7 +36,6 @@ class Data {
   late final int studentId;
   late final String email;
   late final String fullName;
-  // late final int grade;
   late final String phoneNumber;
   late final String imagePath;
   late final int schoolId;
@@ -47,7 +45,6 @@ class Data {
     studentId = json['studentId'];
     email = json['email'];
     fullName = json['fullName'];
-    // grade = json['grade'];
     phoneNumber = json['phoneNumber'];
     imagePath = json['imagePath'];
     schoolId = json['schoolId'];
@@ -59,7 +56,6 @@ class Data {
     _data['studentId'] = studentId;
     _data['email'] = email;
     _data['fullName'] = fullName;
-    // _data['grade'] = grade;
     _data['phoneNumber'] = phoneNumber;
     _data['imagePath'] = imagePath;
     _data['schoolId'] = schoolId;

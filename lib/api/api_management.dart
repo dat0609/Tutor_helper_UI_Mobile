@@ -1,14 +1,11 @@
 // ignore_for_file: camel_case_types
 
 import 'dart:convert';
-// ignore: unused_import
-import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:tutor_helper/constants/strings.dart';
 import 'package:tutor_helper/model/classes.dart';
 import 'package:tutor_helper/model/courses.dart';
 import 'package:tutor_helper/model/studentcourses.dart';
-import 'package:tutor_helper/model/students.dart';
 import 'package:tutor_helper/model/subjects.dart';
 import 'package:tutor_helper/model/tutor_requests.dart';
 import 'package:tutor_helper/model/tutorcourses.dart';
@@ -157,9 +154,8 @@ class API_Management {
       "tutorRequestId": tutorRequestId,
       "studentId": studentId,
     });
-    var res = await http.put(Uri.parse(Strings.courses_url),
+    await http.put(Uri.parse(Strings.courses_url),
         headers: headers, body: body);
-    log(res.statusCode.toString());
   }
 
   void createClass(var token, int courseId, String title, String description,

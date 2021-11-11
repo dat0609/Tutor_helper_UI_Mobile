@@ -279,7 +279,6 @@ class _ViewClassDetailState extends State<ViewClassDetail> {
         updatedButton,
       ],
     );
-    // show the dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -338,7 +337,6 @@ class _ViewClassDetailState extends State<ViewClassDetail> {
         deleteButton,
       ],
     );
-    // show the dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {

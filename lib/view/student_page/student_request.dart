@@ -297,9 +297,6 @@ class _StudentRequestPageState extends State<StudentRequestPage> {
               }
             },
           ),
-          // const SizedBox(
-          //   height: 30,
-          // ),
         ],
       ),
     );
@@ -338,7 +335,7 @@ class _StudentRequestPageState extends State<StudentRequestPage> {
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 1,
-            blurRadius: 5, // changes position of shadow
+            blurRadius: 5,
           ),
         ],
       ),
@@ -385,12 +382,6 @@ class _StudentRequestPageState extends State<StudentRequestPage> {
                               color: color[status],
                               fontWeight: FontWeight.w700),
                         ),
-                        // TextButton(
-                        //   onPressed: () {
-                        //     log("delete");
-                        //   },
-                        //   child: const Text("Delete"),
-                        // )
                       ],
                     ),
                   ),

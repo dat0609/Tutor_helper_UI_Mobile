@@ -1,6 +1,3 @@
-// ignore: unused_import
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
@@ -40,14 +37,6 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
   AppBar _navigator() {
     return AppBar(
       title: Text(data_from_home_page["title"]),
-      // actions: <Widget>[
-      //   IconButton(
-      //     icon: const Icon(Icons.delete_forever),
-      //     onPressed: () {
-      //       showAlertDialog(context);
-      //     },
-      //   )
-      // ],
     );
   }
 
@@ -225,17 +214,6 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
               textStyle: const TextStyle(fontSize: 20),
             ),
           ),
-          // TextButton(
-          //   onPressed: () {},
-          //   child: const Text(
-          //     "Document",
-          //     style: TextStyle(color: Colors.white),
-          //   ),
-          //   style: TextButton.styleFrom(
-          //     backgroundColor: Colors.green,
-          //     textStyle: const TextStyle(fontSize: 20),
-          //   ),
-          // ),
         ],
       ),
     );
@@ -255,7 +233,7 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
           SizedBox(
             width: MediaQuery.of(context).size.width - 135,
             child: Text(
-              right.trim(), //Address
+              right.trim(),
               overflow: TextOverflow.clip,
               style: const TextStyle(
                   color: Colors.black,
@@ -349,7 +327,7 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 132,
                 child: Text(
-                  title.trim(), //Subject Name
+                  title.trim(),
                   overflow: TextOverflow.clip,
                   style: const TextStyle(
                     fontWeight: FontWeight.w700,
@@ -359,7 +337,7 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 132,
                 child: Text(
-                  description.trim(), //Address
+                  description.trim(),
                   overflow: TextOverflow.clip,
                   style: const TextStyle(color: Colors.black, fontSize: 13),
                 ),
@@ -367,7 +345,7 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 132,
                 child: Text(
-                  "Date: ${date.trim()}", //Address
+                  "Date: ${date.trim()}",
                   overflow: TextOverflow.clip,
                   style: const TextStyle(color: Colors.black, fontSize: 13),
                 ),
@@ -375,39 +353,13 @@ class _StudentViewCourseDetailState extends State<StudentViewCourseDetail> {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 132,
                 child: Text(
-                  "${fromTime.trim()} - ${toTime.trim()}", //Address
+                  "${fromTime.trim()} - ${toTime.trim()}",
                   overflow: TextOverflow.clip,
                   style: const TextStyle(color: Colors.black, fontSize: 13),
                 ),
               ),
             ],
           ),
-          // Row(
-          //   children: [
-          //     Container(
-          //       decoration: BoxDecoration(
-          //           color: Colors.cyan[600],
-          //           borderRadius: BorderRadius.circular(90)),
-          //       child: IconButton(
-          //         onPressed: () {
-          //           Get.to(() => const ViewClassDetail(), arguments: {
-          //             "courseId": courseId,
-          //             "title": title,
-          //             "description": description,
-          //             "startTime": startTime,
-          //             "endTime": endTime,
-          //             "classId": classId,
-          //             "token": token,
-          //           });
-          //         },
-          //         icon: const Icon(
-          //           Icons.edit_outlined,
-          //           color: Colors.white,
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
         ],
       ),
     );

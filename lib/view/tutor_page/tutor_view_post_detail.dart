@@ -44,7 +44,6 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
       ),
       child: Column(
         children: [
-          // listItem("Student:", datafromPost),
           FutureBuilder<StudentCourses>(
               future: API_Management().getStudentBystudentId(
                   datafromPost["token"], datafromPost["studentId"]),
@@ -74,10 +73,6 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
                         height: 30,
                       ),
                       listItem("Name", stuData.fullName),
-                      // const SizedBox(
-                      //   height: 10,
-                      // ),
-                      // listItem("Email", stuData.email),
                     ],
                   );
                 } else {
@@ -98,26 +93,17 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
           const SizedBox(
             height: 10,
           ),
-          //Hiển thị grade
           listItem("Grade:", "Grade " + datafromPost["gradeId"].toString()),
           const SizedBox(
             height: 10,
           ),
-          //hiển thị môn
           listItem("Subject:", datafromPost["subjectName"]),
           const SizedBox(
             height: 10,
           ),
-          //Hiển thị thông tin học sinh
-          // listItem("student:", datafromPost["studentId"].toString()),
           const SizedBox(
             height: 200,
           ),
-          // listItem("Grade:", data.grade.toString()),
-          // const SizedBox(
-          //   height: 10,
-          // ),
-          // listItem("Subject:", data.subject.toString()),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -162,7 +148,7 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
           SizedBox(
             width: MediaQuery.of(context).size.width - 135,
             child: Text(
-              right.trim(), //Address
+              right.trim(),
               overflow: TextOverflow.clip,
               style: const TextStyle(
                   color: Colors.black,
@@ -223,8 +209,6 @@ class _TutorViewPostDetailState extends State<TutorViewPostDetail> {
         acceptButton,
       ],
     );
-
-    // show the dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {
